@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+	head
+		meta(name='viewport', content='user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width')
+		title Header
+		link(href="images/favicon.png", rel="icon" type="image/png")
+		link(href="styles/css/libs.css", rel="stylesheet")
+		link(href="styles/css/style.css", rel="stylesheet")
+	body
+		div.header
+			img.logo(src="http://academy.binary-studio.com/resources/logo.png")
+			div.buttons
+				input.searchBar(placeholder="Search")
+				button.searchBtn Filter
+				div#userProfile
+					img.avatar(src="https://avatars1.githubusercontent.com/u/1202528?v=3&s=460")
+					span#userName John PAPA
+				button#appsBtn(onclick="showApps()")
+				button#notificationBtn
+		div#appsBlock.appsBlock()
+		div#notificationBlock.notificationBlock
+	script(src="javascripts/libs.js")
+	script(src='javascripts/main.js')
+
