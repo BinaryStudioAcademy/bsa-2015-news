@@ -1,6 +1,7 @@
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongooseConnection = require('./db/dbconnect').connection;
 
 var app = express();
 
