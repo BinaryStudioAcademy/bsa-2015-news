@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 		server_js: ['backend/**/*.js'],
 		views: ['frontend/views/**/*.jade'],
 		templates: ['frontend/javascripts/**/*.jade'],
-		stylesheets: ['frontend/styles/style.styl'],
+		stylesheets: ['frontend/styles/**/*.styl'],
 
 		jshint: {
 			client: ['Gruntfile.js', '<%= javascripts %>', '!frontend/javascripts/libs/**/*.js'],
