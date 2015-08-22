@@ -6,6 +6,6 @@ function NewsController() {
 
 	var vm = this;
 
-	vm.text = 'news';
+	vm.text = 'newsdd';
 
 }
