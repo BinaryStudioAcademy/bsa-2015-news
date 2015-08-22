@@ -19,6 +19,8 @@ app.use(bodyParser.json());
 
 var routes = require('./routes/')(app);
 
-var server = app.listen(4033);
+var server = app.listen(4033, function() {
+	console.log('http://localhost:4033');
+});
 
 module.exports = app;

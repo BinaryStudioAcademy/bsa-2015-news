@@ -1,6 +1,6 @@
-var notification = require('./notification');
+var news = require('./news');
 module.exports = function(app){
 	return {
-		notification: notification(app)
+		news: news(app)
 	};
 };

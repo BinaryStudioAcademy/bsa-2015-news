@@ -1,5 +1,5 @@
 module.exports = {
-	uri: 'mongodb://localhost/intranet-notifications',
+	uri: 'mongodb://localhost/intranet-news',
 	opts: {
 		server: { 
 			auto_reconnect: true,

@@ -1,5 +1,5 @@
 {
-  "name": "bsa-2015-notifications",
+  "name": "bsa-2015-news",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BinaryStudioAcademy/bsa-2015-notifications.git"
+    "url": "git+https://github.com/BinaryStudioAcademy/bsa-2015-news.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BinaryStudioAcademy/bsa-2015-notifications/issues"
+    "url": "https://github.com/BinaryStudioAcademy/bsa-2015-news/issues"
   },
-  "homepage": "https://github.com/BinaryStudioAcademy/bsa-2015-notifications#readme",
+  "homepage": "https://github.com/BinaryStudioAcademy/bsa-2015-news#readme",
   "dependencies": {
     "body-parser": "^1.13.3",
     "cnfg": "^0.1.2",
