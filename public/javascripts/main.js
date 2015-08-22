@@ -23,7 +23,7 @@ function NewsController() {
 
 	var vm = this;
 
-	vm.text = 'newsaa';
+	vm.text = 'newsss';
 
 }
 },{"../app":1}]},{},[1,2]);
