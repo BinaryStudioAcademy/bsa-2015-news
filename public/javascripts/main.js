@@ -33,7 +33,17 @@ function NewsController() {
 		date: '2015.11.20',
 		likes: [
 			'Jon Smith'
-			]
+			],
+		comments: [{
+				author: 'Bill Jon',
+				text: 'consectetur adipisicing elit.',
+				date: '1900.12.23'
+			},
+			{
+				author: 'Poll Mc',
+				text: 'consectetur adipisicing elit.',
+				date: '1909.11.03'
+			}]
 		},
 		{
 		title: 'Banana',
@@ -42,7 +52,8 @@ function NewsController() {
 		date: '2014.12.30',
 		likes: [
 			'Jon Smith'
-			]
+			],
+		comments: []
 		},
 		{
 			title: 'Cherry',
@@ -52,7 +63,8 @@ function NewsController() {
 			likes: [
 				'Jon Smith',
 				'Mark Pol'
-				]
+				],
+			comments: []
 		},
 		{
 			title: 'Berry',
@@ -63,7 +75,12 @@ function NewsController() {
 				'Jon Smith',
 				'Luis Ving',
 				'Jase Carm'
-				]
+				],
+			comments: [{
+					author: 'Poll Mc',
+					text: 'consectetur adipisicing elit.',
+					date: '1909.11.03'
+				}]
 		}
 	];
 
@@ -79,11 +96,7 @@ function NewsController() {
 				body: vm.bodyNews,
 				author: vm.user,
 				date: Date.parse(new Date()),
-				comments: [{
-					author: '',
-					date: '',
-					text: ''
-					}],
+				comments: [],
 				likes: []
 			});
 		}
@@ -101,19 +114,44 @@ function NewsController() {
 		}
 	};
 
-	vm.dleteMessage = [];
+
 	vm.deleteNews = function(index) {
 		vm.posts.splice(index, 1);
 	};
 
 
-	vm.like = function(index){
+	vm.like = function(index) {
 		if(vm.posts[index].likes.indexOf(vm.user) < 0){
 			vm.posts[index].likes.push(vm.user);
 		}else{
 			vm.posts[index].likes.splice(vm.posts[index].likes.indexOf(vm.user), 1);
 		}
 	};
+
+	vm.commentForm = [];
+	vm.toggleCommentForm = function(index) {
+		vm.commentForm[index] = !vm.commentForm[index];
+	};
+
+	vm.commentsViev = [];
+	vm.toggleComments = function(index) {
+		vm.commentsViev[index] =!vm.commentsViev[index];
+	};
+
+	vm.newComment = function(index) {
+		vm.posts[index].comments.unshift({
+			author: vm.user,
+			text: vm.commentText[index],
+			date: Date.parse(new Date())
+		});
+		vm.commentText[index] = '';
+		vm.commentsViev[index] = true;
+	};
+
+	vm.deleteComment = function(parentIndex, index) {
+		vm.posts[parentIndex].comments.splice(index, 1);
+	};
+
 
 }
 },{"../app":1}],3:[function(require,module,exports){
