@@ -1,4 +1,4 @@
-#container
+#news-viev
 	header
 		span {{newsCtrl.text}}
 		#user-log
@@ -20,7 +20,7 @@
 				button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
 				button.btn.btn-warning(type='reset') Reset
 				
-			.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ' ng-hide='newsCtrl.dleteMessage[$index]')
+			.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ')
 				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
 				h3
 					a(href='') {{news.title}}
@@ -34,5 +34,5 @@
 					span 
 					span {{news.date | date:'yyyy-MM-dd HH:mm'}}
 				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5 
+					span.glyphicon.glyphicon-thumbs-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
+					span.glyphicon.glyphicon-comment 5 

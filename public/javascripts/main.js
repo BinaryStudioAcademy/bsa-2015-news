@@ -30,25 +30,40 @@ function NewsController() {
 		title: 'Apple',
 		body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione!' ,
 		author: 'Donald Tramp',
-		date: '2015.11.20'
+		date: '2015.11.20',
+		likes: [
+			'Jon Smith'
+			]
 		},
 		{
 		title: 'Banana',
 		body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.' ,
 		author: 'Donald Tramp',
-		date: '2014.12.30'
+		date: '2014.12.30',
+		likes: [
+			'Jon Smith'
+			]
 		},
 		{
 			title: 'Cherry',
 			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
 			author: 'Donald Tramp',
-			date: '2014.8.21'
+			date: '2014.8.21',
+			likes: [
+				'Jon Smith',
+				'Mark Pol'
+				]
 		},
 		{
 			title: 'Berry',
 			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
 			author: 'Donald Tramp',
-			date: '2014.8.21'
+			date: '2014.8.21',
+			likes: [
+				'Jon Smith',
+				'Luis Ving',
+				'Jase Carm'
+				]
 		}
 	];
 
@@ -63,7 +78,13 @@ function NewsController() {
 				title: vm.titleNews,
 				body: vm.bodyNews,
 				author: vm.user,
-				date : Date.parse(new Date())
+				date: Date.parse(new Date()),
+				comments: [{
+					author: '',
+					date: '',
+					text: ''
+					}],
+				likes: []
 			});
 		}
 	};
@@ -80,12 +101,20 @@ function NewsController() {
 		}
 	};
 
-/*	vm.dleteMessage = [];
+	vm.dleteMessage = [];
 	vm.deleteNews = function(index) {
-		delete vm.posts[index];
-		vm.dleteMessage[index] =true;
+		vm.posts.splice(index, 1);
 	};
-*/
+
+
+	vm.like = function(index){
+		if(vm.posts[index].likes.indexOf(vm.user) < 0){
+			vm.posts[index].likes.push(vm.user);
+		}else{
+			vm.posts[index].likes.splice(vm.posts[index].likes.indexOf(vm.user), 1);
+		}
+	};
+
 }
 },{"../app":1}],3:[function(require,module,exports){
 var app = require('../app');
