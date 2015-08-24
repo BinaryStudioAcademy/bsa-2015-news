@@ -1,0 +1,15 @@
+#poll-widget
+    .panel.panel-primary(ng-controller="PollController as pollCtrl")
+        .panel-heading
+            i.fa.fa-question-circle
+            | &nbsp;{{ pollCtrl.currentSection.name }}
+        .panel-body
+            form#vote-form(name="voteForm", ng-controller="VoteFormController as voteCtrl",
+                ng-submit="voteCtrl.sendVote(); pollCtrl.showResults()", novalidate)
+                strong {{ pollCtrl.currentQuestion.name }}
+                ul.list-group
+                    textarea.form-control(type="text", ng-if="pollCtrl.currentQuestion.type == 'text'", placeholder='Answer', required)
+                    li.list-group-item(ng-repeat="option in pollCtrl.currentQuestion.options", ng-if="pollCtrl.currentQuestion.type != 'text'")
+                        input(type="{{ pollCtrl.currentQuestion.type }}", name="vote-option", ng-model="voteCtrl.vote.option")
+                        span.text-option {{ option.text }}
+                button#vote-button.btn.btn-primary(type="submit") Vote
