@@ -1,111 +1,38 @@
 #container
 	header
-		span News
+		span {{newsCtrl.text}}
 		#user-log
 			img(src='http://i.imgur.com/wNqHnG6.png', ,='', alt='user logo')
-			span Mike Ross
+			span {{newsCtrl.user}}
 			button.btn.btn-warning Log out
 	nav
 	aside
 		poll-widget
 	#content
 		.search
-			input.form-control(type='text', placeholder='Search')
-			button.btn.btn-success(type='button') New post
+			input.form-control(type='text', placeholder='Search' ng-model="search.title")
+			button.btn.btn-success(type='button' ng-click='newsCtrl.toggleForm()') New post
 		#scroll-block
-			.news-massage
+			form.news-massage(ng-hide='newsCtrl.formView')
+				.form-group
+					input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
+					textarea.form-control(rows="5" cols="20" ng-model="newsCtrl.bodyNews" placeholder='Vrite some news' required)
+				button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
+				button.btn.btn-warning(type='reset') Reset
+				
+			.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ' ng-hide='newsCtrl.dleteMessage[$index]')
 				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
 				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
+					a(href='') {{news.title}}
+				span.delete-news(ng-click='newsCtrl.deleteNews($index)' ) X
+				p {{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
+					span(ng-hide='news.body.length < 200 ')
+						a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
+						a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 				.person-info
-					span Mike Ross
-					span 27.01.2015
+					span {{news.author||newsCtrl.user}}
+					span 
+					span {{news.date | date:'yyyy-MM-dd HH:mm'}}
 				.coments-info
 					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
-			.news-massage
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
-				.person-info
-					span Mike Ross
-					span 27.01.2015
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
-			.news-massage
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
-				.person-info
-					span Mike Ross
-					span 27.01.2015
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
-			.news-massage
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
-				.person-info
-					span Mike Ross
-					span 27.01.2015
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
-			.news-massage
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
-				.person-info
-					span Mike Ross
-					span 27.01.2015
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
-			.news-massage
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') Nostrud exercitation
-				span.delete-news X
-				p
-					| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					| tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud aliquip ex ea commodo
-					| consequat... 
-					a.load-more(href='')  more
-				.person-info
-					span Mike Ross
-					span 27.01.2015
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up  3
-					span.glyphicon.glyphicon-comment  5
+					span.glyphicon.glyphicon-comment  5 
