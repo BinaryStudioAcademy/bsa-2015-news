@@ -24,63 +24,63 @@ function NewsController() {
 	var vm = this;
 
 	vm.text = 'News';
-	vm.user ='Mike Ross';
+	vm.user ='Viktoriya Voytyuk';
 
 	vm.posts=[{
-		title: 'Apple',
-		body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione!' ,
-		author: 'Donald Tramp',
-		date: '2015.11.20',
+		title: 'Camping',
+		body: 'Camping is an elective outdoor recreational activity. Generally held, participants leave developed areas to spend time outdoors in more natural ones in pursuit of activities providing them enjoyment. To be regarded as "camping" a minimum of one night is spent outdoors, distinguishing it from day-tripping, picnicking, and other similarly short-term recreational activities',
+		author: 'Nazar Dubas',
+		date: '2015.08.23',
 		likes: [
-			'Jon Smith'
+			'Veronica Shvets'
 			],
 		comments: [{
-				author: 'Bill Jon',
-				text: 'consectetur adipisicing elit.',
-				date: '1900.12.23'
+				author: 'Taras Zinkiv',
+				text: 'Couldn\'t agree more, people who want to go camping in the UK are insane, those who want to do it abroad, the answer is simple',
+				date: '2015.08.24'
 			},
 			{
-				author: 'Poll Mc',
-				text: 'consectetur adipisicing elit.',
-				date: '1909.11.03'
+				author: 'Anya Burshtyko',
+				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
+				date: '2015.08.24'
 			}]
 		},
 		{
-		title: 'Banana',
-		body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.' ,
-		author: 'Donald Tramp',
-		date: '2014.12.30',
+		title: 'Club or open air?',
+		body: 'If there is one message this blog supports it is the fact that Berlin has an awesome nightlife. In the monthly party-agenda you can find great parties in unique clubs and you have not been to Berlin if you did not visit a few of these famous places. But still there are a few obvious benefits for visiting an open-air instead of a club.' ,
+		author: 'Taras Zinkiv',
+		date: '2015.07.30',
 		likes: [
-			'Jon Smith'
+			'Taras Zinkiv'
 			],
 		comments: []
 		},
 		{
-			title: 'Cherry',
-			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
-			author: 'Donald Tramp',
-			date: '2014.8.21',
+			title: 'Vacation in spain',
+			body: 'A single visit to Spain can result in many different experiences. Culture lovers and history buffs can be awed at more than 40 UNESCO World Heritage sites and more than 1,000 museums. Outdoor enthusiasts can walk, hike and golf their way across stunning landscapes. And foodies can get their fill of delectable regional cuisine paired with incomparable wines.' ,
+			author: 'Veronica Shvets',
+			date: '2015.07.06',
 			likes: [
-				'Jon Smith',
-				'Mark Pol'
-				],
-			comments: []
-		},
-		{
-			title: 'Berry',
-			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
-			author: 'Donald Tramp',
-			date: '2014.8.21',
-			likes: [
-				'Jon Smith',
+				'John Smith',
 				'Luis Ving',
 				'Jase Carm'
 				],
 			comments: [{
-					author: 'Poll Mc',
-					text: 'consectetur adipisicing elit.',
-					date: '1909.11.03'
+					author: 'Anya Burshtyko',
+					text: 'I spent my weekend here, great seaview, exellent staff.',
+					date: '2015.07.07'
 				}]
+		},
+		{
+			title: 'Party',
+			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
+			author: 'Anya Burshtyko',
+			date: '2015.07.11',
+			likes: [
+				'John Smith',
+				'Mark Pol'
+				],
+			comments: []
 		}
 	];
 

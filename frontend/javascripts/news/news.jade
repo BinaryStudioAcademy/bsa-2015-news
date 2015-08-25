@@ -2,7 +2,6 @@
 	header
 		span {{newsCtrl.text}}
 		#user-log
-			img(src='http://i.imgur.com/wNqHnG6.png', ,='', alt='user logo')
 			span {{newsCtrl.user}}
 			button.btn.btn-warning Log out
 	nav
@@ -19,7 +18,7 @@
 						input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
 						textarea.form-control(rows="5" cols="20" ng-model="newsCtrl.bodyNews" placeholder='Vrite some news' required)
 					button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
-					button.btn.btn-warning(type='reset') Reset
+					button.btn.btn-warning(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 					
 				.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ')
 					.title {{news.title}}
