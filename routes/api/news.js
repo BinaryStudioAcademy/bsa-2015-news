@@ -4,10 +4,12 @@ var News = require('../../schemas/news.js');
 module.exports = function (app) {
 
 	app.get('/api/news', function(req, res){
+		console.log(Date.now());
 		News.find()
-			.populate('author', 'name')
-			.populate('comments.author', 'name')
+			//.populate('author', 'name')
+			//.populate('comments.author', 'name')
 			.exec(function(err, results) {
+				console.log(Date.now());
 				if (err) throw err;
 
 				res.json(results);

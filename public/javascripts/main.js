@@ -16,6 +16,70 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource'])
 	]);
 },{}],2:[function(require,module,exports){
 var app = require('../app');
+app.controller("HRController", HRController);
+
+HRController.$inject = ["HRService"];
+
+function HRController(HRService) {
+	var vm = this;
+
+	vm.activities = HRService.getActivities();
+}
+},{"../app":1}],3:[function(require,module,exports){
+var app = require('../app');
+app.directive("hrWidget", HRDirective);
+
+function HRDirective() {
+	return {
+		restrict: "E",
+		templateUrl: "./templates/hr-activity/HR.html",
+		replace: true
+	};
+}
+},{"../app":1}],4:[function(require,module,exports){
+var app = require('../app');
+app.factory("HRService", HRService);
+
+function HRService() {
+	return {
+		getActivities: getActivities
+	};
+
+	function getActivities() {
+		var activities = [
+		{
+			id: 1,
+			message: "recruiter@local.com has joined Hunter",
+			tag: 0,
+			time: new Date("2015-08-10T00:00:00").toLocaleString(),
+			url: "#/user/edit/1",
+			userAlias: "HR3",
+			userLogin: "recruiter2@local.com"
+		},
+		{
+			id: 2,
+			message: "someoneOther@global.net has left Hunter",
+			tag: 0,
+			time: new Date("2015-08-09T05:13:00").toLocaleString(),
+			url: "#/user/edit/2",
+			userAlias: "HR333",
+			userLogin: "recruiter2@local.com"
+		},
+		{
+			id: 3,
+			message: "yetSomeOneNew@super.site has done something nice to everybody",
+			tag: 0,
+			time: new Date("2015-08-09T00:15:00").toLocaleString(),
+			url: "#/user/edit/3",
+			userAlias: "HR9000",
+			userLogin: "recruiter2@local.com"
+		}
+		];
+		return activities;
+	}
+}
+},{"../app":1}],5:[function(require,module,exports){
+var app = require('../app');
 
 app.controller('NewsController', NewsController);
 
@@ -152,8 +216,9 @@ function NewsController() {
 		vm.posts[parentIndex].comments.splice(index, 1);
 	};
 
+
 }
-},{"../app":1}],3:[function(require,module,exports){
+},{"../app":1}],6:[function(require,module,exports){
 var app = require('../app');
 app.controller("PollController", PollController);
 
@@ -193,7 +258,7 @@ function PollController(PollService) {
         }
     }
 }
-},{"../app":1}],4:[function(require,module,exports){
+},{"../app":1}],7:[function(require,module,exports){
 var app = require('../app');
 app.directive("pollWidget", PollDirective);
 
@@ -203,7 +268,7 @@ function PollDirective() {
         templateUrl: "./templates/poll/poll.html"
     };
 }
-},{"../app":1}],5:[function(require,module,exports){
+},{"../app":1}],8:[function(require,module,exports){
 var app = require('../app');
 app.factory("PollService", PollService);
 
@@ -307,7 +372,7 @@ function PollService() {
         return questionnaire;
     }
 }
-},{"../app":1}],6:[function(require,module,exports){
+},{"../app":1}],9:[function(require,module,exports){
 var app = require('../app');
 app.controller("VoteFormController", VoteFormController);
 
@@ -320,4 +385,4 @@ function VoteFormController() {
 
     }
 }
-},{"../app":1}]},{},[1,2,3,4,5,6]);
+},{"../app":1}]},{},[1,2,3,4,5,6,7,8,9]);
