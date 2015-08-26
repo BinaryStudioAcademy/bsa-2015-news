@@ -1,0 +1,8 @@
+#hr-widget(ng-controller="HRController as hrCtrl")
+	#header Latest HR activity log
+	#body
+		.action(ng-repeat='action in hrCtrl.activities')
+			a.message(href='{{action.url}}') {{action.message}}
+			.time - on {{action.time}}
+		#full-log
+			a(href='') Go to full log page
