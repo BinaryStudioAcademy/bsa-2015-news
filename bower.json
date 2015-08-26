@@ -16,6 +16,7 @@
   "dependencies": {
     "angular": "~1.4.4",
     "angular-route": "~1.4.4",
-    "angular-resource": "~1.4.4"
+    "angular-resource": "~1.4.4",
+    "angular-ui-tinymce": "latest"
   }
 }

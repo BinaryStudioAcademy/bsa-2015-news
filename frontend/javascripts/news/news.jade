@@ -13,10 +13,10 @@
 			button.btn.btn-success(type='button' ng-click='newsCtrl.toggleForm()') New post
 		#scroll-block
 			.news
-				form.news-massage(ng-hide='newsCtrl.formView')
+				form.news-massage(method="post" ng-hide='newsCtrl.formView')
 					.form-group
 						input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
-						textarea.form-control(rows="5" cols="20" ng-model="newsCtrl.bodyNews" placeholder='Vrite some news' required)
+						textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
 					button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
 					button.btn.btn-warning(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 					
@@ -24,8 +24,8 @@
 					.title {{news.title}}
 						i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteNews($index)' )
 					.body
-						img(src='http://lorempixel.com/50/50/cats/8/')
-						p {{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
+						div(ng-bind-html='news.body| unsafe')
+								//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 							span(ng-hide='news.body.length < 200 ')
 								a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 								a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
@@ -40,11 +40,12 @@
 							i.fa.fa-thumbs-o-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
 
 					.comments(ng-show='newsCtrl.commentForm[$index]')
-						textarea.form-control(rows="3" cols="10" ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
+						textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
 						button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment($index)') Add comment
-
-					.comment.footer(ng-repeat='comment in news.comments' ng-show='newsCtrl.commentsViev[$parent.$index]')
-						i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 
-						span.author {{comment.author}}
-						.body {{comment.text}}
-						span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
+					.comment-wrap
+						.comment(ng-repeat='comment in news.comments' ng-hide='newsCtrl.commentsViev[$parent.$index]')
+							i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 
+							span.author {{comment.author}}
+							.body(ng-bind-html='comment.text| unsafe')
+							span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
+							i.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index)') {{comment.commentLikes.length}}
