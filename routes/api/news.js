@@ -1,18 +1,17 @@
 var User = require('../../schemas/user.js');
 var News = require('../../schemas/news.js');
+var apiResponse = require('express-api-response');
+var NewsRepository = require('../../repositories/news');
 
 module.exports = function (app) {
 
-	app.get('/api/news', function(req, res){
-		News.find()
-			.populate('author', 'name')
-			.populate('comments.author', 'name')
-			.exec(function(err, results) {
-				if (err) throw err;
-
-				res.json(results);
-			});
-	});
+	app.get('/api/news', function(req, res, next){
+		NewsRepository.getAllNews(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
 
 	app.post('/api/news', function(req, res){
 		News.create(req.body, function(err, created) {
