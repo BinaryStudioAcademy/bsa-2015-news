@@ -40,11 +40,14 @@ nav, aside
 			margin-top 10px
 	.news
 			margin 20px auto
-			width 95%
+			width 100%
+			margin-top 10px
+			max-height 600px
+			overflow-y auto
 			.title
 				padding 10px
-				background #bbdefb
-				color #1e88e5
+				background #2196f3 
+				color #e3f2fd 
 				font-size 1.5em
 			.delete-post
 				color #e57373
@@ -61,10 +64,9 @@ nav, aside
 				padding 10px
 				background #f5f5f5
 				margin-top 20px
-				.likes,.comments-count
+				.comments-count
 					float right
 					cursor pointer
-				.comments-count
 					margin-left 10px
 			.comments
 				padding 10px
@@ -113,15 +115,13 @@ input
 		margin 0 10px
 
 #scroll-block
-	margin-top 10px
-	max-height 600px
-	overflow-y auto
+
 
 .btn-warning
 	margin-left 10px
-.form-group
-	textarea
-		margin-top 10px
+
+textarea
+	margin-top 10px
 .comment-wrap
 	max-height 295px
 	overflow-y auto
@@ -141,5 +141,43 @@ input
 		font-size 2em
 		text-align center
 		padding 5px
-.sandbox
-	border-left 1px solid #e0e0e0
+.fa
+	color #1976d2
+.fa-comment-o
+	padding-left 10px
+.form-group
+	input
+		margin-bottom 15px
+.mce-flow-layout 
+	background #eceff1 !important
+.mce-btn
+	button
+		background #eceff1 !important
+.mce-menubar,.mce-panel 
+	border-color #eceff1 !important
+
+md-input-container
+	width 200px
+md-icon
+	margin 13px
+.md-create
+	color #76ff03
+.md-cancel
+	color #ffa726
+md-tooltip 
+	margin-top -10px
+
+#sandbox
+	.title
+		background #9c27b0 !important
+		color #e3f2fd  !important
+	.fa
+		color #890DBC
+	.avatar
+		height 40px
+		margin -5px 10px 0 -5px
+	.search
+		margin-top 0
+	.btn-coment
+		background #ce93d8
+		color #fff 

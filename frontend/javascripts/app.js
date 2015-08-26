@@ -1,4 +1,4 @@
-module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce'])
+module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial'])
 	.config(['$routeProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
 		function($routeProvider, $resourceProvider, $httpProvider, $locationProvider) {
 			$routeProvider

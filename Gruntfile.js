@@ -69,7 +69,12 @@ module.exports = function(grunt) {
 
 		copy: {
 			libs: {
-				
+				files: [{
+					expand: true,
+					cwd: 'bower_components/tinymce',
+					src: ['**'],
+					dest: 'public/libs'
+				}]
 			},
 			images: {
 				files: [{
@@ -116,14 +121,20 @@ module.exports = function(grunt) {
 				src: [
 					'bower_components/angular/angular.js',
 					'bower_components/angular-route/angular-route.js',
-					'bower_components/angular-resource/angular-resource.js'
-/*					'bower_components/tinymce-dist/tinymce.js',
-					'bower_components/angular-ui-tinymce/src/tinymce.js'*/
+					'bower_components/angular-resource/angular-resource.js',
+					// 'bower_components/tinymce/tinymce.min.js',
+					// 'bower_components/tinymce/plugins/**/*.js',
+					// 'bower_components/tinymce/themes/**/*.js',
+					'bower_components/angular-ui-tinymce/src/tinymce.js',
+					'bower_components/angular-aria/angular-aria.js',
+					'bower_components/angular-animate/angular-animate.js',
+					'bower_components/angular-material/angular-material.js'
 				],
 				dest: 'public/javascripts/libs.js',
 			},
 			css: {
 				src: [
+					 'bower_components/angular-material/angular-material.css'
 				],
 				dest: 'public/styles/css/libs.css'
 			}
