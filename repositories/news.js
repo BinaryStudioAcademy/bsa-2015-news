@@ -8,8 +8,11 @@ var NewsRepository = function(){
 
 NewsRepository.prototype = new Repository();
 
-NewsRepository.prototype.findByCriteria = function() {
-
+NewsRepository.prototype.getAllNews = function(callback) {
+	News.find()
+		.populate('author', 'name')
+		.populate('comments.author', 'name')
+		.exec(callback);
 };
 
 module.exports = new NewsRepository();
