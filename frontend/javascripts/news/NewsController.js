@@ -191,7 +191,6 @@ function NewsController() {
 		vm.posts = vm.newsPosts; 
 	};
 
-
 	vm.newsArr();
 
 	vm.sandboxArr = function() {
