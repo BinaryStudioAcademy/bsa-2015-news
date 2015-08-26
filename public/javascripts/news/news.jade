@@ -8,11 +8,32 @@
 	aside
 		poll-widget
 	#content
+		.tabs
+		.tabsdemoDynamicHeight
+			md-content.md-padding
+				md-tabs(md-dynamic-height='', md-border-bottom='')
+					md-tab(label='one')
+						md-content.md-padding
+							h1.md-display-2 Tab One
+							p
+								| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi.
+					md-tab(label='two')
+						md-content.md-padding
+							h1.md-display-2 Tab Two
+							p
+								| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue.
+
+			.company-news(ng-click='toggleTabs = false')
+				| Company news
+			.sandbox(ng-click='toggleTabs = true')
+				| Sandbox
 		.search
 			input.form-control(type='text', placeholder='Search' ng-model="search.title")
 			button.btn.btn-success(type='button' ng-click='newsCtrl.toggleForm()') New post
 		#scroll-block
-			.news
+			.sandbox(ng-show='toggleTabs')
+				| checking
+			.news(ng-hide='toggleTabs')
 				form.news-massage(method="post" ng-hide='newsCtrl.formView')
 					.form-group
 						input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
