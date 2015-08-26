@@ -198,10 +198,6 @@ function NewsController() {
 		vm.posts[parentIndex].comments.splice(index, 1);
 	};
 
-<<<<<<< HEAD
-}
-},{"../app":1}],3:[function(require,module,exports){
-=======
 	vm.commentLike = function(parentIndex, index) {
 		var comLike = vm.posts[parentIndex].comments[index].commentLikes;
 		if(comLike.indexOf(vm.user) < 0){
@@ -213,7 +209,6 @@ function NewsController() {
 
 }
 },{"../app":1}],3:[function(require,module,exports){
->>>>>>> e01b7495b6a9e80e73a94ac9357d7e299bca4124
 var app = require('../app');
 app.controller("PollController", PollController);
 
