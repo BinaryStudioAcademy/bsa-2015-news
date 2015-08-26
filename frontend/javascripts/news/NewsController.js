@@ -2,9 +2,30 @@ var app = require('../app');
 
 app.controller('NewsController', NewsController);
 
+/*app.filter("sanitize", ['$sce', function($sce) {
+	return function(htmlCode){
+		return $sce.trustAsHtml(htmlCode);
+	}
+}]);*/
+app.filter('unsafe', function($sce) { 
+	return $sce.trustAsHtml; 
+});
+
 function NewsController() {
 
 	var vm = this;
+
+	vm.tinymceOptions = {
+		inline: false,
+		plugins: [
+				"advlist autolink lists link image charmap print preview anchor",
+				"searchreplace visualblocks code fullscreen",
+				"insertdatetime media table contextmenu paste"
+		],
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+		skin: 'lightBlue',
+		theme : 'modern'
+	};
 
 	vm.text = 'News';
 	vm.user ='Viktoriya Voytyuk';
@@ -20,12 +41,35 @@ function NewsController() {
 		comments: [{
 				author: 'Taras Zinkiv',
 				text: 'Couldn\'t agree more, people who want to go camping in the UK are insane, those who want to do it abroad, the answer is simple',
-				date: '2015.08.24'
+				date: '2015.08.24',
+				commentLikes:[
+				'Luis Ving',
+				'Jase Carm'
+				]
 			},
 			{
 				author: 'Anya Burshtyko',
 				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24'
+				date: '2015.08.24',
+				commentLikes:[
+				'Luis Ving'
+				]
+			},
+			{
+				author: 'Anya Burshtyko',
+				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
+				date: '2015.08.24',
+				commentLikes:[
+				'Luis Ving'
+				]
+			},
+			{
+				author: 'Anya Burshtyko',
+				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
+				date: '2015.08.24',
+				commentLikes:[
+				'Luis Ving'
+				]
 			}]
 		},
 		{
@@ -51,7 +95,8 @@ function NewsController() {
 			comments: [{
 					author: 'Anya Burshtyko',
 					text: 'I spent my weekend here, great seaview, exellent staff.',
-					date: '2015.07.07'
+					date: '2015.07.07',
+					commentLikes: []
 				}]
 		},
 		{
@@ -125,15 +170,24 @@ function NewsController() {
 		vm.posts[index].comments.unshift({
 			author: vm.user,
 			text: vm.commentText[index],
-			date: Date.parse(new Date())
+			date: Date.parse(new Date()),
+			commentLikes: []
 		});
 		vm.commentText[index] = '';
-		vm.commentsViev[index] = true;
+		vm.commentForm[index] = false;
 	};
 
 	vm.deleteComment = function(parentIndex, index) {
 		vm.posts[parentIndex].comments.splice(index, 1);
 	};
 
+	vm.commentLike = function(parentIndex, index) {
+		var comLike = vm.posts[parentIndex].comments[index].commentLikes;
+		if(comLike.indexOf(vm.user) < 0){
+			comLike.push(vm.user);
+		}else{
+			comLike.splice(comLike.indexOf(vm.user), 1);
+		}
+	};
 
 }

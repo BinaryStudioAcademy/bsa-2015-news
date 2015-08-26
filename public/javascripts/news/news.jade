@@ -2,7 +2,6 @@
 	header
 		span {{newsCtrl.text}}
 		#user-log
-			img(src='http://i.imgur.com/wNqHnG6.png', ,='', alt='user logo')
 			span {{newsCtrl.user}}
 			button.btn.btn-warning Log out
 	nav
@@ -13,26 +12,40 @@
 			input.form-control(type='text', placeholder='Search' ng-model="search.title")
 			button.btn.btn-success(type='button' ng-click='newsCtrl.toggleForm()') New post
 		#scroll-block
-			form.news-massage(ng-hide='newsCtrl.formView')
-				.form-group
-					input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
-					textarea.form-control(rows="5" cols="20" ng-model="newsCtrl.bodyNews" placeholder='Vrite some news' required)
-				button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
-				button.btn.btn-warning(type='reset') Reset
-				
-			.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ')
-				img(src='http://www.abramovo.ru/avatary/albums/animated/thumb_bebbdb2368204aab18f6aa25d7317530.gif')
-				h3
-					a(href='') {{news.title}}
-				span.delete-news(ng-click='newsCtrl.deleteNews($index)' ) X
-				p {{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
-					span(ng-hide='news.body.length < 200 ')
-						a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
-						a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
-				.person-info
-					span {{news.author||newsCtrl.user}}
-					span 
-					span {{news.date | date:'yyyy-MM-dd HH:mm'}}
-				.coments-info
-					span.glyphicon.glyphicon-thumbs-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
-					span.glyphicon.glyphicon-comment 5 
+			.news
+				form.news-massage(method="post" ng-hide='newsCtrl.formView')
+					.form-group
+						input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
+						textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
+					button.btn.btn-success(type='submit' ng-click='newsCtrl.createNews()') Create
+					button.btn.btn-warning(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
+					
+				.news-massage(ng-repeat='news in newsCtrl.posts | filter: search track by $index ')
+					.title {{news.title}}
+						i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteNews($index)' )
+					.body
+						div(ng-bind-html='news.body| unsafe')
+								//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
+							span(ng-hide='news.body.length < 200 ')
+								a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
+								a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
+					.footer
+						span.author {{news.author||newsCtrl.user}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
+						span 
+							a(ng-click='newsCtrl.toggleCommentForm($index)')
+								|comment
+						span.comments-count
+							i.fa.fa-commenting-o(ng-click='newsCtrl.toggleComments($index)') {{news.comments.length}}
+						span.likes
+							i.fa.fa-thumbs-o-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
+
+					.comments(ng-show='newsCtrl.commentForm[$index]')
+						textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
+						button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment($index)') Add comment
+					.comment-wrap
+						.comment(ng-repeat='comment in news.comments' ng-hide='newsCtrl.commentsViev[$parent.$index]')
+							i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 
+							span.author {{comment.author}}
+							.body(ng-bind-html='comment.text| unsafe')
+							span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
+							i.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index)') {{comment.commentLikes.length}}

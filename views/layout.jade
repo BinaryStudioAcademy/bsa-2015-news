@@ -8,10 +8,14 @@ html(lang="en")
 		link(href="styles/css/style.css", rel="stylesheet")
 		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
 		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css')
+
 	body
 		block content
 		script(src="javascripts/libs.js")
 		script(src='javascripts/main.js')
+		script(type='text/javascript', src='javascripts/tinymce-dist/tinymce.js')
+		script(type='text/javascript', src='javascripts/angular-ui-tinymce/src/tinymce.js')
+
 
 		script.
 			angular.bootstrap(document, ['news']);
