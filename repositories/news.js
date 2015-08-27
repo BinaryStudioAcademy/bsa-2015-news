@@ -12,6 +12,7 @@ NewsRepository.prototype.getAllNews = function(callback) {
 	News.find()
 		.populate('author', 'name')
 		.populate('comments.author', 'name')
+		.sort('-date')
 		.exec(callback);
 };
 

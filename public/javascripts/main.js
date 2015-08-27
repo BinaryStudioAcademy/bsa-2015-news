@@ -79,6 +79,51 @@ function HRService() {
 	}
 }
 },{"../app":1}],5:[function(require,module,exports){
+var app = require('../app.js');
+	app.factory('NewsService', NewsService);
+
+	NewsService.$inject = ["$resource"];
+
+	function NewsService($resource) {
+		return {
+			getNews: getNews,
+			createNews: createNews,
+			editNews: editNews,
+			deleteNews: deleteNews
+		};
+
+		function getRequest() {
+			return $resource("/api/news/:id", { id: "@id"});
+		}
+
+		function getNews() {
+			return $resource("/api/news").query().$promise;
+		}
+
+		function createNews(news) {
+			//return  $resource().query().$promise.save(news).$promise;
+			return $resource("/api/news", {}, {
+						save: { method: 'POST', 
+							headers: {'Content-Type': 'application/json'}
+						}
+					}).save(news).$promise;
+		}
+
+		function editNews(newsId, news) {
+			var data = $resource("/api/news/:id", { id: "@id" }, {
+				update: {
+					method: "PUT"
+				}
+			});
+			return data.update({ id: newsId }, news).$promise;
+		}
+
+		function deleteNews(newsId) {
+			return getRequest().remove({ id: newsId }).$promise;
+		}
+	}
+
+},{"../app.js":1}],6:[function(require,module,exports){
 var app = require('../app');
 
 app.controller('NewsController', NewsController);
@@ -86,126 +131,63 @@ app.filter('unsafe', function($sce) {
 	return $sce.trustAsHtml; 
 });
 
-function NewsController() {
+NewsController.$inject = ['NewsService'];
 
+function NewsController(NewsService) {
 	var vm = this;
-	
+	vm.text = 'News';
+	vm.formView = true;
+	vm.user ={
+		_id: "1111111111",
+		name:'Viktoriya Voytyuk',
+		//login: 'voytuk@voytuk'
+	};
+
 	vm.tinymceOptions = {
 		inline: false,
-		plugins: [
+/*		plugins: [
 				"advlist autolink lists link image charmap print preview anchor",
 				"searchreplace visualblocks code fullscreen",
 				"insertdatetime media table contextmenu paste"
 		],
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",*/
 		skin: 'lightgray',
 		theme : 'modern'
 	};
 
-	vm.text = 'News';
-	vm.user ='Viktoriya Voytyuk';
+	vm.posts = [];
+	getNews();
+	function getNews(){
+		NewsService.getNews().then(function(data){
+			vm.posts = data.slice(0,20);
+		});
+	}
 
-	vm.newsPosts=[{
-		title: 'Camping',
-		body: 'Camping is an elective outdoor recreational activity. Generally held, participants leave developed areas to spend time outdoors in more natural ones in pursuit of activities providing them enjoyment. To be regarded as "camping" a minimum of one night is spent outdoors, distinguishing it from day-tripping, picnicking, and other similarly short-term recreational activities',
-		author: 'Nazar Dubas',
-		date: '2015.08.23',
-		likes: [
-			'Veronica Shvets'
-			],
-		comments: [{
-				author: 'Taras Zinkiv',
-				text: 'Couldn\'t agree more, people who want to go camping in the UK are insane, those who want to do it abroad, the answer is simple',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving',
-				'Jase Carm'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			}]
-		},
-		{
-		title: 'Club or open air?',
-		body: 'If there is one message this blog supports it is the fact that Berlin has an awesome nightlife. In the monthly party-agenda you can find great parties in unique clubs and you have not been to Berlin if you did not visit a few of these famous places. But still there are a few obvious benefits for visiting an open-air instead of a club.' ,
-		author: 'Taras Zinkiv',
-		date: '2015.07.30',
-		likes: [
-			'Taras Zinkiv'
-			],
-		comments: []
-		},
-		{
-			title: 'Vacation in spain',
-			body: 'A single visit to Spain can result in many different experiences. Culture lovers and history buffs can be awed at more than 40 UNESCO World Heritage sites and more than 1,000 museums. Outdoor enthusiasts can walk, hike and golf their way across stunning landscapes. And foodies can get their fill of delectable regional cuisine paired with incomparable wines.' ,
-			author: 'Veronica Shvets',
-			date: '2015.07.06',
-			likes: [
-				'John Smith',
-				'Luis Ving',
-				'Jase Carm'
-				],
-			comments: [{
-					author: 'Anya Burshtyko',
-					text: 'I spent my weekend here, great seaview, exellent staff.',
-					date: '2015.07.07',
-					commentLikes: []
-				}]
-		},
-		{
-			title: 'Party',
-			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
-			author: 'Anya Burshtyko',
-			date: '2015.07.11',
-			likes: [
-				'John Smith',
-				'Mark Pol'
-				],
-			comments: []
+	vm.createNews = function() {
+		vm.news = {};
+		if(vm.titleNews && vm.bodyNews){
+			vm.news = {
+				title: vm.titleNews,
+				body: vm.bodyNews,
+				//author: vm.user._id,
+				date: Date.parse(new Date()),
+				comments: [],
+				likes: []
+			};
 		}
-	];
+		console.log(vm.news);
+		NewsService.createNews(vm.news).then(function() {
+			getNews();
+		});
+		vm.formView = true;
+	};
 
 
-
-	vm.formView = true;
 	vm.toggleForm = function() {
 		vm.formView = !vm.formView;
 	};
 
-	vm.createNews = function() {
-		if(vm.titleNews && vm.bodyNews){
-			vm.posts.unshift({
-				title: vm.titleNews,
-				body: vm.bodyNews,
-				author: vm.user,
-				date: Date.parse(new Date()),
-				comments: [],
-				likes: []
-			});
-		}
-	};
+
 
 	vm.toggleText = [];
 	vm.textLength = [];
@@ -220,8 +202,10 @@ function NewsController() {
 	};
 
 
-	vm.deleteNews = function(index) {
-		vm.posts.splice(index, 1);
+	vm.deleteNews = function(newsId) {
+		NewsService.deleteNews(newsId).then(function() {
+			getNews();
+		});
 	};
 
 
@@ -243,18 +227,28 @@ function NewsController() {
 		vm.commentsViev[index] =!vm.commentsViev[index];
 	};
 
-	vm.newComment = function(index) {
-		vm.posts[index].comments.unshift({
+	vm.newComment = function(index, newsId) {
+		console.log(newsId);
+		 vm.posts[index].comments.unshift({
+		 	_id: '11273832qq',
 			author: vm.user,
-			text: vm.commentText[index],
+			body: vm.commentText[index],
 			date: Date.parse(new Date()),
 			commentLikes: []
 		});
+		vm.comments = vm.posts[index].comments;
+
+/*		NewsService.editNews(newsId, vm.comments).then(function(){
+			getNews();
+			console.log(vm.posts[index].comments);
+		});*/
+
 		vm.commentText[index] = '';
 		vm.commentForm[index] = false;
 	};
 
 	vm.deleteComment = function(parentIndex, index) {
+
 		vm.posts[parentIndex].comments.splice(index, 1);
 	};
 
@@ -268,102 +262,22 @@ function NewsController() {
 	};
 // Sandbox
 
-	vm.newsArr = function() {
-		vm.posts = vm.newsPosts; 
-	};
+	// vm.newsArr = function() {
+	// 	vm.posts = vm.newsPost; 
+	// };
 
-	vm.newsArr();
+	// vm.newsArr();
 
-	vm.sandboxArr = function() {
-		vm.posts = vm.sandPosts;
-	};
+	// vm.sandboxArr = function() {
+	// 	vm.posts = vm.sandPosts;
+	// };
 
 
-vm.sandPosts=[{
-		title: 'sandCamping',
-		body: 'Camping is an elective outdoor recreational activity. Generally held, participants leave developed areas to spend time outdoors in more natural ones in pursuit of activities providing them enjoyment. To be regarded as "camping" a minimum of one night is spent outdoors, distinguishing it from day-tripping, picnicking, and other similarly short-term recreational activities',
-		author: 'Nazar Dubas',
-		date: '2015.08.23',
-		likes: [
-			'Veronica Shvets'
-			],
-		comments: [{
-				author: 'Taras Zinkiv',
-				text: 'Couldn\'t agree more, people who want to go camping in the UK are insane, those who want to do it abroad, the answer is simple',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving',
-				'Jase Carm'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			},
-			{
-				author: 'Anya Burshtyko',
-				text: 'Sorry, you went camping for a second date?! I think there might be a clue to the cause of your problem there.',
-				date: '2015.08.24',
-				commentLikes:[
-				'Luis Ving'
-				]
-			}]
-		},
-		{
-		title: 'sandClub or open air?',
-		body: 'If there is one message this blog supports it is the fact that Berlin has an awesome nightlife. In the monthly party-agenda you can find great parties in unique clubs and you have not been to Berlin if you did not visit a few of these famous places. But still there are a few obvious benefits for visiting an open-air instead of a club.' ,
-		author: 'Taras Zinkiv',
-		date: '2015.07.30',
-		likes: [
-			'Taras Zinkiv'
-			],
-		comments: []
-		},
-		{
-			title: 'sandVacation in spain',
-			body: 'A single visit to Spain can result in many different experiences. Culture lovers and history buffs can be awed at more than 40 UNESCO World Heritage sites and more than 1,000 museums. Outdoor enthusiasts can walk, hike and golf their way across stunning landscapes. And foodies can get their fill of delectable regional cuisine paired with incomparable wines.' ,
-			author: 'Veronica Shvets',
-			date: '2015.07.06',
-			likes: [
-				'John Smith',
-				'Luis Ving',
-				'Jase Carm'
-				],
-			comments: [{
-					author: 'Anya Burshtyko',
-					text: 'I spent my weekend here, great seaview, exellent staff.',
-					date: '2015.07.07',
-					commentLikes: []
-				}]
-		},
-		{
-			title: 'sandParty',
-			body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam reiciendis odio id commodi nihil tenetur, iure mollitia assumenda eius asperiores laborum culpa accusamus accusantium debitis, rem, magni quo omnis porro. Temporibus minus commodi accusantium at maiores illo optio deserunt rerum ducimus laudantium accusamus iusto, quis perspiciatis officiis natus porro ratione! ' ,
-			author: 'Anya Burshtyko',
-			date: '2015.07.11',
-			likes: [
-				'John Smith',
-				'Mark Pol'
-				],
-			comments: []
-		}
-	];
+
 
 
 }
-},{"../app":1}],6:[function(require,module,exports){
+},{"../app":1}],7:[function(require,module,exports){
 var app = require('../app');
 app.controller("PollController", PollController);
 
@@ -403,7 +317,7 @@ function PollController(PollService) {
         }
     }
 }
-},{"../app":1}],7:[function(require,module,exports){
+},{"../app":1}],8:[function(require,module,exports){
 var app = require('../app');
 app.directive("pollWidget", PollDirective);
 
@@ -413,7 +327,7 @@ function PollDirective() {
         templateUrl: "./templates/poll/poll.html"
     };
 }
-},{"../app":1}],8:[function(require,module,exports){
+},{"../app":1}],9:[function(require,module,exports){
 var app = require('../app');
 app.factory("PollService", PollService);
 
@@ -517,7 +431,7 @@ function PollService() {
         return questionnaire;
     }
 }
-},{"../app":1}],9:[function(require,module,exports){
+},{"../app":1}],10:[function(require,module,exports){
 var app = require('../app');
 app.controller("VoteFormController", VoteFormController);
 
@@ -530,4 +444,4 @@ function VoteFormController() {
 
     }
 }
-},{"../app":1}]},{},[1,2,3,4,5,6,7,8,9]);
+},{"../app":1}]},{},[1,2,3,4,5,6,7,8,9,10]);
