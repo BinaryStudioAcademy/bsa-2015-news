@@ -2,7 +2,7 @@
 	header
 		span {{newsCtrl.text}}
 		#user-log
-			span {{newsCtrl.user}}
+			span {{newsCtrl.user.name}}
 			button.btn.btn-warning Log out
 	nav
 	aside#left
@@ -21,17 +21,18 @@
 									md-icon.fa.fa-search
 									input(type='text', placeholder='Search' ng-model="search.title")
 								md-button(type='button' ng-click='newsCtrl.toggleForm()') New post
+
+							form.news-message(method="post" ng-hide='newsCtrl.formView')
+								.form-group
+									input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
+									textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
+								md-button.md-create(type='submit' ng-click='newsCtrl.createNews()') Create
+								md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
+
 							.news
-								form.news-massage(method="post" ng-hide='newsCtrl.formView')
-									.form-group
-										input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
-										textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
-									md-button.md-create(type='submit' ng-click='newsCtrl.createNews()') Create
-									md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
-									
-								.news-massage(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
+								.news-message(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
 									.title {{news.title}}
-										i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteNews($index)' )
+										i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteNews(news._id)' )
 									.body
 										div(ng-bind-html='news.body| unsafe')
 												//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
@@ -39,20 +40,20 @@
 												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 									.footer
-										span.author {{news.author||newsCtrl.user}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
+										span.author {{news.author.name||newsCtrl.user.name}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
 										md-button.md-icon-button.fa.fa-comment-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)')
 											md-tooltip Comment
 										span.comments-count
 											md-button.md-icon-button.fa.fa-commenting-o(ng-click='newsCtrl.toggleComments($index)') {{news.comments.length}}
 											md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
-									.comments(ng-show='newsCtrl.commentForm[$index]')
+									.comments(ng-if='newsCtrl.commentForm[$index]')
 										textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
-										button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment($index)') Add comment
+										button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment($index, news._id)') Add comment
 									.comment-wrap
 										.comment(ng-repeat='comment in news.comments' ng-hide='newsCtrl.commentsViev[$parent.$index]')
 											i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 
-											span.author {{comment.author}}
-											.body(ng-bind-html='comment.text| unsafe')
+											span.author {{comment.author.name}}
+											.body(ng-bind-html='comment.body| unsafe')
 											span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
 											i.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index)') {{comment.commentLikes.length}}
 
@@ -63,15 +64,14 @@
 									md-icon.fa.fa-search
 									input(type='text', placeholder='Search' ng-model="searchAll")
 								md-button(type='button' ng-click='newsCtrl.toggleForm()') New post
+							form.news-message(method="post" ng-hide='newsCtrl.formView')
+								.form-group
+									input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
+									textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
+								md-button.md-create(type='submit' ng-click='newsCtrl.createNews()') Create
+								md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 							.news
-								form.news-massage(method="post" ng-hide='newsCtrl.formView')
-									.form-group
-										input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
-										textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
-									md-button.md-create(type='submit' ng-click='newsCtrl.createNews()') Create
-									md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
-									
-								.news-massage(ng-repeat='news in newsCtrl.posts | filter: searchAll track by $index ')
+								.news-message(ng-repeat='news in newsCtrl.posts | filter: searchAll track by $index ')
 									.title
 										img.avatar(src='http://lorempixel.com/50/50/cats/8/') 
 										| {{news.title}}
@@ -83,7 +83,7 @@
 												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 									.footer
-										span.author {{news.author||newsCtrl.user}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
+										span.author {{news.author.name||newsCtrl.user}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
 										
 										md-button.md-icon-button.fa.fa-comment-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)')
 											md-tooltip Comment
@@ -91,13 +91,14 @@
 											md-button.md-icon-button.fa.fa-commenting-o(ng-click='newsCtrl.toggleComments($index)') {{news.comments.length}}
 											md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.like($index)') {{news.likes.length}}
 
-									.comments(ng-show='newsCtrl.commentForm[$index]')
+									.comments(ng-if='newsCtrl.commentForm[$index]')
 										textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
-										button.btn.btn-coment.form-control(type='submit' ng-click='newsCtrl.newComment($index)') Add comment
+										md-button.btn.btn-comment.form-control(type='submit' ng-click='newsCtrl.newComment(news._id)') Add comment
 									.comment-wrap
 										.comment(ng-repeat='comment in news.comments' ng-hide='newsCtrl.commentsViev[$parent.$index]')
 											i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 
-											span.author {{comment.author}}
-											.body(ng-bind-html='comment.text| unsafe')
+											span.author {{comment.author.name}}
+											.body(ng-bind-html='comment.body| unsafe')
 											span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
 											i.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index)') {{comment.commentLikes.length}}
+											//-
