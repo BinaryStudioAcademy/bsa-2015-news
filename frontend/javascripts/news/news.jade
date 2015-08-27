@@ -36,9 +36,9 @@
 									.body
 										div(ng-bind-html='news.body| unsafe')
 												//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
-											span(ng-hide='news.body.length < 200 ')
-												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
-												a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
+											//- span(ng-hide='news.body.length < 200 ')
+											//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
+											//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 									.footer
 										span.author {{news.author.name||newsCtrl.user.name}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
 										md-button.md-icon-button.fa.fa-comment-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)')
