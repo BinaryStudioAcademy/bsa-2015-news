@@ -3,9 +3,9 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Code review requests
+		md-select(ng-model='rwCtrl.period.value' aria-label='select period')
+			md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
 		md-content
-			md-select(ng-model='rwCtrl.period.value')
-				md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
 			.list-item(ng-repeat='request in rwCtrl.upcoming[rwCtrl.period.value]')
 				.item-content
 					div
