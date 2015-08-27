@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var commentSchema = new Schema({
 	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	body: String,
-	date: Number
+	date: Number,
+	likes: [mongoose.Schema.ObjectId]
 });
 
 var newsSchema = new Schema({

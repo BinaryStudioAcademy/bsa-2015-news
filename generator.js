@@ -36,7 +36,8 @@ _.times(50, function(n) {
 _.times(200, function(n) {
 	var news = Factory.build('News', {author: _.sample(db.users)._id, comments: [], likes: []});
 	_.times(casual.integer(1, 5), function(nn) {
-		var comment = {author: _.sample(db.users)._id, body: casual.title, date: news.date + casual.integer(200, 350) * nn};
+		var comment = {author: _.sample(db.users)._id, body: casual.title, date: news.date + casual.integer(200, 350) * nn, likes: []};
+		comment.likes = _.pluck(_.sample(db.users, casual.integer(0, 10)), '_id');
 		news.comments.push(comment);
 	});
 	news.likes = _.pluck(_.sample(db.users, casual.integer(0, 10)), '_id');
