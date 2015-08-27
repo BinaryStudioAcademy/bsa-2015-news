@@ -28,7 +28,7 @@ function HRService() {
 		},
 		{
 			id: 3,
-			message: "yetSomeOneNew@super.site has done something nice to everybody",
+			message: "yetSomeOneNew@super.site has done something nice",
 			tag: 0,
 			time: new Date("2015-08-09T00:15:00").toLocaleString(),
 			url: "#/user/edit/3",
