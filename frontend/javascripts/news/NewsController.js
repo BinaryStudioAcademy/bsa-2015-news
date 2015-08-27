@@ -19,12 +19,12 @@ function NewsController(NewsService) {
 
 	vm.tinymceOptions = {
 		inline: false,
-/*		plugins: [
+		plugins: [
 				"advlist autolink lists link image charmap print preview anchor",
 				"searchreplace visualblocks code fullscreen",
 				"insertdatetime media table contextmenu paste"
 		],
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",*/
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 		skin: 'lightgray',
 		theme : 'modern'
 	};
@@ -108,10 +108,9 @@ function NewsController(NewsService) {
 			author: vm.user,
 			body: vm.commentText[index],
 			date: Date.parse(new Date()),
-			commentLikes: []
+			likes: []
 		});
-		vm.comments = vm.posts[index].comments;
-
+console.log(vm.posts);
 /*		NewsService.editNews(newsId, vm.comments).then(function(){
 			getNews();
 			console.log(vm.posts[index].comments);
@@ -127,7 +126,7 @@ function NewsController(NewsService) {
 	};
 
 	vm.commentLike = function(parentIndex, index) {
-		var comLike = vm.posts[parentIndex].comments[index].commentLikes;
+		var comLike = vm.posts[parentIndex].comments[index].likes;
 		if(comLike.indexOf(vm.user) < 0){
 			comLike.push(vm.user);
 		}else{

@@ -110,8 +110,7 @@ function NewsController(NewsService) {
 			date: Date.parse(new Date()),
 			commentLikes: []
 		});
-		vm.comments = vm.posts[index].comments;
-
+console.log(vm.posts);
 /*		NewsService.editNews(newsId, vm.comments).then(function(){
 			getNews();
 			console.log(vm.posts[index].comments);
