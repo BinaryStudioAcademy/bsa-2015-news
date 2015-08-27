@@ -101,4 +101,3 @@
 											.body(ng-bind-html='comment.body| unsafe')
 											span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
 											i.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index)') {{comment.commentLikes.length}}
-											//-
