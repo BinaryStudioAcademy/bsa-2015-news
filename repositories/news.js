@@ -16,4 +16,8 @@ NewsRepository.prototype.getAllNews = function(callback) {
 		.exec(callback);
 };
 
+NewsRepository.prototype.updatwComment = function(newsId, body, callback) {
+	News.update({_id: newsId},{$push:{comments: body}})
+	.exec(callback);
+}
 module.exports = new NewsRepository();
