@@ -210,11 +210,7 @@ function NewsController(NewsService) {
 	var vm = this;
 	vm.text = 'News';
 	vm.formView = true;
-	vm.user ={
-		_id: "1111111111",
-		name:'Viktoriya Voytyuk',
-		//login: 'voytuk@voytuk'
-	};
+	vm.user ='55ddbde6d636c0e46a23fc90';
 
 	vm.tinymceOptions = {
 		inline: false,
@@ -242,17 +238,21 @@ function NewsController(NewsService) {
 			vm.news = {
 				title: vm.titleNews,
 				body: vm.bodyNews,
-				//author: vm.user._id,
+				// author: vm.user._id,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: []
 			};
+		vm.titleNews = '';
+		vm.bodyNews = '';
+		vm.formView = true;
 		}
-		console.log(vm.news);
+
 		NewsService.createNews(vm.news).then(function() {
 			getNews();
 		});
-		vm.formView = true;
+
+
 	};
 
 
@@ -301,19 +301,17 @@ function NewsController(NewsService) {
 	};
 
 	vm.newComment = function(index, newsId) {
-		console.log(newsId);
-		 vm.posts[index].comments.unshift({
-		 	_id: '11273832qq',
+
+		var comment = {
 			author: vm.user,
 			body: vm.commentText[index],
 			date: Date.parse(new Date()),
 			likes: []
-		});
-console.log(vm.posts);
-/*		NewsService.editNews(newsId, vm.comments).then(function(){
-			getNews();
-			console.log(vm.posts[index].comments);
-		});*/
+			};
+			
+			NewsService.editNews(newsId, comment).then(function(){
+				vm.posts[index].comments.unshift(comment);
+			});
 
 		vm.commentText[index] = '';
 		vm.commentForm[index] = false;
