@@ -3,3 +3,39 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Add expense
+		md-content
+			form.expense-form(name="expenseForm", ng-controller="ExpenseController as formCtrl",
+				ng-submit="expenseForm.$valid && formCtrl.createExpense(categoryModel, subcategoryModel)", novalidate)
+				md-input-container.input-container
+					label Expense name
+					input(type="text", name='Name', ng-model="formCtrl.expense.name", typeahead="expense.name for expense in expCtr.allExpenses | filter:$viewValue | limitTo:8", required)
+				md-input-container.input-container
+					label Date
+					input(type='date', name='Date', ng-model="formCtrl.date", required)
+				md-input-container.input-container
+					md-select(name='Category', ng-model="categoryModel", ng-change="formCtrl.getSubcategories(categoryModel)", 
+						aria-label="Category", required)
+				md-input-container.input-container
+					md-select(name='Subcategory', ng-model="subcategoryModel", ng-change="formCtrl.setLeftSubcategoryBudget(categoryModel, subcategoryModel)", 
+						aria-label="Subcategory", required)
+				md-input-container.input-container
+					label Cost
+					input(type='number', min="0", name='Cost', ng-model="formCtrl.expense.price", required)
+				md-input-container.input-container
+					md-select(name='Currency', ng-model="formCtrl.expense.currency", ng-change="formCtrl.changeCurrency(categoryModel, subcategoryModel)", aria-label="Currency", required)
+						md-option(ng-value="USD") USD
+						md-option(ng-value="UAH") UAH
+				md-checkbox(name='Personal', ng-model="formCtrl.expense.personal", aria-label="Personal budget", ng-click="formCtrl.setPersonalLeftBudget(categoryModel, subcategoryModel)")
+					| Personal budget
+				md-input-container.input-container
+					label Description
+					textarea(ng-model="formCtrl.expense.description")
+				.money-left(ng-show="subcategoryModel")
+					#form-category-left
+						b {{formCtrl.budgetType}} budget left:
+						span.green  {{formCtrl.leftBudget - formCtrl.expense.price | currency:""}} {{formCtrl.expense.currency}}
+					#form-subcategory-left(ng-hide="formCtrl.expense.personal")
+						br
+						b {{subcategoryModel.name}} budget left:&nbsp;
+						span.green {{formCtrl.leftSubcategoryBudget - formCtrl.expense.price | currency:""}} {{formCtrl.expense.currency}}
+				button#add-expense-button.md-raised.md-primary.md-button.md-default-theme(type="submit") Add expense
