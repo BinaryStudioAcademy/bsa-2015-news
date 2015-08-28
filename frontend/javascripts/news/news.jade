@@ -7,6 +7,7 @@
 	nav
 	aside#left
 		code-review-widget
+		expense-widget
 	aside#right
 		poll-widget
 		hr-widget
@@ -94,7 +95,7 @@
 
 									.comments(ng-if='newsCtrl.commentForm[$index]')
 										textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
-										md-button.btn.btn-comment.form-control(type='submit' ng-click='newsCtrl.newComment(news._id)') Add comment
+										md-button.btn.btn-comment.form-control(type='submit' ng-click='newsCtrl.newComment($index, news._id)') Add comment
 									.comment-wrap
 										.comment(ng-repeat='comment in news.comments' ng-hide='newsCtrl.commentsViev[$parent.$index]')
 											i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)') 

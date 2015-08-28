@@ -20,6 +20,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('teal', {
 					'default': '800'
 				});
+			$mdThemingProvider.theme('addExpenseWidget')
+				.primaryPalette('green', {
+					'default': '800'
+				});
 			$mdThemingProvider.theme('pollWidget')
 				.primaryPalette('indigo', {
 					'default': '800'
@@ -93,6 +97,65 @@ function ReviewService($resource) {
 }
 },{"../app":1}],5:[function(require,module,exports){
 var app = require('../app');
+app.controller("ExpenseController", ExpenseController);
+
+ExpenseController.$inject = ["ExpenseService"];
+
+function ExpenseController(ExpenseService) {
+	var vm = this;
+
+	//ExpenseService.getPopular().then(function(data) {
+	//	vm.popular = data;
+	//});
+	//vm.periods = [
+	//{
+	//	value: 'today',
+	//	text: 'Upcoming today'
+	//},
+	//{
+	//	value: 'week',
+	//	text: 'Upcoming this week'
+	//},
+	//{
+	//	value: 'month',
+	//	text: 'Upcoming this month'
+	//}
+	//];
+	//vm.period = vm.periods[0];
+//
+	//vm.upcoming = ExpenseService.getPopular();
+	//vm.upcoming.week = vm.upcoming.month.slice(0, 5);
+	//vm.upcoming.today = vm.upcoming.month.slice(0, 2);
+}
+},{"../app":1}],6:[function(require,module,exports){
+var app = require('../app');
+app.directive("expenseWidget", ExpenseDirective);
+
+function ExpenseDirective() {
+	return {
+		restrict: "E",
+		templateUrl: "./templates/expense/Expense.html",
+		replace: true
+	};
+}
+},{"../app":1}],7:[function(require,module,exports){
+var app = require('../app');
+app.factory("ExpenseService", ExpenseService);
+
+ExpenseService.$inject = ["$resource"];
+
+function ExpenseService($resource) {
+	return {
+		getWorld: getWorld
+	};
+
+	function getWorld() {
+		return 'Hello world';
+		//return $resource("http://team.binary-studio.com/Expenser/api/v1/Expenserequest/popular").query().$promise;
+	}
+}
+},{"../app":1}],8:[function(require,module,exports){
+var app = require('../app');
 app.controller("HRController", HRController);
 
 HRController.$inject = ["HRService"];
@@ -102,7 +165,7 @@ function HRController(HRService) {
 
 	vm.activities = HRService.getActivities();
 }
-},{"../app":1}],6:[function(require,module,exports){
+},{"../app":1}],9:[function(require,module,exports){
 var app = require('../app');
 app.directive("hrWidget", HRDirective);
 
@@ -113,7 +176,7 @@ function HRDirective() {
 		replace: true
 	};
 }
-},{"../app":1}],7:[function(require,module,exports){
+},{"../app":1}],10:[function(require,module,exports){
 var app = require('../app');
 app.factory("HRService", HRService);
 
@@ -155,7 +218,7 @@ function HRService() {
 		return activities;
 	}
 }
-},{"../app":1}],8:[function(require,module,exports){
+},{"../app":1}],11:[function(require,module,exports){
 var app = require('../app.js');
 	app.factory('NewsService', NewsService);
 
@@ -200,7 +263,7 @@ var app = require('../app.js');
 		}
 	}
 
-},{"../app.js":1}],9:[function(require,module,exports){
+},{"../app.js":1}],12:[function(require,module,exports){
 var app = require('../app');
 
 app.controller('NewsController', NewsController);
@@ -351,7 +414,7 @@ function NewsController(NewsService) {
 
 
 }
-},{"../app":1}],10:[function(require,module,exports){
+},{"../app":1}],13:[function(require,module,exports){
 var app = require('../app');
 app.controller("PollController", PollController);
 
@@ -391,7 +454,7 @@ function PollController(PollService) {
         }
     }
 }
-},{"../app":1}],11:[function(require,module,exports){
+},{"../app":1}],14:[function(require,module,exports){
 var app = require('../app');
 app.directive("pollWidget", PollDirective);
 
@@ -401,7 +464,7 @@ function PollDirective() {
         templateUrl: "./templates/poll/poll.html"
     };
 }
-},{"../app":1}],12:[function(require,module,exports){
+},{"../app":1}],15:[function(require,module,exports){
 var app = require('../app');
 app.factory("PollService", PollService);
 
@@ -505,7 +568,7 @@ function PollService() {
         return questionnaire;
     }
 }
-},{"../app":1}],13:[function(require,module,exports){
+},{"../app":1}],16:[function(require,module,exports){
 var app = require('../app');
 app.controller("VoteFormController", VoteFormController);
 
@@ -518,4 +581,4 @@ function VoteFormController() {
 
     }
 }
-},{"../app":1}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13]);
+},{"../app":1}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
