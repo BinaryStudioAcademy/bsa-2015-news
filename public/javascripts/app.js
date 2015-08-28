@@ -19,6 +19,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('teal', {
 					'default': '800'
 				});
+			$mdThemingProvider.theme('addExpenseWidget')
+				.primaryPalette('green', {
+					'default': '800'
+				});
 			// Приклад теми:
 			//$mdThemingProvider.theme('default')
 			//	.primaryPalette('blue')

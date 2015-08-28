@@ -1,0 +1,33 @@
+#add-expense-widget(ng-controller='ExpenseController as expCtrl' md-theme='addExpenseWidget')
+	md-card.md-whiteframe-z3
+		md-toolbar.md-primary
+			.md-toolbar-tools
+				h2.md-flex Add expense
+		//md-select(ng-model='rwCtrl.period.value' aria-label='select period')
+		//	md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
+		//md-content
+		//	.list-item(ng-repeat='request in rwCtrl.upcoming[rwCtrl.period.value]')
+		//		.item-content
+		//			div
+		//				b Title: 
+		//				| {{request.title}}
+		//			div
+		//				b Group: 
+		//				| {{request.group.title}}
+		//			div
+		//				b Author: 
+		//				| {{request.user.first_name}} {{request.user.last_name}}
+		//			div
+		//				b Review date: 
+		//				| {{request.date_review}}
+		//			div
+		//				b Offers: 
+		//				| {{request.offers_count}}
+		//			div
+		//				b Your offer: 
+		//				a(href='' ng-show='{{$index == 0 || $index > 3}}') Send offer
+		//				span(ng-show='{{$index == 1}}' style='color: green') Accepted
+		//				span(ng-show='{{$index == 2}}') Pending
+		//				span(ng-show='{{$index == 3}}' style='color: red') Declined
+		//				//md-button.md-raised.md-primary Send offer
+		//		md-divider(ng-if='!$last')
