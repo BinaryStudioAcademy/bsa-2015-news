@@ -20,6 +20,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('teal', {
 					'default': '800'
 				});
+			$mdThemingProvider.theme('pollWidget')
+				.primaryPalette('indigo', {
+					'default': '800'
+				});
 			// Приклад теми:
 			//$mdThemingProvider.theme('default')
 			//	.primaryPalette('blue')
@@ -211,7 +215,7 @@ function NewsController(NewsService) {
 	vm.text = 'News';
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
-
+	vm.author = 'Veronika Balko';
 	vm.tinymceOptions = {
 		inline: false,
 		plugins: [

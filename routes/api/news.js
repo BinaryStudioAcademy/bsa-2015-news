@@ -22,11 +22,11 @@ module.exports = function (app) {
 	}, apiResponse);
 
 	app.put('/api/news/:id', function(req, res, next){
-		NewsRepository.update(req.params.id, req.body, function(err, data) {
+/*		NewsRepository.update(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
 			next();
-		});
+		});*/
 		NewsRepository.updatwComment(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;

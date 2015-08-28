@@ -102,28 +102,17 @@ function NewsController(NewsService) {
 	};
 
 	vm.newComment = function(index, newsId) {
-		console.log(newsId);
-/*		 vm.posts[index].comments.unshift({
-			author: vm.user,
-			body: vm.commentText[index],
-			date: Date.parse(new Date()),
-			likes: []
-		});*/
+
 		var comment = {
-
 			author: vm.user,
 			body: vm.commentText[index],
 			date: Date.parse(new Date()),
 			likes: []
-		 };
-		 vm.posts[index].comments.unshift(comment);
-		//console.log(vm.posts);
-		//var comments = vm.posts[index].comments;
-		NewsService.editNews(newsId, comment).then(function(){
-			//getNews();
-
-			console.log(vm.posts[index].comments);
-		});
+			};
+			
+			NewsService.editNews(newsId, comment).then(function(){
+				vm.posts[index].comments.unshift(comment);
+			});
 
 		vm.commentText[index] = '';
 		vm.commentForm[index] = false;

@@ -12,7 +12,7 @@ function NewsController(NewsService) {
 	vm.text = 'News';
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
-
+	vm.author = 'Veronika Balko';
 	vm.tinymceOptions = {
 		inline: false,
 		plugins: [
