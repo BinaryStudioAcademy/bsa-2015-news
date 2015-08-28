@@ -2,11 +2,11 @@
     md-card.md-whiteframe-z3
         md-toolbar.md-primary
             .md-toolbar-tools
-                i.fa.fa-question-circle
                 h2.md-flex &nbsp;Questionnaire
         md-content
             .section-container
-                strong Section:&nbsp;
+                i.fa.fa-question-circle
+                strong &nbsp;Section:&nbsp;
                 span {{ pollCtrl.currentSection.name }}
             md-divider.divider
             form#vote-form(name="voteForm", ng-controller="VoteFormController as voteCtrl",
