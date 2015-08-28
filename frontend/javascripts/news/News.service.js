@@ -12,16 +12,16 @@ var app = require('../app.js');
 		};
 
 		function getRequest() {
-			return $resource("/api/news/:id", { id: "@id"});
+			return $resource("/news/api/news/:id", { id: "@id"});
 		}
 
 		function getNews() {
-			return $resource("/api/news").query().$promise;
+			return $resource("/news/api/news").query().$promise;
 		}
 
 		function createNews(news) {
 			//return  $resource().query().$promise.save(news).$promise;
-			return $resource("/api/news", {}, {
+			return $resource("/news/api/news", {}, {
 						save: { method: 'POST', 
 							headers: {'Content-Type': 'application/json'}
 						}
@@ -29,7 +29,7 @@ var app = require('../app.js');
 		}
 
 		function editNews(newsId, news) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {
 					method: "PUT"
 				}

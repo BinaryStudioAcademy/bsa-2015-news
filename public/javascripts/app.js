@@ -19,13 +19,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('teal', {
 					'default': '800'
 				});
-<<<<<<< HEAD
-=======
 			$mdThemingProvider.theme('addExpenseWidget')
 				.primaryPalette('green', {
 					'default': '800'
 				});
->>>>>>> ef8a1fd8ca3b8fdb9f52071f27442b9f80c14da8
 			$mdThemingProvider.theme('pollWidget')
 				.primaryPalette('indigo', {
 					'default': '800'
