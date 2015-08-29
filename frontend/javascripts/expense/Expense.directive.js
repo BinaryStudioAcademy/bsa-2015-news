@@ -5,6 +5,8 @@ function ExpenseDirective() {
 	return {
 		restrict: "E",
 		templateUrl: "./templates/expense/Expense.html",
-		replace: true
+		replace: true,
+		controller: "ExpenseController",
+		controllerAs: "formCtrl"
 	};
 }

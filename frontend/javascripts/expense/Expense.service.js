@@ -5,11 +5,10 @@ ExpenseService.$inject = ["$resource"];
 
 function ExpenseService($resource) {
 	return {
-		getWorld: getWorld
+		getBudgets: getBudgets
 	};
 
-	function getWorld() {
-		return 'Hello world';
-		//return $resource("http://team.binary-studio.com/Expenser/api/v1/Expenserequest/popular").query().$promise;
+	function getBudgets(year) {
+		return $resource("https://localhost:1335/budget", { where: {"year": year}}).query().$promise;
 	}
 }
