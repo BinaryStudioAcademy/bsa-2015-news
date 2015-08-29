@@ -32,7 +32,7 @@
 
 							.news
 								.news-message(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
-									.title {{news.title}}
+									.title(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
 										i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteNews(news._id)' )
 									.body
 										div(ng-bind-html='news.body| unsafe')

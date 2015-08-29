@@ -9,6 +9,6 @@ function ExpenseService($resource) {
 	};
 
 	function getBudgets(year) {
-		return $resource("https://localhost:1335/budget", { where: {"year": year}}).query().$promise;
+		return $resource("http://localhost:1335/budget", { where: {"year": year}}).query().$promise;
 	}
 }

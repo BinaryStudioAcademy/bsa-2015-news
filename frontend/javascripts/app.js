@@ -7,6 +7,12 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl'
 				})
+				.when('/post/:postId/', {
+					templateUrl: './templates/news/news.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
+				})
 				.otherwise({
 					redirectTo: '/'
 				});

@@ -5,9 +5,9 @@ app.filter('unsafe', function($sce) {
 	return $sce.trustAsHtml; 
 });
 
-NewsController.$inject = ['NewsService'];
+NewsController.$inject = ['NewsService', '$mdDialog', '$location', '$route', '$rootScope', '$filter'];
 
-function NewsController(NewsService) {
+function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $filter) {
 	var vm = this;
 	vm.text = 'News';
 	vm.formView = true;
@@ -30,6 +30,7 @@ function NewsController(NewsService) {
 	function getNews(){
 		NewsService.getNews().then(function(data){
 			vm.posts = data.slice(0,20);
+			checkUrlPath();
 		});
 	}
 
@@ -143,8 +144,67 @@ function NewsController(NewsService) {
 	// 	vm.posts = vm.sandPosts;
 	// };
 
+	// Modal post
+	vm.showModalPost = showModalPost;
+	vm.currentPost = {};
 
+	function checkUrlPath() {
+		var path = $location.path();
 
+		if(path.indexOf("post") > -1) {
+			path = path.split("/").join("");
+			var postId = path.substring(4, path.length);
+			var post = $filter('filter')(vm.posts, {_id: postId});
 
+			if(post[0]) showModalPost(post[0], false);
+		}
+	}
 
+	function showModalPost(post, isSetPath) {
+		vm.currentPost = post;
+
+		if(isSetPath) {
+			// Set url path in browser
+			correctPath();
+			$location.path("/post/" + post._id);
+		}
+
+		$mdDialog.show({
+			controller: DialogController,
+			templateUrl: './templates/news/ModalPost.html',
+			parent: angular.element(document.body),
+			clickOutsideToClose: true
+		}).then(function(answer) {
+			vm.status = 'You said the information was "' + answer + '".';
+		}, function() {
+			// Reset path in browser
+			correctPath();
+			$location.path("/");
+		});
+	}
+
+	function correctPath() {
+		var original = $location.path;
+		$location.path = function(path) {
+			var lastRoute = $route.current;
+			var un = $rootScope.$on('$locationChangeSuccess', function () {
+				$route.current = lastRoute;
+				un();
+			});
+			return original.apply($location, [path]);
+		};
+	}
+
+	function DialogController($scope, $mdDialog) {
+		$scope.post = vm.currentPost;
+		$scope.hide = function() {
+			$mdDialog.hide();
+		};
+		$scope.cancel = function() {
+			console.log(true);
+		};
+		$scope.answer = function(answer) {
+			$mdDialog.hide(answer);
+		};
+	}
 }
