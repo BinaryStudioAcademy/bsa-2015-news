@@ -6,7 +6,15 @@ stackController.$inject = ['StackService'];
 
 function stackController(StackService) {
 	var vm = this;
-	vm.questions = StackService.getQuestions();
+	vm.questions = [];
+	vm.type = 'recent';
+	vm.getQuestions = getQuestions;
 
-	console.log(vm.questions);
+	getQuestions(vm.type);
+
+	function getQuestions(type) {
+		StackService.getQuestions(type).then(function(questions) {
+			vm.questions = questions;
+		});
+	}
 }

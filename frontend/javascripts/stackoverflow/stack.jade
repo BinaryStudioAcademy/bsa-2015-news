@@ -1,0 +1,26 @@
+#stack-widget(md-theme="stackWidget")
+	md-card.md-whiteframe-z3
+		md-toolbar.md-primary
+			.md-toolbar-tools
+				h2.md-flex Questions
+		md-select(ng-model='rwCtrl.period.value' aria-label='select period')
+			md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
+		md-content
+			.list-item(ng-repeat='question in stackCtrl.questions')
+				.item-content
+					div
+						b Question: 
+						| {{question.title}}
+					div
+						b Group: 
+						| {{question.folder.title}}
+					div
+						b Author: 
+						| {{question.user.first_name}} {{question.user.last_name}}
+					div
+						b Answers: 
+						| {{question.answers_count}}
+					div
+						b Votes: 
+						| {{question.vote_value}}
+					md-divider

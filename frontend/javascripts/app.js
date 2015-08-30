@@ -27,6 +27,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('indigo', {
 					'default': '800'
 				});
+			$mdThemingProvider.theme('stackWidget')
+				.primaryPalette('pink', {
+					'default': '800'
+				});
 			// Приклад теми:
 			//$mdThemingProvider.theme('default')
 			//	.primaryPalette('blue')
