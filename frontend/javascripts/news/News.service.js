@@ -30,7 +30,7 @@ var app = require('../app.js');
 		}
 
 		function addComment(newsId, comment) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {
 					method: "PUT"
 				}
@@ -40,7 +40,7 @@ var app = require('../app.js');
 
 		function editNews(newsId, news) {
 
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {
 					method: "PUT"
 				}
