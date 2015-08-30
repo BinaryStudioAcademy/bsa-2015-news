@@ -5,9 +5,9 @@ app.filter('unsafe', function($sce) {
 	return $sce.trustAsHtml; 
 });
 
-NewsController.$inject = ['NewsService'];
+NewsController.$inject = ['NewsService', '$scope'];
 
-function NewsController(NewsService) {
+function NewsController(NewsService, $scope) {
 	var vm = this;
 	vm.text = 'News';
 	vm.formView = true;
@@ -18,11 +18,17 @@ function NewsController(NewsService) {
 		plugins: [
 				"advlist autolink lists link image charmap print preview anchor",
 				"searchreplace visualblocks code fullscreen",
+				'print textcolor',
 				"insertdatetime media table contextmenu paste"
 		],
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor | backcolor",
 		skin: 'lightgray',
 		theme : 'modern'
+	};
+
+	vm.tinymceOptionsComment = {
+		menubar: false, 
+		statusbar: false,
 	};
 
 	vm.posts = [];
@@ -30,8 +36,14 @@ function NewsController(NewsService) {
 	function getNews(){
 		NewsService.getNews().then(function(data){
 			vm.posts = data.slice(0,20);
+					console.log(vm.posts);
 		});
 	}
+
+	vm.editpost = function(newsId, newpost) {
+			NewsService.editNews(newsId, newpost).then(function(){
+			});
+	};
 
 	vm.createNews = function() {
 		vm.news = {};
@@ -101,20 +113,20 @@ function NewsController(NewsService) {
 		vm.commentsViev[index] =!vm.commentsViev[index];
 	};
 
-	vm.newComment = function(index, newsId) {
+	vm.newComment = function(commentText, newsId, index) {
 
 		var comment = {
 			author: vm.user,
-			body: vm.commentText[index],
+			body: commentText,
 			date: Date.parse(new Date()),
 			likes: []
 			};
 			
-			NewsService.editNews(newsId, comment).then(function(){
+			NewsService.addComment(newsId, comment).then(function(){
 				vm.posts[index].comments.unshift(comment);
 			});
 
-		vm.commentText[index] = '';
+//		vm.commentText[index] = '';
 		vm.commentForm[index] = false;
 	};
 
@@ -131,6 +143,8 @@ function NewsController(NewsService) {
 			comLike.splice(comLike.indexOf(vm.user), 1);
 		}
 	};
+
+
 // Sandbox
 
 	// vm.newsArr = function() {

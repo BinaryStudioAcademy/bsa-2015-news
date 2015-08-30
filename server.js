@@ -6,7 +6,7 @@ var mongooseConnection = require('./db/dbconnect').connection;
 var app = express();
 
 staticPath = path.normalize(__dirname + '/bower_components');
-app.use('news/bower_components', express.static(staticPath));
+app.use('/bower_components', express.static(staticPath));
 app.use('/', express.static(__dirname + '/public'));
 
 app.set('view engine', 'jade');
