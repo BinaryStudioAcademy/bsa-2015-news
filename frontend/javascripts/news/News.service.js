@@ -8,7 +8,8 @@ var app = require('../app.js');
 			getNews: getNews,
 			createNews: createNews,
 			editNews: editNews,
-			deleteNews: deleteNews
+			deleteNews: deleteNews,
+			addComment: addComment
 		};
 
 		function getRequest() {
@@ -28,16 +29,27 @@ var app = require('../app.js');
 					}).save(news).$promise;
 		}
 
-		function editNews(newsId, news) {
+		function addComment(newsId, comment) {
+			console.log(comment);
 			var data = $resource("/api/news/:id", { id: "@id" }, {
 				update: {
 					method: "PUT"
 				}
 			});
-			return data.update({ id: newsId }, news).$promise;
+			return data.update({ id: newsId }, {$push:{comments: comment}}).$promise;
 		}
 
+		function editNews(newsId, news) {
+
+			var data = $resource("/api/news/:id", { id: "@id" }, {
+				update: {
+					method: "PUT"
+				}
+			});
+			return data.update({ id: newsId }, { body: news }).$promise;
+		}
 		function deleteNews(newsId) {
 			return getRequest().remove({ id: newsId }).$promise;
 		}
+		
 	}
