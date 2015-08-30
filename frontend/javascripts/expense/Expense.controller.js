@@ -17,14 +17,14 @@ function ExpenseController(ExpenseService) {
 	//vm.currentUser = $rootScope.currentUser;
 	//vm.exchangeRate = $rootScope.exchangeRate;
 
-	//vm.budgets = [];
-	//getBudgets();
-	//function getBudgets() {
-	//	ExpenseService.getBudgets(vm.date.getFullYear()).then(function(data) {
-	//		vm.budgets = data;
-	//		console.log(data);
-	//	});
-	//}
+	vm.budgets = [];
+	getBudgets();
+	function getBudgets() {
+		ExpenseService.getBudgets(vm.date.getFullYear()).then(function(data) {
+			vm.budgets = data;
+			console.log(data);
+		});
+	}
 
 	//function createExpense(categoryModel, subcategoryModel) {
 	//	// Setting id's

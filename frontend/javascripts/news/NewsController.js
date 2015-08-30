@@ -5,9 +5,17 @@ app.filter('unsafe', function($sce) {
 	return $sce.trustAsHtml; 
 });
 
-NewsController.$inject = ['NewsService', '$mdDialog', '$location', '$route', '$rootScope', '$filter'];
+NewsController.$inject = [
+	'NewsService',
+	'$mdDialog',
+	'$location',
+	'$route',
+	'$rootScope',
+	'$filter',
+	'socket'
+];
 
-function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $filter) {
+function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $filter, socket) {
 	var vm = this;
 	vm.text = 'News';
 	vm.formView = true;
@@ -143,6 +151,11 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	// vm.sandboxArr = function() {
 	// 	vm.posts = vm.sandPosts;
 	// };
+
+	socket.emit("client message", "message from client");
+	socket.on("server message", function(msg) {
+		console.log(msg);
+	});
 
 	// Modal post
 	vm.showModalPost = showModalPost;
