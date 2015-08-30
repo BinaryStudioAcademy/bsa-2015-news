@@ -41,8 +41,7 @@ function NewsController(NewsService, $scope) {
 	}
 
 	vm.editpost = function(newsId, newpost) {
-			NewsService.editNews(newsId, newpost).then(function(){
-			});
+			NewsService.editNews(newsId, newpost);
 	};
 
 	vm.createNews = function() {
@@ -51,7 +50,6 @@ function NewsController(NewsService, $scope) {
 			vm.news = {
 				title: vm.titleNews,
 				body: vm.bodyNews,
-				// author: vm.user._id,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: []
@@ -60,10 +58,7 @@ function NewsController(NewsService, $scope) {
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-
-		NewsService.createNews(vm.news).then(function() {
-			getNews();
-		});
+		NewsService.createNews(vm.news);
 	};
 
 	vm.toggleForm = function() {
@@ -83,17 +78,7 @@ function NewsController(NewsService, $scope) {
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId).then(function() {
-			getNews();
-		});
-	};
-
-	vm.like = function(index) {
-		if(vm.posts[index].likes.indexOf(vm.user) < 0){
-			vm.posts[index].likes.push(vm.user);
-		}else{
-			vm.posts[index].likes.splice(vm.posts[index].likes.indexOf(vm.user), 1);
-		}
+		NewsService.deleteNews(newsId);
 	};
 
 	vm.commentForm = [];
@@ -107,33 +92,37 @@ function NewsController(NewsService, $scope) {
 	};
 
 	vm.newComment = function(commentText, newsId, index) {
-
 		var comment = {
 			author: vm.user,
 			body: commentText,
 			date: Date.parse(new Date()),
 			likes: []
 			};
-			
-			NewsService.addComment(newsId, comment).then(function(){
-				vm.posts[index].comments.unshift(comment);
-			});
-
+		NewsService.addComment(newsId, comment);
 		vm.commentForm[index] = false;
 	};
 
-	vm.deleteComment = function(parentIndex, index) {
-
-		vm.posts[parentIndex].comments.splice(index, 1);
+	vm.deleteComment = function(newsId, commentId) {
+		NewsService.deleteComment(newsId, commentId);
 	};
 
-	vm.commentLike = function(parentIndex, index) {
-		var comLike = vm.posts[parentIndex].comments[index].likes;
+	vm.newsLike = function(newsId, userId, index) {
+		if(vm.posts[index].likes.indexOf(userId) < 0){
+				NewsService.newsLike(newsId, userId);
+			}else{
+				NewsService.deleteNewsLike(newsId, userId);
+		}
+	};
+
+	vm.commentLike = function(newsId, commentId, userId) {
+
+		NewsService.comentLike(newsId, commentId, userId);
+/*		var comLike = vm.posts[parentIndex].comments[index].likes;
 		if(comLike.indexOf(vm.user) < 0){
 			comLike.push(vm.user);
 		}else{
 			comLike.splice(comLike.indexOf(vm.user), 1);
-		}
+		}*/
 	};
 
 }

@@ -64,16 +64,11 @@ function NewsController(NewsService, $scope) {
 		NewsService.createNews(vm.news).then(function() {
 			getNews();
 		});
-
-
 	};
-
 
 	vm.toggleForm = function() {
 		vm.formView = !vm.formView;
 	};
-
-
 
 	vm.toggleText = [];
 	vm.textLength = [];
@@ -87,13 +82,11 @@ function NewsController(NewsService, $scope) {
 		}
 	};
 
-
 	vm.deleteNews = function(newsId) {
 		NewsService.deleteNews(newsId).then(function() {
 			getNews();
 		});
 	};
-
 
 	vm.like = function(index) {
 		if(vm.posts[index].likes.indexOf(vm.user) < 0){
@@ -126,7 +119,6 @@ function NewsController(NewsService, $scope) {
 				vm.posts[index].comments.unshift(comment);
 			});
 
-//		vm.commentText[index] = '';
 		vm.commentForm[index] = false;
 	};
 
@@ -143,22 +135,5 @@ function NewsController(NewsService, $scope) {
 			comLike.splice(comLike.indexOf(vm.user), 1);
 		}
 	};
-
-
-// Sandbox
-
-	// vm.newsArr = function() {
-	// 	vm.posts = vm.newsPost; 
-	// };
-
-	// vm.newsArr();
-
-	// vm.sandboxArr = function() {
-	// 	vm.posts = vm.sandPosts;
-	// };
-
-
-
-
 
 }
