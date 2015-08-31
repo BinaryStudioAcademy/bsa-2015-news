@@ -11,6 +11,7 @@ var commentSchema = new Schema({
 var newsSchema = new Schema({
 	title: String,
 	body: String,
+	type: String,
 	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	date: Number,
 	comments: [commentSchema],

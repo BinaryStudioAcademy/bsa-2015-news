@@ -24,6 +24,7 @@ Factory.define('User')
 
 Factory.define('News')
 	.sequence('_id', function() {return new ObjectId();})
+	.attr('type', function() {return _.sample(['company', 'sandbox', 'weekly']);})
 	.attr('title', function() {return casual.title;})
 	.attr('body', function() {return casual.text;})
 	.attr('date', function() {return casual.integer(142202113, 1440338169);});
