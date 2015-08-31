@@ -8,8 +8,13 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
 
 			$routeProvider
-				.when('/', {
-					templateUrl: './templates/news/news.html',
+				.when('/sandbox', {
+					templateUrl: './templates/news/sandbox.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl'
+				})
+				.when('/company', {
+					templateUrl: './templates/news/company.html',
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl'
 				})
@@ -18,6 +23,11 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
+				})
+				.when('/weekly', {
+					templateUrl: './templates/news/weekly.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl'
 				})
 				.otherwise({
 					redirectTo: '/'
