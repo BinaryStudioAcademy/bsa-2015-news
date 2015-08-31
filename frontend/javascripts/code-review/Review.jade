@@ -8,26 +8,21 @@
 		md-content
 			.list-item(ng-repeat='request in rwCtrl.upcoming[rwCtrl.period.value]')
 				.item-content
-					div
+					img.avatar(ng-src='{{request.user.avatar}}' alt='avatar')
+					.info
 						b Title: 
 						| {{request.title}}
-					div
-						b Group: 
-						| {{request.group.title}}
-					div
+						br
 						b Author: 
 						| {{request.user.first_name}} {{request.user.last_name}}
-					div
-						b Review date: 
+						br
+						b Group: 
+						| {{request.group.title}}
+						br
+						b Coming: 
 						| {{request.date_review}}
-					div
-						b Offers: 
-						| {{request.offers_count}}
-					div
-						b Your offer: 
-						a(href='' ng-show='{{$index == 0 || $index > 3}}') Send offer
-						span(ng-show='{{$index == 1}}' style='color: green') Accepted
-						span(ng-show='{{$index == 2}}') Pending
-						span(ng-show='{{$index == 3}}' style='color: red') Declined
-						//md-button.md-raised.md-primary Send offer
+					.controls
+						md-button.md-raised.md-primary(ng-if='!rwCtrl.getRequestStatus(request)') Send offer
+						md-button.md-raised.md-warn(ng-if='rwCtrl.getRequestStatus(request)') Cancel offer
+						md-button.md-raised Details
 				md-divider(ng-if='!$last')

@@ -1,4 +1,5 @@
 var app = require('../app');
+var _ = require('lodash');
 app.controller("ReviewController", ReviewController);
 
 ReviewController.$inject = ["ReviewService"];
@@ -6,9 +7,8 @@ ReviewController.$inject = ["ReviewService"];
 function ReviewController(ReviewService) {
 	var vm = this;
 
-	//ReviewService.getPopular().then(function(data) {
-	//	vm.popular = data;
-	//});
+	vm.currentUser = {id: '1'};
+
 	vm.periods = [
 	{
 		value: 'today',
@@ -28,4 +28,8 @@ function ReviewController(ReviewService) {
 	vm.upcoming = ReviewService.getPopular();
 	vm.upcoming.week = vm.upcoming.month.slice(0, 5);
 	vm.upcoming.today = vm.upcoming.month.slice(0, 2);
+
+	vm.getRequestStatus = function(request) {
+		return _.find(request.users, {id: vm.currentUser.id});
+	};
 }

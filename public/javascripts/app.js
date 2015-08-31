@@ -7,13 +7,13 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			$httpProvider.defaults.headers.common["Accept"] = "application/json";
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
 			$routeProvider
+			.when('/company', {
+				templateUrl: './templates/news/company.html',
+				controller: 'NewsController',
+				controllerAs: 'newsCtrl'
+			})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
-					controller: 'NewsController',
-					controllerAs: 'newsCtrl'
-				})
-				.when('/company', {
-					templateUrl: './templates/news/company.html',
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl'
 				})
@@ -29,7 +29,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controllerAs: 'newsCtrl'
 				})
 				.otherwise({
-					redirectTo: '/'
+					redirectTo: '/company'
 				});
 			$resourceProvider.defaults.stripTrailingSlashes = false;
 			$mdThemingProvider.theme('reviewWidget')
