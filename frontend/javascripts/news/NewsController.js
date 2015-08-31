@@ -36,7 +36,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.tinymceOptionsComment = {
 		menubar: false, 
-		statusbar: false,
+		statusbar: false
 	};
 
 	vm.posts = [];
@@ -49,7 +49,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	vm.editpost = function(newsId, newpost) {
-			NewsService.editNews(newsId, newpost);
+		NewsService.editNews(newsId, newpost).then(function() {
+			socket.emit("edit post", {postId: newsId, body: newpost});
+		});
 	};
 
 	vm.createNews = function() {
@@ -68,7 +70,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 
 		NewsService.createNews(vm.news).then(function(post) {
-			//getNews();
 			socket.emit("new post", post);
 		});
 	};
@@ -114,18 +115,26 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId);
+		NewsService.deleteNews(newsId).then(function() {
+			socket.emit("delete post", newsId);
+		});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
-		NewsService.deleteComment(newsId, commentId);
+		NewsService.deleteComment(newsId, commentId).then(function() {
+			socket.emit("delete comment", {post: newsId, comment: commentId});
+		});
 	};
 
 	vm.newsLike = function(newsId, userId, index) {
-		if(vm.posts[index].likes.indexOf(userId) < 0){
-				NewsService.newsLike(newsId, userId);
-			}else{
-				NewsService.deleteNewsLike(newsId, userId);
+		if(vm.posts[index].likes.indexOf(userId) < 0) {
+			NewsService.newsLike(newsId, userId).then(function() {
+				socket.emit("like post", {post: newsId, user: userId, isLike: true});
+			});
+		} else {
+			NewsService.deleteNewsLike(newsId, userId).then(function() {
+				socket.emit("like post", {post: newsId, user: userId, isLike: false});
+			});
 		}
 	};
 
@@ -144,12 +153,47 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
 	});
+
+	socket.on("change post", function(newPost) {
+		if(newPost) {
+			var post = $filter('filter')(vm.posts, {_id: newPost.postId});
+			if(post[0]) {
+				post[0].body = newPost.body;
+			}
+		}
+	});
+
+	socket.on("splice post", function(postId) {
+		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
+		vm.posts.splice(index, 1);
+	});
+
+	socket.on("change like post", function(newPost) {
+		if(newPost) {
+			var post = $filter('filter')(vm.posts, {_id: newPost.post});
+			if(post[0]) {
+				if(newPost.isLike) post[0].likes.push(newPost.user);
+				else {
+					var index = post[0].likes.indexOf(newPost.user);
+					if(index != -1) post[0].likes.splice(index, 1);
+				}
+			}
+		}
+	});
 	
 	socket.on("push comment", function(comment) {
 		var post = $filter('filter')(vm.posts, {_id: comment.postId});
 		if(post[0]) {
 			delete post[0].postId;
 			post[0].comments.push(comment);
+		}
+	});
+
+	socket.on("splice comment", function(commentDetails) {
+		var post = $filter('filter')(vm.posts, {_id: commentDetails.post});
+		if(post[0]) {
+			var index = post[0].comments.map(function(x) {return x._id; }).indexOf(commentDetails.comment);
+			post[0].comments.splice(index, 1);
 		}
 	});
 
