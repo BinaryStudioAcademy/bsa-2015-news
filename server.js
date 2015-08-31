@@ -22,8 +22,12 @@ var routes = require('./routes/index.js')(router);
 
 app.use('/news', router);
 
+
 var server = app.listen(4035, function() {
 	console.log('http://localhost:4035');
 });
+
+var io = require('socket.io').listen(server);
+require('./io/webSocket.js')(io);
 
 module.exports = app;

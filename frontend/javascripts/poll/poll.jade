@@ -13,7 +13,7 @@
                 ng-submit="voteCtrl.sendVote(); pollCtrl.showResults()", novalidate)
                 strong {{ pollCtrl.currentQuestion.name }}
                 md-divider.divider
-                md-radio-group(ng-model="selected")
+                md-radio-group.md-primary(ng-model="pollCtrl.selectedElement")
                     md-input-container.answer-container(ng-if="pollCtrl.currentQuestion.type == 'text'")
                         label Answer
                         textarea.form-control(type="text", required)

@@ -32,7 +32,7 @@
 
 							.news
 								.news-message(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
-									.title {{news.title}}
+									.title(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
 										md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 										md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=news.body')
 									.body

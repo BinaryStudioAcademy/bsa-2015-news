@@ -13,6 +13,8 @@ function PollController(PollService) {
     var currentQuestionCounter = 0;
     var currentSectionCounter = 0;
 
+    vm.selectedElement = "";
+
     getQuestions();
 
     function getQuestions() {
@@ -20,6 +22,7 @@ function PollController(PollService) {
         vm.currentSection = vm.sections[currentSectionCounter];
         vm.questions = vm.currentSection.questions;
         vm.currentQuestion = vm.questions[currentQuestionCounter];
+        vm.selectedElement = vm.currentQuestion.options[0];
     }
 
     vm.showResults = showResults;
@@ -35,5 +38,6 @@ function PollController(PollService) {
         } else {
             vm.currentQuestion = vm.questions[currentQuestionCounter];
         }
+        vm.selectedElement = vm.currentQuestion.options[0];
     }
 }
