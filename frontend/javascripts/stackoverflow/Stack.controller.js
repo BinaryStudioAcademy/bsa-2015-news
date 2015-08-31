@@ -13,8 +13,6 @@ function stackController(StackService) {
 	getQuestions(vm.type);
 
 	function getQuestions(type) {
-		StackService.getQuestions(type).then(function(questions) {
-			vm.questions = questions;
-		});
+		vm.questions = StackService.getQuestions(type);
 	}
 }
