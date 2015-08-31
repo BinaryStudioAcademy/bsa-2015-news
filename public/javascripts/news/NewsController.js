@@ -21,6 +21,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
 	vm.author = 'Veronika Balko';
+
 	vm.tinymceOptions = {
 		inline: false,
 		plugins: [
@@ -105,7 +106,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			date: Date.parse(new Date()),
 			likes: []
 			};
-		
 		NewsService.addComment(newsId, comment).then(function(){
 			comment.postId = newsId;
 			socket.emit("new comment", comment);
@@ -130,7 +130,10 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.commentLike = function(newsId, commentId, userId) {
+		
+		var post = $filter('filter')(vm.posts, {_id: newsId});
 
+		console.log(post);
 		NewsService.comentLike(newsId, commentId, userId);
 /*		var comLike = vm.posts[parentIndex].comments[index].likes;
 		if(comLike.indexOf(vm.user) < 0){
@@ -144,6 +147,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
 	});
+
 	socket.on("push comment", function(comment) {
 		var post = $filter('filter')(vm.posts, {_id: comment.postId});
 		if(post[0]) {
@@ -152,6 +156,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 	});
 
+	socket.on("push comment", function(comment) {
+		var post = $filter('filter')(vm.posts, {_id: comment.postId});
+		if(post[0]) {
+			delete post[0].postId;
+			post[0].comments.push(comment);
+		}
+	});
 	// Modal post
 	vm.showModalPost = showModalPost;
 	vm.currentPost = {};

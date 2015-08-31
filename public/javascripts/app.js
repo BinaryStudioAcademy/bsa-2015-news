@@ -6,10 +6,14 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			delete $httpProvider.defaults.headers.common["X-Requested-With"];
 			$httpProvider.defaults.headers.common["Accept"] = "application/json";
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
-
 			$routeProvider
-				.when('/', {
-					templateUrl: './templates/news/news.html',
+				.when('/sandbox', {
+					templateUrl: './templates/news/sandbox.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl'
+				})
+				.when('/company', {
+					templateUrl: './templates/news/company.html',
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl'
 				})
@@ -18,6 +22,11 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
+				})
+				.when('/weekly', {
+					templateUrl: './templates/news/weekly.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl'
 				})
 				.otherwise({
 					redirectTo: '/'
@@ -37,6 +46,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				});
 			$mdThemingProvider.theme('pollWidget')
 				.primaryPalette('indigo', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('stackWidget')
+				.primaryPalette('pink', {
 					'default': '800'
 				});
 			// Приклад теми:
