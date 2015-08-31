@@ -1,10 +1,10 @@
 module.exports = function(io) {
     return io.on("connection", function(socket) {
-        console.log("Connected new user");
-
-        socket.on("client message", function(msg) {
-            console.log(msg);
-            io.emit("server message", "message from server");
+        socket.on("new post", function(post) {
+            io.emit("push post", post);
+        });
+        socket.on("new comment", function(commnet) {
+            io.emit("push comment", commnet);
         });
     });
 };

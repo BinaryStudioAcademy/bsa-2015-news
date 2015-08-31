@@ -58,8 +58,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		vm.formView = true;
 		}
 
-		NewsService.createNews(vm.news).then(function() {
-			getNews();
+		NewsService.createNews(vm.news).then(function(post) {
+			//getNews();
+			socket.emit("new post", post);
 		});
 
 
@@ -120,7 +121,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			};
 			
 			NewsService.editNews(newsId, comment).then(function(){
-				vm.posts[index].comments.unshift(comment);
+				//vm.posts[index].comments.unshift(comment);
+				comment.postId = newsId;
+				socket.emit("new comment", comment);
 			});
 
 		vm.commentText[index] = '';
@@ -152,9 +155,16 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	// 	vm.posts = vm.sandPosts;
 	// };
 
-	socket.emit("client message", "message from client");
-	socket.on("server message", function(msg) {
-		console.log(msg);
+	// Socket logic
+	socket.on("push post", function(post) {
+		if(post) vm.posts.unshift(post);
+	});
+	socket.on("push comment", function(comment) {
+		var post = $filter('filter')(vm.posts, {_id: comment.postId});
+		if(post[0]) {
+			delete post[0].postId;
+			post[0].comments.push(comment);
+		}
 	});
 
 	// Modal post
