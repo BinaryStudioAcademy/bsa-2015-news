@@ -9,10 +9,10 @@ md-content#sandbox
 		.form-group
 			input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
 			textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
-		md-button.md-create(type='submit' ng-click='newsCtrl.createNews()') Create
+		md-button.md-create(type='submit' ng-click='newsCtrl.createNews("sandbox")') Create
 		md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 	.news
-		.news-message(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
+		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: search track by $index ')
 			.title
 				img.avatar(src='http://lorempixel.com/50/50/cats/8/') 
 				span(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
@@ -29,7 +29,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{news.author.name ||newsCtrl.author}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
+				span.author(ng-click="newsCtrl.showModalPost(news, true)") {{news.author.name||newsCtrl.author}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}
 						md-tooltip Comment

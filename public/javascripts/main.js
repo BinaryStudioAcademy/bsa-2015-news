@@ -22,12 +22,14 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			.when('/company', {
 				templateUrl: './templates/news/company.html',
 				controller: 'NewsController',
-				controllerAs: 'newsCtrl'
+				controllerAs: 'newsCtrl',
+				reloadOnSearch: false
 			})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
 					controller: 'NewsController',
-					controllerAs: 'newsCtrl'
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/news.html',
@@ -38,7 +40,8 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.when('/weekly', {
 					templateUrl: './templates/news/weekly.html',
 					controller: 'NewsController',
-					controllerAs: 'newsCtrl'
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
 				})
 				.otherwise({
 					redirectTo: '/company'
@@ -505,7 +508,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.tinymceOptionsComment = {
 		menubar: false, 
-		statusbar: false,
+		statusbar: false
 	};
 
 	vm.posts = [];
@@ -513,15 +516,25 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	function getNews(){
 		NewsService.getNews().then(function(data){
 			vm.posts = data.slice(0,20);
-			checkUrlPath();
+			console.log(vm.posts);
+			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
+			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
+			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
 		});
 	}
 
-	vm.editpost = function(newsId, newpost) {
-			NewsService.editNews(newsId, newpost);
+
+	vm.filtertNews = function(type){
+		console.log(type);
 	};
 
-	vm.createNews = function() {
+	vm.editpost = function(newsId, newpost) {
+		NewsService.editNews(newsId, newpost).then(function() {
+			socket.emit("edit post", {postId: newsId, body: newpost});
+		});
+	};
+
+	vm.createNews = function(type) {
 		vm.news = {};
 		if(vm.titleNews && vm.bodyNews){
 			vm.news = {
@@ -529,7 +542,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				body: vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
-				likes: []
+				likes: [],
+				type: type
 			};
 		vm.titleNews = '';
 		vm.bodyNews = '';
@@ -537,7 +551,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 
 		NewsService.createNews(vm.news).then(function(post) {
-			//getNews();
 			socket.emit("new post", post);
 		});
 	};
@@ -582,18 +595,26 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId);
+		NewsService.deleteNews(newsId).then(function() {
+			socket.emit("delete post", newsId);
+		});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
-		NewsService.deleteComment(newsId, commentId);
+		NewsService.deleteComment(newsId, commentId).then(function() {
+			socket.emit("delete comment", {post: newsId, comment: commentId});
+		});
 	};
 
 	vm.newsLike = function(newsId, userId, index) {
-		if(vm.posts[index].likes.indexOf(userId) < 0){
-				NewsService.newsLike(newsId, userId);
-			}else{
-				NewsService.deleteNewsLike(newsId, userId);
+		if(vm.posts[index].likes.indexOf(userId) < 0) {
+			NewsService.newsLike(newsId, userId).then(function() {
+				socket.emit("like post", {post: newsId, user: userId, isLike: true});
+			});
+		} else {
+			NewsService.deleteNewsLike(newsId, userId).then(function() {
+				socket.emit("like post", {post: newsId, user: userId, isLike: false});
+			});
 		}
 	};
 
@@ -610,12 +631,42 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			comLike.splice(comLike.indexOf(vm.user), 1);
 		}*/
 	};
-	
+
+
+
+
 	// Socket logic
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
 	});
 
+	socket.on("change post", function(newPost) {
+		if(newPost) {
+			var post = $filter('filter')(vm.posts, {_id: newPost.postId});
+			if(post[0]) {
+				post[0].body = newPost.body;
+			}
+		}
+	});
+
+	socket.on("splice post", function(postId) {
+		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
+		vm.posts.splice(index, 1);
+	});
+
+	socket.on("change like post", function(newPost) {
+		if(newPost) {
+			var post = $filter('filter')(vm.posts, {_id: newPost.post});
+			if(post[0]) {
+				if(newPost.isLike) post[0].likes.push(newPost.user);
+				else {
+					var index = post[0].likes.indexOf(newPost.user);
+					if(index != -1) post[0].likes.splice(index, 1);
+				}
+			}
+		}
+	});
+	
 	socket.on("push comment", function(comment) {
 		var post = $filter('filter')(vm.posts, {_id: comment.postId});
 		if(post[0]) {
@@ -624,13 +675,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 	});
 
-	socket.on("push comment", function(comment) {
-		var post = $filter('filter')(vm.posts, {_id: comment.postId});
+	socket.on("splice comment", function(commentDetails) {
+		var post = $filter('filter')(vm.posts, {_id: commentDetails.post});
 		if(post[0]) {
-			delete post[0].postId;
-			post[0].comments.push(comment);
+			var index = post[0].comments.map(function(x) {return x._id; }).indexOf(commentDetails.comment);
+			post[0].comments.splice(index, 1);
 		}
 	});
+
 	// Modal post
 	vm.showModalPost = showModalPost;
 	vm.currentPost = {};
