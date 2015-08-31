@@ -288,19 +288,16 @@ var app = require('../app.js');
 			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
+			console.log(data);
 			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
+
 		}
 
 		function comentLike(newsId, commentId, userId) {
-		console.log('newsId',newsId);
-		console.log('commentId', commentId);
-		console.log('userId', userId);
 			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
-			return data.update(
-				{id: newsId},
-				{ $addToSet:{'comments.$.likes': userId} }).$promise;
+			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
 		}
 	}
 
@@ -368,11 +365,7 @@ function NewsController(NewsService, $scope) {
 		NewsService.createNews(vm.news);
 	};
 
-	vm.toggleForm = function() {
-		vm.formView = !vm.formView;
-	};
-
-	vm.toggleText = [];
+/*	vm.toggleText = [];
 	vm.textLength = [];
 
 	vm.loadMore = function(index) {
@@ -382,10 +375,9 @@ function NewsController(NewsService, $scope) {
 		}else{
 			vm.textLength[index] = 200;
 		}
-	};
-
-	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId);
+	};*/
+	vm.toggleForm = function() {
+		vm.formView = !vm.formView;
 	};
 
 	vm.commentForm = [];
@@ -407,6 +399,10 @@ function NewsController(NewsService, $scope) {
 			};
 		NewsService.addComment(newsId, comment);
 		vm.commentForm[index] = false;
+	};
+
+	vm.deleteNews = function(newsId) {
+		NewsService.deleteNews(newsId);
 	};
 
 	vm.deleteComment = function(newsId, commentId) {

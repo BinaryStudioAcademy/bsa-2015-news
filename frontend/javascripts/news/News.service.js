@@ -67,18 +67,15 @@ var app = require('../app.js');
 			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
+			console.log(data);
 			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
+
 		}
 
 		function comentLike(newsId, commentId, userId) {
-		console.log('newsId',newsId);
-		console.log('commentId', commentId);
-		console.log('userId', userId);
 			var data = $resource("/news/api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
-			return data.update(
-				{id: newsId},
-				{ $addToSet:{'comments.$.likes': userId} }).$promise;
+			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
 		}
 	}
