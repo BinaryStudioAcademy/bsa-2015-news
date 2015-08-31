@@ -10,12 +10,14 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			.when('/company', {
 				templateUrl: './templates/news/company.html',
 				controller: 'NewsController',
-				controllerAs: 'newsCtrl'
+				controllerAs: 'newsCtrl',
+				reloadOnSearch: false
 			})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
 					controller: 'NewsController',
-					controllerAs: 'newsCtrl'
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/news.html',
@@ -26,7 +28,8 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.when('/weekly', {
 					templateUrl: './templates/news/weekly.html',
 					controller: 'NewsController',
-					controllerAs: 'newsCtrl'
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
 				})
 				.otherwise({
 					redirectTo: '/company'
@@ -52,6 +55,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				.primaryPalette('pink', {
 					'default': '800'
 				});
+
 			// Приклад теми:
 			//$mdThemingProvider.theme('default')
 			//	.primaryPalette('blue')

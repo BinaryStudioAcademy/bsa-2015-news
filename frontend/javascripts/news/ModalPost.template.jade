@@ -4,8 +4,6 @@ md-dialog(aria-label='post.title')
          .md-toolbar-tools
             h2 {{ post.title }}
             span(flex='')
-            md-button.md-icon-button#remove-button(aria-label="remove")
-               i.fa.fa-times.fa-2x
       md-dialog-content
          .body
             div(ng-bind-html='post.body | unsafe')
