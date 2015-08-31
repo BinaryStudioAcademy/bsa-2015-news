@@ -6,7 +6,6 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			delete $httpProvider.defaults.headers.common["X-Requested-With"];
 			$httpProvider.defaults.headers.common["Accept"] = "application/json";
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
-
 			$routeProvider
 				.when('/', {
 					templateUrl: './templates/news/news.html',
@@ -37,6 +36,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				});
 			$mdThemingProvider.theme('pollWidget')
 				.primaryPalette('indigo', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('stackWidget')
+				.primaryPalette('pink', {
 					'default': '800'
 				});
 			// Приклад теми:

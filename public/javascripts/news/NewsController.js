@@ -144,6 +144,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
 	});
+	
 	socket.on("push comment", function(comment) {
 		var post = $filter('filter')(vm.posts, {_id: comment.postId});
 		if(post[0]) {
