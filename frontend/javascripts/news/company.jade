@@ -15,7 +15,7 @@ md-content
 	.news
 		.news-message(ng-repeat='news in newsCtrl.posts | filter: search.title track by $index ')
 			.title
-				span(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
+				span {{news.title}}
 				md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 				md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=news.body')
 			.body
@@ -29,7 +29,7 @@ md-content
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{news.author.name ||newsCtrl.author}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
+				span.author(ng-click="newsCtrl.showModalPost(news, true)") {{news.author.name ||newsCtrl.author}} on {{news.date | date:'yyyy-MM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}
 						md-tooltip Comment
