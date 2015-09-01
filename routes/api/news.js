@@ -6,7 +6,7 @@ var NewsRepository = require('../../repositories/news');
 module.exports = function (app) {
 
 	app.get('/api/news', function(req, res, next){
-		NewsRepository.getAllNews(function(err, data){
+		NewsRepository.getAllNews(req.user, function(err, data){
 			res.err = err;
 			res.data = data;
 			next();

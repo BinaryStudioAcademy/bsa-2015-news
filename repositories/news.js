@@ -8,8 +8,10 @@ var NewsRepository = function(){
 
 NewsRepository.prototype = new Repository();
 
-NewsRepository.prototype.getAllNews = function(callback) {
-	News.find()
+NewsRepository.prototype.getAllNews = function(user, callback) {
+	console.log(user);
+	//var query = user.role === 'ADMIN' ? {} : { access_roles: { $or: [ user.role, { $size: 0 }, { $exists: false } ] } };
+	News.find({})
 		.populate('author', 'name')
 		.populate('comments.author', 'name')
 		.sort('-date')
