@@ -2,7 +2,7 @@ extends ./layout.jade
 
 block content
 	#news-viev
-		header
+		header#header
 			span {{newsCtrl.text}}
 			#user-log
 				span {{newsCtrl.author}}
@@ -14,6 +14,7 @@ block content
 		aside#right
 			poll-widget
 			hr-widget
+			stack-widget
 		#content
 			.tabsdemoDynamicHeight
 				md-content
