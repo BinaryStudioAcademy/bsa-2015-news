@@ -17,15 +17,15 @@ var app = require('../app.js');
 		};
 
 		function getRequest() {
-			return $resource("/api/news/:id", { id: "@id"});
+			return $resource("api/news/:id", { id: "@id"});
 		}
 
 		function getNews() {
-			return $resource("/api/news").query().$promise;
+			return $resource("api/news").query().$promise;
 		}
 
 		function createNews(news) {
-			return $resource("/api/news", {}, {
+			return $resource("api/news", {}, {
 						save: { method: 'POST', 
 							headers: {'Content-Type': 'application/json'}
 						}
@@ -33,14 +33,14 @@ var app = require('../app.js');
 		}
 
 		function addComment(newsId, comment) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, {$push:{comments: comment}}).$promise;
 		}
 
 		function editNews(newsId, news) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { body: news }).$promise;
@@ -51,20 +51,20 @@ var app = require('../app.js');
 		}
 
 		function deleteComment(newsId, commentId) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { $pull:{comments: {_id: commentId} }}).$promise;
 		}
 
 		function newsLike(newsId, userId) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { $addToSet:{likes: userId }}).$promise;
 		}
 		function deleteNewsLike(newsId, userId) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			console.log(data);
@@ -73,7 +73,7 @@ var app = require('../app.js');
 		}
 
 		function comentLike(newsId, commentId, userId) {
-			var data = $resource("/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
