@@ -43,6 +43,12 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
 				})
+				.when('/activity', {
+					templateUrl: './templates/news/activity.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
+				})
 				.otherwise({
 					redirectTo: '/company'
 				});

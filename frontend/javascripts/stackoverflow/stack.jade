@@ -1,11 +1,11 @@
 #stack-widget(md-theme="stackWidget")
 	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+		md-toolbar.md-primary(ng-click="isStackShow = !isStackShow")
 			.md-toolbar-tools
 				h2.md-flex Questions
 		//- md-select(ng-model='rwCtrl.period.value' aria-label='select period')
 		//- 	md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
-		md-content
+		md-content(ng-class="{showMenu: isStackShow}")
 			.list-item(ng-repeat='question in stackCtrl.questions')
 				.item-content
 					div.stack-av

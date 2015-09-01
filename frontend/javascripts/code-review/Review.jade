@@ -1,11 +1,12 @@
 #code-review-widget(ng-controller='ReviewController as rwCtrl' md-theme='reviewWidget')
 	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+		md-toolbar.md-primary(ng-click="isReviewShow = !isReviewShow")
 			.md-toolbar-tools
 				h2.md-flex Code review requests
-		md-select(ng-model='rwCtrl.period.value' aria-label='select period')
-			md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
-		md-content
+
+		md-content(ng-class="{showMenu: isReviewShow}")
+			md-select(ng-model='rwCtrl.period.value' aria-label='select period')
+				md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
 			.list-item(ng-repeat='request in rwCtrl.upcoming[rwCtrl.period.value]')
 				.item-content
 					img.avatar(ng-src='{{request.user.avatar}}' alt='avatar')
