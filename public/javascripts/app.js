@@ -11,25 +11,27 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				templateUrl: './templates/news/company.html',
 				controller: 'NewsController',
 				controllerAs: 'newsCtrl',
-				reloadOnSearch: false
+				reloadOnSearch: false,
+				activetab: 'company'
 			})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
-					controller: 'NewsController',
-					controllerAs: 'newsCtrl',
-					reloadOnSearch: false
+					reloadOnSearch: false,
+					activetab:'sandbox'
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/news.html',
-					controller: 'NewsController',
-					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
 					templateUrl: './templates/news/weekly.html',
-					controller: 'NewsController',
-					controllerAs: 'newsCtrl',
-					reloadOnSearch: false
+					reloadOnSearch: false,
+					activetab: 'weekly'
+				})
+				.when('/activity', {
+					templateUrl: './templates/news/activity.html',
+					reloadOnSearch: false,
+					activetab: 'activity'
 				})
 				.otherwise({
 					redirectTo: '/company'

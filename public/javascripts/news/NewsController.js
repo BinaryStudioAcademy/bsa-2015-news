@@ -40,6 +40,33 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
+/*	var lastRoute = $route.current;
+	$rootScope.$on('$locationChangeSuccess', function (event) {
+		console.log(lastRoute);
+			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
+					$route.current = lastRoute;
+			}
+	});*/
+
+	$rootScope.$watch('selectedIndex', function(current, old) {
+		switch(current) {
+			case 0: $location.url("/company"); break;
+			case 1: $location.url("/sandbox"); break;
+			case 2: $location.url("/weekly"); break;
+			
+		}
+	});
+/*		var lastRoute = $route.current;
+		$rootScope.$on('$locationChangeSuccess', function(event) {
+				$route.current = lastRoute;
+		});*/
+/*$rootScope.$route = $route;*/
+/*		vm.isActive = function(route) {
+			console.log(route);
+				return route === $location.path();
+		};
+*/
+
 	vm.posts = [];
 	getNews();
 	function getNews(){

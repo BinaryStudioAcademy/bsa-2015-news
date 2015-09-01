@@ -15,10 +15,11 @@ md-content#weekly
 	.news
 		.news-message(ng-repeat='news in newsCtrl.weeklyPosts | filter: search track by $index ')
 			.title
-				span {{news.title}} {{news.type}}
+				span {{news.title}}
 				md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 				md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=news.body')
 			.body
+				md-button(ng-click='newsCtrl.createNews("company", news.body, news.title )') send to company
 				div(ng-if='!edit', style='white-space: pre-wrap')
 					div(ng-bind-html='news.body | unsafe')
 				div(ng-if='edit')

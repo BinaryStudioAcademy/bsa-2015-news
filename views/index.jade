@@ -1,12 +1,11 @@
 extends ./layout.jade
 
 block content
-	#news-viev
+	#news-viev(ng-controller='NewsController as newsCtrl')
 		header
 			i#menu-btn.fa.fa-bars(ng-click="isMenuShow = !isMenuShow")
 			span {{newsCtrl.text}}
 			#user-log
-				span {{newsCtrl.author}}
 				button.btn.btn-warning Log out
 		aside#left
 			code-review-widget
@@ -19,14 +18,14 @@ block content
 				expense-widget
 		#content
 			.tabsdemoDynamicHeight
-				md-content(ng-class="{showMenu: isMenuShow}")
-					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="selectedIndex" )
-						md-tab
-							a(href='#/company') Company news
-						md-tab
+				md-content(ng-class="{showMenu: isMenuShow}" )
+					md-tabs( md-stretch-tabs md-selected="selectedIndex" )
+						md-tab(ng-class="{md-active:newsCtrl.isActive('/company')}")
+							a(href='#/company' ) Company news
+						md-tab(ng-class="{md-active:newsCtrl.isActive('/sandbox')}")
 							a(href ='#/sandbox') Sandbox
 						md-tab
 							a(href ='#/weekly') weekly
 						md-tab
 							a(href ='#/activity') activity log
-			#main(ng-view)
+			#main(ng-view flex)
