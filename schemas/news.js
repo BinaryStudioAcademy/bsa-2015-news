@@ -15,7 +15,15 @@ var newsSchema = new Schema({
 	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	date: Number,
 	comments: [commentSchema],
-	likes: [mongoose.Schema.ObjectId]
+	likes: [mongoose.Schema.ObjectId],
+	access_roles: {
+		type: [String],
+		default: []
+	},
+	restrict_ids: {
+		type: [mongoose.Schema.Types.ObjectId],
+		default: []
+	}
 });
 
 module.exports = mongoose.model('News', newsSchema);

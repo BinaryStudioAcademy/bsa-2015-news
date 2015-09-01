@@ -2,18 +2,14 @@ extends ./layout.jade
 
 block content
 	#news-viev
-		header
-			i#menu-btn.fa.fa-bars(ng-click="isMenuShow = !isMenuShow")
-			span {{newsCtrl.text}}
-			#user-log
-				span {{newsCtrl.author}}
-				button.btn.btn-warning Log out
+		header#header
 		aside#left
 			code-review-widget
 			expense-widget
 		aside#right
 			poll-widget
 			hr-widget
+			stack-widget
 			#left-block
 				code-review-widget
 				expense-widget
