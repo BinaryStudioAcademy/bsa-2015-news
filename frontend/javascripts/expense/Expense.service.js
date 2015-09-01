@@ -12,15 +12,15 @@ function ExpenseService($resource) {
 	};
 
 	function getBudgets(year) {
-		return $resource("http://localhost:1335/budget", { where: {"year": year}}).query().$promise;
+		return $resource("/accounting/budget", { where: {"year": year}}).query().$promise;
 	}
 
 	function getCategories() {
-		return $resource("http://localhost:1335/category/:id", { id: "@id" }).query().$promise;
+		return $resource("/accounting/category/:id", { id: "@id" }).query().$promise;
 	}
 
 	function createExpense(newExpense) {
-		return $resource("http://localhost:1335/expense/:id", { id: "@id" }).save(newExpense).$promise;
+		return $resource("/accounting/expense/:id", { id: "@id" }).save(newExpense).$promise;
 	}
 
 	function getCurrentUser() {
