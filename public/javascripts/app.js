@@ -9,8 +9,6 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			$routeProvider
 			.when('/company', {
 				templateUrl: './templates/news/company.html',
-				controller: 'NewsController',
-				controllerAs: 'newsCtrl',
 				reloadOnSearch: false,
 				activetab: 'company'
 			})
@@ -20,7 +18,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					activetab:'sandbox'
 				})
 				.when('/post/:postId/', {
-					templateUrl: './templates/news/news.html',
+					templateUrl: './templates/news/company.html',
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
@@ -66,3 +64,21 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			//	.backgroundPalette('grey');
 		}
 	]);
+
+var getHeader = function() {
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://team.binary-studio.com/app/header', true); //http://team.binary-studio.com/app/header
+	request.send();
+	request.onreadystatechange = function() {
+		if (request.readyState != 4) return;
+		if (request.status != 200) {
+			alert(request.status + ': ' + request.statusText);
+		} else {
+			var headerHtml = request.responseText;
+			var headerContainer = document.getElementById('header');
+			headerContainer.innerHTML =headerHtml;
+			headerFunction();
+		}
+	};
+};
+getHeader();

@@ -30,7 +30,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					activetab:'sandbox'
 				})
 				.when('/post/:postId/', {
-					templateUrl: './templates/news/news.html',
+					templateUrl: './templates/news/company.html',
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
@@ -76,6 +76,25 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			//	.backgroundPalette('grey');
 		}
 	]);
+
+var getHeader = function() {
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://team.binary-studio.com/app/header', true); //http://team.binary-studio.com/app/header
+	request.send();
+	request.onreadystatechange = function() {
+		if (request.readyState != 4) return;
+		if (request.status != 200) {
+			alert(request.status + ': ' + request.statusText);
+		} else {
+			var headerHtml = request.responseText;
+			var headerContainer = document.getElementById('header');
+			headerContainer.innerHTML =headerHtml;
+			headerFunction();
+		}
+	};
+};
+getHeader();
+
 },{}],3:[function(require,module,exports){
 var app = require('../app');
 var _ = require('lodash');
@@ -404,20 +423,19 @@ var app = require('../app.js');
 			addComment: addComment,
 			deleteComment: deleteComment,
 			newsLike: newsLike,
-			deleteNewsLike: deleteNewsLike,
-			comentLike: comentLike
+			deleteNewsLike: deleteNewsLike
 		};
 
 		function getRequest() {
-			return $resource("/news/api/news/:id", { id: "@id"});
+			return $resource("api/news/:id", { id: "@id"});
 		}
 
 		function getNews() {
-			return $resource("/news/api/news").query().$promise;
+			return $resource("api/news").query().$promise;
 		}
 
 		function createNews(news) {
-			return $resource("/news/api/news", {}, {
+			return $resource("api/news", {}, {
 						save: { method: 'POST', 
 							headers: {'Content-Type': 'application/json'}
 						}
@@ -425,14 +443,14 @@ var app = require('../app.js');
 		}
 
 		function addComment(newsId, comment) {
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, {$push:{comments: comment}}).$promise;
 		}
 
 		function editNews(newsId, news) {
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { body: news }).$promise;
@@ -443,33 +461,25 @@ var app = require('../app.js');
 		}
 
 		function deleteComment(newsId, commentId) {
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { $pull:{comments: {_id: commentId} }}).$promise;
 		}
 
 		function newsLike(newsId, userId) {
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, { $addToSet:{likes: userId }}).$promise;
 		}
 		function deleteNewsLike(newsId, userId) {
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
+			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
 			console.log(data);
 			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
 
-		}
-
-		function comentLike(newsId, commentId, userId) {
-			
-			var data = $resource("/news/api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
-			});
-			return data.update( {id: newsId}, { $set:{'comments.$.likes': userId} }).$promise;
 		}
 
 	}
@@ -553,6 +563,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			checkUrlPath();
 		});
 	}
 
@@ -724,7 +735,7 @@ console.log(vm.news);
 
 	// Modal post
 	vm.showModalPost = showModalPost;
-	vm.currentPost = {};
+	var currentPostId = "";
 
 	function checkUrlPath() {
 		var path = $location.path();
@@ -734,17 +745,17 @@ console.log(vm.news);
 			var postId = path.substring(4, path.length);
 			var post = $filter('filter')(vm.posts, {_id: postId});
 
-			if(post[0]) showModalPost(post[0], false);
+			if(post[0]) showModalPost(post[0]._id, false);
 		}
 	}
 
-	function showModalPost(post, isSetPath) {
-		vm.currentPost = post;
+	function showModalPost(postId, isSetPath) {
+		currentPostId = postId;
 
 		if(isSetPath) {
 			// Set url path in browser
 			correctPath();
-			$location.path("/post/" + post._id);
+			$location.path("/post/" + postId);
 		}
 
 		$mdDialog.show({
@@ -774,12 +785,13 @@ console.log(vm.news);
 	}
 
 	function DialogController($scope, $mdDialog) {
-		$scope.post = vm.currentPost;
+		var post = $filter('filter')(vm.posts, {_id: currentPostId});
+		if(post[0]) $scope.post = post[0];
+		$scope.newComment = vm.newComment;
+		$scope.editpost = vm.editpost;
+		$scope.deleteNews = vm.deleteNews;
 		$scope.hide = function() {
 			$mdDialog.hide();
-		};
-		$scope.cancel = function() {
-			console.log(true);
 		};
 		$scope.answer = function(answer) {
 			$mdDialog.hide(answer);

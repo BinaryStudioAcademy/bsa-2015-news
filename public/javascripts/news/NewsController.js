@@ -48,24 +48,24 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			}
 	});*/
 
-	$rootScope.$watch('selectedIndex', function(current, old) {
+/*	$rootScope.$watch('selectedIndex', function(current, old) {
 		switch(current) {
 			case 0: $location.url("/company"); break;
 			case 1: $location.url("/sandbox"); break;
 			case 2: $location.url("/weekly"); break;
 			
 		}
-	});
+	});*/
 /*		var lastRoute = $route.current;
 		$rootScope.$on('$locationChangeSuccess', function(event) {
 				$route.current = lastRoute;
 		});*/
 /*$rootScope.$route = $route;*/
-/*		vm.isActive = function(route) {
+		vm.isActive = function(route) {
 			console.log(route);
 				return route === $location.path();
 		};
-*/
+
 
 	vm.posts = [];
 	getNews();
@@ -76,6 +76,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			checkUrlPath();
 		});
 	}
 
@@ -90,12 +91,12 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	};
 
-	vm.createNews = function(type) {
+	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
-		if(vm.titleNews && vm.bodyNews){
+		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.news = {
-				title: vm.titleNews,
-				body: vm.bodyNews,
+				title: weeklyTitle || vm.titleNews,
+				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
@@ -105,7 +106,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-
+console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});
@@ -176,16 +177,22 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.commentLike = function(newsId, commentId, userId) {
 		
-		var post = $filter('filter')(vm.posts, {_id: newsId});
+		var	post = $filter('filter')(vm.posts, {_id: newsId});
+		var comment = $filter('filter')(post[0].comments, {_id: commentId});
 
-		console.log(post);
-		NewsService.comentLike(newsId, commentId, userId);
-/*		var comLike = vm.posts[parentIndex].comments[index].likes;
-		if(comLike.indexOf(vm.user) < 0){
-			comLike.push(vm.user);
+		//NewsService.comentLike(newsId, commentId, userId);
+		if(comment[0].likes.indexOf(userId) < 0){
+			console.log('not exist');
+			comment[0].likes.push(userId);
 		}else{
-			comLike.splice(comLike.indexOf(vm.user), 1);
-		}*/
+			console.log('exist');
+			comment[0].likes.splice(comment[0].likes.indexOf(vm.user), 1);
+		}
+		
+		NewsService.deleteComment(newsId, commentId);
+		NewsService.addComment(newsId, comment[0]);
+		console.log(comment[0]);
+
 	};
 
 
@@ -241,7 +248,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	// Modal post
 	vm.showModalPost = showModalPost;
-	vm.currentPost = {};
+	var currentPostId = "";
 
 	function checkUrlPath() {
 		var path = $location.path();
@@ -251,17 +258,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			var postId = path.substring(4, path.length);
 			var post = $filter('filter')(vm.posts, {_id: postId});
 
-			if(post[0]) showModalPost(post[0], false);
+			if(post[0]) showModalPost(post[0]._id, false);
 		}
 	}
 
-	function showModalPost(post, isSetPath) {
-		vm.currentPost = post;
+	function showModalPost(postId, isSetPath) {
+		currentPostId = postId;
 
 		if(isSetPath) {
 			// Set url path in browser
 			correctPath();
-			$location.path("/post/" + post._id);
+			$location.path("/post/" + postId);
 		}
 
 		$mdDialog.show({
@@ -291,12 +298,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	function DialogController($scope, $mdDialog) {
-		$scope.post = vm.currentPost;
+		var post = $filter('filter')(vm.posts, {_id: currentPostId});
+		if(post[0]) $scope.post = post[0];
+		$scope.newComment = vm.newComment;
+		$scope.editpost = vm.editpost;
+		$scope.deleteNews = vm.deleteNews;
 		$scope.hide = function() {
 			$mdDialog.hide();
-		};
-		$scope.cancel = function() {
-			console.log(true);
 		};
 		$scope.answer = function(answer) {
 			$mdDialog.hide(answer);

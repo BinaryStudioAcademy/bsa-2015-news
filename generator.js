@@ -27,6 +27,8 @@ Factory.define('News')
 	.attr('type', function() {return _.sample(['company', 'sandbox', 'weekly']);})
 	.attr('title', function() {return casual.title;})
 	.attr('body', function() {return casual.text;})
+	.attr('access_roles', function() {return casual.random_element([[], _.sample(['DEVELOPER', 'HR'], casual.integer(1, 2))]);})
+	.attr('restrict_ids', function() {return casual.random_element([[], _.pluck(_.sample(db.users, casual.integer(1, 4)), '_id')]);})
 	.attr('date', function() {return casual.integer(142202113, 1440338169);});
 
 _.times(50, function(n) {

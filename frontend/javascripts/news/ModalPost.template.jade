@@ -2,27 +2,31 @@ md-dialog(aria-label='post.title')
    form
       md-toolbar
          .md-toolbar-tools
-            h2 {{ post.title }}
-            span(flex='')
+            .title-modal
+               h2.title {{ post.title }}
+               md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
+               md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='deleteNews(post._id); hide()')
       md-dialog-content
          .body
-            div(ng-bind-html='post.body | unsafe')
+            div(ng-show='!edit', style='white-space: pre-wrap')
+               div(ng-bind-html='post.body | unsafe')
+            div(ng-show='edit')
+               textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
+               md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
          .footer
-            span.author {{post.author.name}} on {{post.date | date:'yyyy-MM-dd HH:mm'}}
+            span.author {{post.author.name || newsCtrl.author}} on {{post.date | date:'yyyy-MM-dd HH:mm'}}
             span.comments-count
-               md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentForm = !toggleCommentForm') {{post.comments.length}}
+               md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
                   md-tooltip Comment
-               md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.like($index); showNewsThunmbs =!showNewsThunmbs' ng-hide='showNewsThunmbs' ) {{post.likes.length}}
-               md-button.md-icon-button.fa.fa-thumbs-up(ng-click='newsCtrl.like($index); showNewsThunmbs =!showNewsThunmbs' ng-show='showNewsThunmbs' ) {{post.likes.length}}
-         .comments(ng-if='toggleCommentForm')
-            textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="newsCtrl.commentText[$index]" placeholder='Comment')
-            button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment($index, news._id)') Add comment
+               md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.newsLike(post._id, newsCtrl.user, 0)') {{post.likes.length}}
+         .comments(ng-show='toggleCommentModal')
+            textarea.form-control(ui-tinymce='newsCtrl.tinymceOptionsComment' ng-model="commentText" placeholder='Comment')
+            button.btn.btn-info.form-control(type='submit' ng-click='newComment(commentText, post._id, 0); toggleCommentModal = !toggleCommentModal') Add comment
          .comment-wrap
             .comment(ng-repeat='comment in post.comments')
-               i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment($parent.$index, $index)')
+               i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(post._id, comment._id)')
                span.author {{comment.author.name}}
                .body(ng-bind-html='comment.body| unsafe')
                span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
                span.right-thumb
-                  md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike($parent.$index, $index); showThunmbs =!showThunmbs' ng-hide='showThunmbs') {{comment.likes.length}}
-                  md-button.md-icon-button.fa.fa-thumbs-up(ng-click='newsCtrl.commentLike($parent.$index, $index); showThunmbs =!showThunmbs' ng-show='showThunmbs') {{comment.likes.length}}
+                  md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike(post._id, comment._id, newsCtrl.user)') {{comment.likes.length}}
