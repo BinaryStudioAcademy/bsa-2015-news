@@ -49,6 +49,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			checkUrlPath();
 		});
 	}
 
@@ -214,7 +215,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	// Modal post
 	vm.showModalPost = showModalPost;
-	vm.currentPost = {};
+	var currentPostId = "";
 
 	function checkUrlPath() {
 		var path = $location.path();
@@ -224,17 +225,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			var postId = path.substring(4, path.length);
 			var post = $filter('filter')(vm.posts, {_id: postId});
 
-			if(post[0]) showModalPost(post[0], false);
+			if(post[0]) showModalPost(post[0]._id, false);
 		}
 	}
 
-	function showModalPost(post, isSetPath) {
-		vm.currentPost = post;
+	function showModalPost(postId, isSetPath) {
+		currentPostId = postId;
 
 		if(isSetPath) {
 			// Set url path in browser
 			correctPath();
-			$location.path("/post/" + post._id);
+			$location.path("/post/" + postId);
 		}
 
 		$mdDialog.show({
@@ -264,12 +265,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	function DialogController($scope, $mdDialog) {
-		$scope.post = vm.currentPost;
+		var post = $filter('filter')(vm.posts, {_id: currentPostId});
+		if(post[0]) $scope.post = post[0];
+		$scope.newComment = vm.newComment;
+		$scope.editpost = vm.editpost;
+		$scope.deleteNews = vm.deleteNews;
 		$scope.hide = function() {
 			$mdDialog.hide();
-		};
-		$scope.cancel = function() {
-			console.log(true);
 		};
 		$scope.answer = function(answer) {
 			$mdDialog.hide(answer);
