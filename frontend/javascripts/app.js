@@ -20,7 +20,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					reloadOnSearch: false
 				})
 				.when('/post/:postId/', {
-					templateUrl: './templates/news/news.html',
+					templateUrl: './templates/news/company.html',
 					controller: 'NewsController',
 					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
