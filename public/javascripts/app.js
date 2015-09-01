@@ -31,6 +31,12 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controllerAs: 'newsCtrl',
 					reloadOnSearch: false
 				})
+				.when('/activity', {
+					templateUrl: './templates/news/activity.html',
+					controller: 'NewsController',
+					controllerAs: 'newsCtrl',
+					reloadOnSearch: false
+				})
 				.otherwise({
 					redirectTo: '/company'
 				});
@@ -67,7 +73,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 
 var getHeader = function() {
 	var request = new XMLHttpRequest();
-	request.open('GET', 'http://localhost:4033/header', true); //http://team.binary-studio.com/app/header
+	request.open('GET', 'http://team.binary-studio.com/app/header', true); //http://team.binary-studio.com/app/header
 	request.send();
 	request.onreadystatechange = function() {
 		if (request.readyState != 4) return;

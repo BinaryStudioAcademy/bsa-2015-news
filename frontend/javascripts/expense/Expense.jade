@@ -1,9 +1,9 @@
 #add-expense-widget(md-theme='addExpenseWidget')
 	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+		md-toolbar.md-primary(ng-click="isExpenseShow = !isExpenseShow")
 			.md-toolbar-tools
 				h2.md-flex Add expense
-		md-content
+		md-content(ng-class="{showMenu: isExpenseShow}")
 			form.expense-form(name="expenseForm", ng-init="showMoneyLeft = false",
 				ng-submit="expenseForm.$valid && formCtrl.createExpense(categoryModel, subcategoryModel)", novalidate)
 				md-input-container.input-container

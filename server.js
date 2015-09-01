@@ -7,7 +7,7 @@ var app = express();
 
 staticPath = path.normalize(__dirname + '/bower_components');
 app.use('/bower_components', express.static(staticPath));
-app.use('/news', express.static(__dirname + '/public'));
+app.use('/', express.static(__dirname + '/public'));
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
@@ -17,10 +17,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-var router = express.Router();
-var routes = require('./routes/index.js')(router);
+// var router = express.Router();
+var routes = require('./routes/index.js')(app); //var routes = require('./routes/index.js')(router);
 
-app.use('/news', router);
+// app.use('/news', router);
 
 
 var server = app.listen(4035, function() {

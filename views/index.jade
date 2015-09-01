@@ -3,11 +3,6 @@ extends ./layout.jade
 block content
 	#news-viev
 		header#header
-			span {{newsCtrl.text}}
-			#user-log
-				span {{newsCtrl.author}}
-				button.btn.btn-warning Log out
-		nav
 		aside#left
 			code-review-widget
 			expense-widget
@@ -15,10 +10,12 @@ block content
 			poll-widget
 			hr-widget
 			stack-widget
+			#left-block
+				code-review-widget
+				expense-widget
 		#content
 			.tabsdemoDynamicHeight
-				md-content
-
+				md-content(ng-class="{showMenu: isMenuShow}")
 					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="selectedIndex" )
 						md-tab
 							a(href='#/company') Company news
@@ -26,4 +23,6 @@ block content
 							a(href ='#/sandbox') Sandbox
 						md-tab
 							a(href ='#/weekly') weekly
-	#main(ng-view flex)
+						md-tab
+							a(href ='#/activity') activity log
+			#main(ng-view)

@@ -1,9 +1,9 @@
 #hr-widget(ng-controller="HRController as hrCtrl" md-theme='hrWidget')
 	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+		md-toolbar.md-primary(ng-click="isHrShow = !isHrShow")
 			.md-toolbar-tools
 				h2.md-flex Latest HR activity log
-		md-content
+		md-content(ng-class="{showMenu: isHrShow}")
 			.list-item(ng-repeat='action in hrCtrl.activities')
 				.item-content
 					a.message(href='{{action.url}}') {{action.message}}
