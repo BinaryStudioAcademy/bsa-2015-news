@@ -40,6 +40,33 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
+/*	var lastRoute = $route.current;
+	$rootScope.$on('$locationChangeSuccess', function (event) {
+		console.log(lastRoute);
+			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
+					$route.current = lastRoute;
+			}
+	});*/
+
+/*	$rootScope.$watch('selectedIndex', function(current, old) {
+		switch(current) {
+			case 0: $location.url("/company"); break;
+			case 1: $location.url("/sandbox"); break;
+			case 2: $location.url("/weekly"); break;
+			
+		}
+	});*/
+/*		var lastRoute = $route.current;
+		$rootScope.$on('$locationChangeSuccess', function(event) {
+				$route.current = lastRoute;
+		});*/
+/*$rootScope.$route = $route;*/
+		vm.isActive = function(route) {
+			console.log(route);
+				return route === $location.path();
+		};
+
+
 	vm.posts = [];
 	getNews();
 	function getNews(){
@@ -64,12 +91,12 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	};
 
-	vm.createNews = function(type) {
+	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
-		if(vm.titleNews && vm.bodyNews){
+		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.news = {
-				title: vm.titleNews,
-				body: vm.bodyNews,
+				title: weeklyTitle || vm.titleNews,
+				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
@@ -79,7 +106,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-
+console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});
@@ -150,16 +177,22 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.commentLike = function(newsId, commentId, userId) {
 		
-		var post = $filter('filter')(vm.posts, {_id: newsId});
+		var	post = $filter('filter')(vm.posts, {_id: newsId});
+		var comment = $filter('filter')(post[0].comments, {_id: commentId});
 
-		console.log(post);
-		NewsService.comentLike(newsId, commentId, userId);
-/*		var comLike = vm.posts[parentIndex].comments[index].likes;
-		if(comLike.indexOf(vm.user) < 0){
-			comLike.push(vm.user);
+		//NewsService.comentLike(newsId, commentId, userId);
+		if(comment[0].likes.indexOf(userId) < 0){
+			console.log('not exist');
+			comment[0].likes.push(userId);
 		}else{
-			comLike.splice(comLike.indexOf(vm.user), 1);
-		}*/
+			console.log('exist');
+			comment[0].likes.splice(comment[0].likes.indexOf(vm.user), 1);
+		}
+		
+		NewsService.deleteComment(newsId, commentId);
+		NewsService.addComment(newsId, comment[0]);
+		console.log(comment[0]);
+
 	};
 
 
