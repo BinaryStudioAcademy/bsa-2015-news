@@ -5,6 +5,6 @@ SocketFactory.$inject = ['socketFactory'];
 
 function SocketFactory(socketFactory) {
     return socketFactory({
-        ioSocket: io.connect()
+        ioSocket: io.connect('/')
     });
 }
