@@ -152,8 +152,19 @@ console.log(vm.news);
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId).then(function() {
-			socket.emit("delete post", newsId);
+		var confirm = $mdDialog.confirm()
+			.title("Are you sure want to delete this post?")
+			.content("")
+			.ariaLabel('Confirmation')
+			.ok('Yes')
+			.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			NewsService.deleteNews(newsId).then(function() {
+				socket.emit("delete post", newsId);
+				return true;
+			});
+		}, function() {
+			return false;
 		});
 	};
 
@@ -195,12 +206,16 @@ console.log(vm.news);
 
 	};
 
-
-
+	function updatePosts() {
+		vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
+		vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
+		vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+	}
 
 	// Socket logic
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
+		updatePosts();
 	});
 
 	socket.on("change post", function(newPost) {
@@ -215,6 +230,7 @@ console.log(vm.news);
 	socket.on("splice post", function(postId) {
 		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
 		vm.posts.splice(index, 1);
+		updatePosts();
 	});
 
 	socket.on("change like post", function(newPost) {
@@ -302,7 +318,11 @@ console.log(vm.news);
 		if(post[0]) $scope.post = post[0];
 		$scope.newComment = vm.newComment;
 		$scope.editpost = vm.editpost;
-		$scope.deleteNews = vm.deleteNews;
+		$scope.deleteNews = function(newsId) {
+			vm.deleteNews(newsId);
+			correctPath();
+			$location.path("/");
+		};
 		$scope.hide = function() {
 			$mdDialog.hide();
 		};
