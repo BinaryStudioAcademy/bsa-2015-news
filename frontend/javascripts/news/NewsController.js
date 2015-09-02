@@ -234,11 +234,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		$mdDialog.show(confirm).then(function() {
 			NewsService.deleteNews(newsId).then(function() {
 				socket.emit("delete post", newsId);
-				return true;
 			});
-		}, function() {
-			return false;
-		});
+		}, function() {});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
@@ -396,6 +393,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			correctPath();
 			$location.path("/");
 		};
+		$scope.deleteComment = vm.deleteComment;
+		$scope.newsLike = vm.newsLike;
+		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
 			$mdDialog.hide();
 		};
