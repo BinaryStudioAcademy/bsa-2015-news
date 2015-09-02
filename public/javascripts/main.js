@@ -31,6 +31,8 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/company.html',
+/*					controller: 'NewsController',
+					controllerAs: 'newsCtrl',*/
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
@@ -533,26 +535,73 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
 					$route.current = lastRoute;
 			}
-	});*/
-
-/*	$rootScope.$watch('selectedIndex', function(current, old) {
+	});
+	$rootScope.selectedIndex = 0;
+	$rootScope.$watch('selectedIndex', function(current, old) {
 		switch(current) {
 			case 0: $location.url("/company"); break;
 			case 1: $location.url("/sandbox"); break;
 			case 2: $location.url("/weekly"); break;
-			
 		}
-	});*/
-/*		var lastRoute = $route.current;
+	});
+		var lastRoute = $route.current;
 		$rootScope.$on('$locationChangeSuccess', function(event) {
 				$route.current = lastRoute;
-		});*/
+		});
 /*$rootScope.$route = $route;*/
-		vm.isActive = function(route) {
+/*		vm.isActive = function(route) {
 			console.log(route);
 				return route === $location.path();
+		};*/
+
+//angular chips
+	 vm.readonly = false;
+		vm.selectedItem = null;
+		vm.searchText = null;
+		vm.querySearch = querySearch;
+		vm.users = loadUsers();
+		vm.selectedNames = [];
+
+
+		/**
+		 * Search for vegetables.
+		 */
+		function querySearch (query) {
+			var results = query ? vm.users.filter(createFilterFor(query)) : [];
+			return results;
+		}
+		
+		//get user id
+		vm.names = [];
+		vm.showArr = function(){
+
+			console.log(vm.names);
 		};
 
+
+		/**
+		 * Create filter function for a query string
+		 */
+		function createFilterFor(query) {
+			var lowercaseQuery = angular.lowercase(query);
+			return function filterFn(vegetable) {
+				return (vegetable._lowername.indexOf(lowercaseQuery) === 0);
+			};
+		}
+
+		function loadUsers() {
+			var veggies = [
+				{
+					'name': 'HR'},
+				{
+					'name': 'Manager'}
+			];
+
+			return veggies.map(function (veg) {
+				veg._lowername = veg.name.toLowerCase();
+				return veg;
+			});
+		}
 
 	vm.posts = [];
 	getNews();
@@ -581,19 +630,26 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
+			vm.selectedNames.forEach(function(objNames){
+				vm.names.push(objNames.name);
+			});
 			vm.news = {
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
-				type: type
+				type: type,
+				access_roles: vm.names,
+				restrict_ids: []
 			};
+		console.log(vm.names);
+		vm.names = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-console.log(vm.news);
+		console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});

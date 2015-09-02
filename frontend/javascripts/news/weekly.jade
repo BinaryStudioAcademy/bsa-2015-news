@@ -8,6 +8,20 @@ md-content#weekly
 	form.news-message(method="post" ng-if='!newsCtrl.formView')
 		.form-group
 			input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
+			md-chips(ng-model='newsCtrl.selectedNames', md-autocomplete-snap='', md-require-match='')
+				md-autocomplete(md-selected-item='newsCtrl.selectedItem', md-search-text='newsCtrl.searchText', md-items='item in newsCtrl.querySearch(newsCtrl.searchText)', md-item-text='item.name', placeholder='Show only for:')
+					span(md-highlight-text='newsCtrl.searchText') {{item.name}} 
+				md-chip-template
+					span
+						strong {{$chip.name}}
+			br
+			md-chips(ng-model='newsCtrl.selectedNames', md-autocomplete-snap='', md-require-match='')
+				md-autocomplete(md-selected-item='newsCtrl.selectedItem', md-search-text='newsCtrl.searchText', md-items='item in newsCtrl.querySearch(newsCtrl.searchText)', md-item-text='item.name', placeholder='Show for all except:')
+					span(md-highlight-text='newsCtrl.searchText') {{item.name}} 
+				md-chip-template
+					span
+						strong {{$chip.name}}
+			br
 			textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
 		md-button.md-create(type='submit' ng-click='newsCtrl.createNews("weekly")') Create
 		md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
