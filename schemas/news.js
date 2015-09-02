@@ -20,10 +20,11 @@ var newsSchema = new Schema({
 		type: [String],
 		default: []
 	},
-	restrict_ids: {
-		type: [mongoose.Schema.Types.ObjectId],
+	restrict_ids: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
 		default: []
-	}
+	}]
 });
 
 module.exports = mongoose.model('News', newsSchema);

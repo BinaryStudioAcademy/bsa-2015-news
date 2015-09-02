@@ -65,54 +65,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				return route === $location.path();
 		};*/
 
-//angular chips
-	 vm.readonly = false;
-		vm.selectedItem = null;
-		vm.searchText = null;
-		vm.querySearch = querySearch;
-		vm.users = loadUsers();
-		vm.selectedNames = [];
 
-
-		/**
-		 * Search for vegetables.
-		 */
-		function querySearch (query) {
-			var results = query ? vm.users.filter(createFilterFor(query)) : [];
-			return results;
-		}
-		
-		//get user id
-		vm.names = [];
-		vm.showArr = function(){
-
-			console.log(vm.names);
-		};
-
-
-		/**
-		 * Create filter function for a query string
-		 */
-		function createFilterFor(query) {
-			var lowercaseQuery = angular.lowercase(query);
-			return function filterFn(vegetable) {
-				return (vegetable._lowername.indexOf(lowercaseQuery) === 0);
-			};
-		}
-
-		function loadUsers() {
-			var veggies = [
-				{
-					'name': 'HR'},
-				{
-					'name': 'Manager'}
-			];
-
-			return veggies.map(function (veg) {
-				veg._lowername = veg.name.toLowerCase();
-				return veg;
-			});
-		}
 
 	vm.posts = [];
 	getNews();
@@ -127,10 +80,69 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	}
 
+	vm.allUsers = [];
+	getUsers();
+	function getUsers() {
+		NewsService.getUsers().then(function(data) {
+			vm.allUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
+		});
+	}
 
-	vm.filtertNews = function(type){
-		console.log(type);
+	//angular chips
+	vm.readonly = false;
+	vm.selectedCategory = null;
+	vm.selectedUser = null;
+	vm.searchText = null;
+	vm.searchCategory = null;
+
+	//from jade
+	vm.selectedNames = [];
+	vm.selectedCategories = [];
+
+	vm.userIds = [];
+	vm.allowedCategory = [];
+
+	/**
+	 * Search for vegetables.
+	 */
+	vm.queryUsers = function (query) {
+		var results = query ? vm.users.filter(createFilterFor(query)) : [];
+		return results;
 	};
+	vm.queryCategory = function (query) {
+		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
+		return results;
+	};
+
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+		return function filterFn(lowercaseFilter) {
+			return (lowercaseFilter._lowername.indexOf(lowercaseQuery) === 0);
+		};
+	}
+
+	function loadUsers() {
+		return vm.allUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
+		});
+	}
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -140,9 +152,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
+		console.log(vm.selectedCategories);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
-				vm.names.push(objNames.name);
+				vm.userIds.push(objNames._id);
+			});
+			vm.selectedCategories.forEach(function(categoriesObj){
+				vm.allowedCategory.push(categoriesObj.name);
 			});
 			vm.news = {
 				title: weeklyTitle || vm.titleNews,
@@ -151,11 +167,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				comments: [],
 				likes: [],
 				type: type,
-				access_roles: vm.names,
-				restrict_ids: []
+				access_roles: vm.allowedCategory,
+				restrict_ids: vm.userIds
 			};
-		console.log(vm.names);
-		vm.names = [];
+		console.log(vm.userIds);
+		vm.selectedNames = [];
+		vm.selectedCategories = [];
+		vm.userIds = [];
+		vm.allowedCategory = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
@@ -206,9 +225,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId).then(function() {
-			socket.emit("delete post", newsId);
-		});
+		var confirm = $mdDialog.confirm()
+			.title("Are you sure want to delete this post?")
+			.content("")
+			.ariaLabel('Confirmation')
+			.ok('Yes')
+			.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			NewsService.deleteNews(newsId).then(function() {
+				socket.emit("delete post", newsId);
+			});
+		}, function() {});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
@@ -249,12 +276,16 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	};
 
-
-
+	function updatePosts() {
+		vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
+		vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
+		vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+	}
 
 	// Socket logic
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
+		updatePosts();
 	});
 
 	socket.on("change post", function(newPost) {
@@ -269,6 +300,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	socket.on("splice post", function(postId) {
 		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
 		vm.posts.splice(index, 1);
+		updatePosts();
 	});
 
 	socket.on("change like post", function(newPost) {
@@ -356,7 +388,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		if(post[0]) $scope.post = post[0];
 		$scope.newComment = vm.newComment;
 		$scope.editpost = vm.editpost;
-		$scope.deleteNews = vm.deleteNews;
+		$scope.deleteNews = function(newsId) {
+			vm.deleteNews(newsId);
+			correctPath();
+			$location.path("/");
+		};
+		$scope.deleteComment = vm.deleteComment;
+		$scope.newsLike = vm.newsLike;
+		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
 			$mdDialog.hide();
 		};
