@@ -32,13 +32,11 @@ header
 	// 	margin-left 200px
 	// 	color #fff
 
-nav, aside
+aside
 	width 380px
-	padding 5px
-	padding-left 15px
 
 #content
-	margin 0 370px
+	margin 0 400px
 	padding 10px
 	height 100%
 	& > .news-massage
@@ -46,7 +44,7 @@ nav, aside
 			margin-top 10px
 .news
 		width 100%
-		max-height 600px
+		max-height 800px
 		overflow-y auto
 		.title
 			padding 10px
@@ -87,34 +85,44 @@ md-dialog
 			width 800px
 			max-height 810px
 			padding 0px !important
+		.title-modal
+			width 100%
+		.title
+			display inline-block
+		.md-button
+			width auto !important
+		.delete-post
+				margin-right 0px !important
 		#remove-button
 			padding-top 5px
 			i
 				color #e57373
+		.delete-post
+			color #e57373
+			float right
+			margin-top -10px
 		.body
-				padding 10px
-				img
-					float left
-					margin-right 10px
-					border 2px solid white
-					outline 1px solid #bdbdbd
-			.footer
-				border-top 1px solid #e0e0e0
-				padding 10px 
-				background #f5f5f5
-				margin-top 10px
-				.comments-count
-					margin-top -15px
-					float right
-					cursor pointer
-					margin-left 10px
-			.comments
-				padding 10px
-				.comment, button
-					margin-top 5px
+			padding 10px
+			.fa
+				float right
+			
+		.footer
+			border-top 1px solid #e0e0e0
+			padding 10px 
+			background #f5f5f5
+			margin-top 10px
+			.comments-count
+				margin-top -15px
+				float right
+				cursor pointer
+				margin-left 10px
+		.comments
+			padding 10px
+			.comment, button
+				margin-top 5px
 
-					.body, .footer
-						padding 0
+				.body, .footer
+					padding 0
 
 aside#right
 	float right
@@ -142,7 +150,6 @@ input
 
 .search
 	width 90%
-	margin auto
 	margin-top 15px
 	button
 		float right
@@ -221,8 +228,6 @@ md-tooltip
 	.avatar
 		height 40px
 		margin -5px 10px 0 -5px
-	.search
-		margin-top 0
 	.btn-comment
 		background #d500f9
 		color #fff
@@ -232,3 +237,54 @@ md-tooltip
 	.title
 		background #f44336  !important
 		color #ffebee   !important
+#left-block
+	display none
+.showMenu
+	display initial !important
+#menu-btn
+	display none
+.md-chips 
+	.md-chip 
+		.md-chip-remove 
+			md-icon 
+				top 8%
+				left 20%
+@media screen and (max-width: 1600px)
+	#content
+		margin 0 390px 0 50px
+	aside#left
+		display none
+	#left-block
+		display block
+	.news
+		max-height 600px
+	md-card
+		margin 20px 10px 0 0
+@media screen and (max-width: 1090px)
+	#menu-btn
+		display block
+		float left
+		margin-left 10px
+	#content
+		margin 10px
+	header
+		position fixed
+		width 100%
+		z-index 3
+		top 0
+	aside#right
+		float none
+		width 100%
+		margin-top 54px
+	md-card
+		margin 0
+		md-content
+			display none
+	.tabsdemoDynamicHeight
+		md-content
+			display none
+	md-tabs-wrapper
+		&.md-stretch-tabs
+			md-pagination-wrapper
+				flex-direction column !important
+				height 140px

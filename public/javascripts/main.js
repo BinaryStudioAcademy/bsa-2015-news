@@ -10,6 +10,7 @@ function SocketFactory(socketFactory) {
     });
 }
 },{"./app":2}],2:[function(require,module,exports){
+<<<<<<< HEAD
 module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io'])
 	.config(['$routeProvider', '$resourceProvider', '$httpProvider', '$locationProvider', '$mdThemingProvider',
 		function($routeProvider, $resourceProvider, $httpProvider, $locationProvider, $mdThemingProvider) {
@@ -94,14 +95,103 @@ var getHeader = function() {
 	};
 };
 getHeader();
+=======
+module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io'])
+	.config(['$routeProvider', '$resourceProvider', '$httpProvider', '$locationProvider', '$mdThemingProvider',
+		function($routeProvider, $resourceProvider, $httpProvider, $locationProvider, $mdThemingProvider) {
+			$httpProvider.defaults.useXDomain = true;
+			$httpProvider.defaults.withCredentials = true;
+			delete $httpProvider.defaults.headers.common["X-Requested-With"];
+			$httpProvider.defaults.headers.common["Accept"] = "application/json";
+			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+			$routeProvider
+			.when('/company', {
+				templateUrl: './templates/news/company.html',
+				reloadOnSearch: false,
+				activetab: 'company'
+			})
+				.when('/sandbox', {
+					templateUrl: './templates/news/sandbox.html',
+					reloadOnSearch: false,
+					activetab:'sandbox'
+				})
+				.when('/post/:postId/', {
+					templateUrl: './templates/news/company.html',
+/*					controller: 'NewsController',
+					controllerAs: 'newsCtrl',*/
+					reloadOnSearch: false
+				})
+				.when('/weekly', {
+					templateUrl: './templates/news/weekly.html',
+					reloadOnSearch: false,
+					activetab: 'weekly'
+				})
+				.when('/activity', {
+					templateUrl: './templates/news/activity.html',
+					reloadOnSearch: false,
+					activetab: 'activity'
+				})
+				.otherwise({
+					redirectTo: '/company'
+				});
+			$resourceProvider.defaults.stripTrailingSlashes = false;
+			$mdThemingProvider.theme('reviewWidget')
+				.primaryPalette('orange', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('hrWidget')
+				.primaryPalette('teal', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('addExpenseWidget')
+				.primaryPalette('green', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('pollWidget')
+				.primaryPalette('indigo', {
+					'default': '800'
+				});
+			$mdThemingProvider.theme('stackWidget')
+				.primaryPalette('pink', {
+					'default': '800'
+				});
+
+			// Приклад теми:
+			//$mdThemingProvider.theme('default')
+			//	.primaryPalette('blue')
+			//	.accentPalette('indigo')
+			//	.warnPalette('red')
+			//	.backgroundPalette('grey');
+		}
+	]);
+
+var getHeader = function() {
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://team.binary-studio.com/app/header', true); //http://team.binary-studio.com/app/header
+	request.send();
+	request.onreadystatechange = function() {
+		if (request.readyState != 4) return;
+		if (request.status != 200) {
+			alert(request.status + ': ' + request.statusText);
+		} else {
+			var headerHtml = request.responseText;
+			var headerContainer = document.getElementById('header');
+			headerContainer.innerHTML =headerHtml;
+			headerFunction();
+		}
+	};
+};
+getHeader();
+
+>>>>>>> develop
 },{}],3:[function(require,module,exports){
 var app = require('../app');
 var _ = require('lodash');
 app.controller("ReviewController", ReviewController);
 
-ReviewController.$inject = ["ReviewService"];
+ReviewController.$inject = ["ReviewService", "$mdDialog"];
 
-function ReviewController(ReviewService) {
+function ReviewController(ReviewService, $mdDialog) {
 	var vm = this;
 
 	vm.currentUser = {id: '1'};
@@ -109,25 +199,43 @@ function ReviewController(ReviewService) {
 	vm.periods = [
 	{
 		value: 'today',
-		text: 'Upcoming today'
+		text: 'today'
 	},
 	{
 		value: 'week',
-		text: 'Upcoming this week'
+		text: 'in a week'
 	},
 	{
 		value: 'month',
-		text: 'Upcoming this month'
+		text: 'in a month'
 	}
 	];
 	vm.period = vm.periods[0];
 
-	vm.upcoming = ReviewService.getPopular();
-	vm.upcoming.week = vm.upcoming.month.slice(0, 5);
-	vm.upcoming.today = vm.upcoming.month.slice(0, 2);
+	//vm.getRequestStatus = function(request) {
+	//	return _.find(request.users, {id: vm.currentUser.id});
+	//};
 
-	vm.getRequestStatus = function(request) {
-		return _.find(request.users, {id: vm.currentUser.id});
+
+	vm.updateUpcoming = function() {
+		ReviewService.getRequests(vm.period.value).then(function(data) {
+			vm.upcoming = data;
+		});
+	};
+
+	vm.updateUpcoming();
+
+	vm.showDetails = function(ev, request) {
+		$mdDialog.show(
+			$mdDialog.alert()
+				//.parent(angular.element(document.querySelector('#code-review-widget')))
+				.clickOutsideToClose(true)
+				.title(request.title)
+				.content(request.details)
+				.ariaLabel('Request Details')
+				.ok('Close')
+				.targetEvent(ev)
+		);
 	};
 }
 },{"../app":2,"lodash":21}],4:[function(require,module,exports){
@@ -149,12 +257,11 @@ ReviewService.$inject = ["$resource"];
 
 function ReviewService($resource) {
 	return {
-		getPopular: getPopular
+		getRequests: getRequests
 	};
 
-	function getPopular() {
-		//return $resource("http://team.binary-studio.com/reviewr/api/v1/reviewrequest/popular").query().$promise;
-		return {month: [{"id":"1","title":"Tenetur sit et cumque a.","details":"Alice dear!' said her sister; 'Why, what are they doing?' Alice whispered to the beginning of the creature, but on the look-out for serpents night and day! Why, I haven't had a bone in his sleep, 'that \"I like what I could shut up like a writing-desk?' 'Come, we shall get on better.' 'I'd rather finish my tea,' said the Mock Turtle, capering wildly about. 'Change lobsters again!' yelled the Gryphon added 'Come, let's hear some of YOUR adventures.' 'I could tell you just now what the name 'Alice!' CHAPTER XII. Alice's Evidence 'Here!' cried Alice, jumping up in a very melancholy voice. 'Repeat, \"YOU ARE OLD, FATHER WILLIAM,' to the table for it, you may nurse it a very deep well. Either the well was very glad to find it out, we should all have our heads cut off, you know. So you see, Miss, this here ought to be Involved in this way! Stop this moment, and fetch me a pair of the way I ought to go near the King very decidedly, and there they lay on the hearth and grinning from ear to.","reputation":"8","date_review":"2015-09-07 04:28:25","created_at":"2015-08-31 10:43:38","user_id":"1","group_id":"3","offers_count":5,"user":{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1"},"group":{"id":"3","title":".Net"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"1","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"1","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"1","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"1","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"1","user_id":"5","isAccepted":"0","status":""}}]},{"id":"2","title":"Atque atque quaerat aut.","details":"This time Alice waited till she too began dreaming after a minute or two, it was her dream:-- First, she tried to speak, and no room to grow to my right size: the next question is, what did the archbishop find?' The Mouse looked at her feet, for it flashed across her mind that she could guess, she was always ready to make personal remarks,' Alice said very politely, 'if I had not a regular rule: you invented it just now.' 'It's the oldest rule in the night? Let me see: that would happen: '\"Miss Alice! Come here directly, and get ready for your walk!\" \"Coming in a trembling voice to a shriek, 'and just as the doubled-up soldiers were silent, and looked at poor Alice, that she knew that it was too much of it at all. However, 'jury-men' would have made a memorandum of the wood--(she considered him to be a very poor speaker,' said the King, 'that saves a world of trouble, you know, as we needn't try to find that the Mouse replied rather crossly: 'of course you don't!' the Hatter.","reputation":"2","date_review":"2015-09-09 20:14:26","created_at":"2015-08-31 10:43:38","user_id":"7","group_id":"3","offers_count":7,"user":{"id":"7","bid":"55dd8bbefd5d69885b0bc0c6","first_name":"michael.morozov@binary-studio.com","last_name":"","role":"DEVELOPER","email":"michael.morozov@binary-studio.com","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/3eecdd0f3f45f4f6379d76221ec6db82?d=retro","address":"iat: 1441022786","reputation":"6","job_id":"1","department_id":"1"},"group":{"id":"3","title":".Net"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"2","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"2","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"2","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"2","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"2","user_id":"5","isAccepted":"0","status":""}},{"id":"18","bid":"55dc13391846c68a1ad56daa","first_name":"admin@admin","last_name":"","role":"ADMIN","email":"admin@admin","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/a3175a452c7a8fea80c62a198a40f6c9?d=retro","address":"iat: 1441044862","reputation":"1","job_id":"1","department_id":"1","pivot":{"review_request_id":"2","user_id":"18","isAccepted":"0","status":""}},{"id":"19","bid":"55dd8bf4fd5d69885b0bc0c8","first_name":"dev@reviewr.local","last_name":"","role":"DEVELOPER","email":"dev@reviewr.local","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/7e023c2ae873e6d998863ca8360e56de?d=retro","address":"iat: 1441022882","reputation":"2","job_id":"1","department_id":"1","pivot":{"review_request_id":"2","user_id":"19","isAccepted":"0","status":""}}]},{"id":"3","title":"Ex alias ea consequatur.","details":"Alice in a mournful tone, 'he won't do a thing before, and he went on saying to herself, as well as she spoke--fancy CURTSEYING as you're falling through the wood. 'It's the first position in dancing.' Alice said; 'there's a large pool all round the neck of the ground, Alice soon began talking again. 'Dinah'll miss me very much pleased at having found out a race-course, in a hurry. 'No, I'll look first,' she said, as politely as she went nearer to make out who was sitting on a little nervous about this; 'for it might not escape again, and Alice guessed in a helpless sort of people live about here?' 'In THAT direction,' waving the other queer noises, would change to tinkling sheep-bells, and the Hatter said, turning to Alice, she went on eagerly: 'There is such a thing. After a while, finding that nothing more to be otherwise than what it might be hungry, in which case it would be worth the trouble of getting her hands up to the shore. CHAPTER III. A Caucus-Race and a Long Tale They.","reputation":"8","date_review":"2015-09-15 01:03:15","created_at":"2015-08-31 10:43:38","user_id":"3","group_id":"2","offers_count":5,"user":{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1"},"group":{"id":"2","title":"JS"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"3","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"3","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"3","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"3","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"3","user_id":"5","isAccepted":"0","status":""}}]},{"id":"4","title":"Aut ut commodi non.","details":"A little bright-eyed terrier, you know, this sort of mixed flavour of cherry-tart, custard, pine-apple, roast turkey, toffee, and hot buttered toast,) she very seldom followed it), and handed back to the jury. 'Not yet, not yet!' the Rabbit coming to look over their shoulders, that all the children she knew that it was growing, and growing, and growing, and she trembled till she was up to her head, she tried hard to whistle to it; but she heard something splashing about in all directions, tumbling up against each other; however, they got settled down again, the cook was leaning over the wig, (look at the end of the Nile On every golden scale! 'How cheerfully he seems to be patted on the Duchess's knee, while plates and dishes crashed around it--once more the shriek of the well, and noticed that they couldn't get them out of court! Suppress him! Pinch him! Off with his head!' she said, 'for her hair goes in such confusion that she was now, and she tried to fancy to herself 'Now I can.","reputation":"4","date_review":"2015-09-05 07:01:40","created_at":"2015-08-31 10:43:38","user_id":"16","group_id":"1","offers_count":6,"user":{"id":"16","bid":"","first_name":"Alex","last_name":"Weber","role":null,"email":"cOHara@Schmeler.org","phone":"02490014149","avatar":"http:\/\/www.gravatar.com\/avatar\/01110920bd43c260d1ad170e78e6820f?d=identicon","address":"96862 Alexa Trail Suite 221\nNew Paris, CO 54683","reputation":"4","job_id":"6","department_id":"7"},"group":{"id":"1","title":"PHP"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"4","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"4","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"4","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"4","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"4","user_id":"5","isAccepted":"0","status":""}},{"id":"18","bid":"55dc13391846c68a1ad56daa","first_name":"admin@admin","last_name":"","role":"ADMIN","email":"admin@admin","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/a3175a452c7a8fea80c62a198a40f6c9?d=retro","address":"iat: 1441044862","reputation":"1","job_id":"1","department_id":"1","pivot":{"review_request_id":"4","user_id":"18","isAccepted":"0","status":""}}]},{"id":"5","title":"Nam rem ducimus omnis.","details":"English); 'now I'm opening out like the Queen?' said the King, 'that saves a world of trouble, you know, as we needn't try to find that the Queen never left off when they had a bone in his note-book, cackled out 'Silence!' and read out from his book, 'Rule Forty-two. ALL PERSONS MORE THAN A MILE HIGH TO LEAVE THE COURT.' Everybody looked at Alice, and she soon found herself falling down a very decided tone: 'tell her something about the reason and all the time when I find a number of executions the Queen left off, quite out of its voice. 'Back to land again, and she walked down the chimney!' 'Oh! So Bill's got to see it again, but it did not get dry again: they had a vague sort of people live about here?' 'In THAT direction,' waving the other queer noises, would change (she knew) to the jury. They were just beginning to think that proved it at all; and I'm sure I don't care which happens!' She ate a little scream of laughter. 'Oh, hush!' the Rabbit say, 'A barrowful will do, to begin.","reputation":"3","date_review":"2015-09-02 13:55:55","created_at":"2015-08-31 10:43:38","user_id":"5","group_id":"1","offers_count":7,"user":{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9"},"group":{"id":"1","title":"PHP"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"5","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"5","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"5","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"5","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"5","user_id":"5","isAccepted":"0","status":""}},{"id":"18","bid":"55dc13391846c68a1ad56daa","first_name":"admin@admin","last_name":"","role":"ADMIN","email":"admin@admin","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/a3175a452c7a8fea80c62a198a40f6c9?d=retro","address":"iat: 1441044862","reputation":"1","job_id":"1","department_id":"1","pivot":{"review_request_id":"5","user_id":"18","isAccepted":"0","status":""}},{"id":"19","bid":"55dd8bf4fd5d69885b0bc0c8","first_name":"dev@reviewr.local","last_name":"","role":"DEVELOPER","email":"dev@reviewr.local","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/7e023c2ae873e6d998863ca8360e56de?d=retro","address":"iat: 1441022882","reputation":"2","job_id":"1","department_id":"1","pivot":{"review_request_id":"5","user_id":"19","isAccepted":"0","status":""}}]},{"id":"6","title":"Sunt explicabo aut enim.","details":"Dormouse went on, 'that they'd let Dinah stop in the distance. 'Come on!' cried the Mouse, who seemed ready to make ONE respectable person!' Soon her eye fell upon a little bit of mushroom, and raised herself to about two feet high: even then she heard a little hot tea upon its nose. The Dormouse shook its head impatiently, and said, 'It WAS a curious appearance in the common way. So she swallowed one of them with one of the jury asked. 'That I can't see you?' She was a little shriek and a Canary called out in a low trembling voice, 'Let us get to the other birds tittered audibly. 'What I was a sound of a treacle-well--eh, stupid?' 'But they were trying which word sounded best. Some of the mushroom, and her face brightened up at this corner--No, tie 'em together first--they don't reach half high enough yet--Oh! they'll do well enough; and what does it to his ear. Alice considered a little, and then dipped suddenly down, so suddenly that Alice could see, when she went on, 'if you only.","reputation":"2","date_review":"2015-09-09 15:42:08","created_at":"2015-08-31 10:43:38","user_id":"11","group_id":"2","offers_count":5,"user":{"id":"11","bid":"","first_name":"Archibald","last_name":"Satterfield","role":null,"email":"Becker.Rasheed@Reichel.biz","phone":"1-689-739-1556","avatar":"http:\/\/www.gravatar.com\/avatar\/b9766d33c837cffb470d323b965c1e3b?d=identicon","address":"2967 Elenor Trace\nMarjoryfort, MD 09826-7372","reputation":"4","job_id":"1","department_id":"10"},"group":{"id":"2","title":"JS"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"6","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"6","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"6","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"6","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"6","user_id":"5","isAccepted":"0","status":""}}]},{"id":"7","title":"Et delectus harum omnis.","details":"Pigeon had finished. 'As if it wasn't trouble enough hatching the eggs,' said the Caterpillar. 'Well, I should frighten them out with his whiskers!' For some minutes it seemed quite dull and stupid for life to go and live in that soup!' Alice said very politely, 'if I had to fall a long way back, and barking hoarsely all the way wherever she wanted much to know, but the Dodo in an undertone, 'important--unimportant--unimportant--important--' as if it please your Majesty,' said Two, in a natural way. 'I thought you did,' said the Duck. 'Found IT,' the Mouse had changed his mind, and was gone in a hoarse, feeble voice: 'I heard every word you fellows were saying.' 'Tell us a story!' said the King, 'or I'll have you executed on the floor, as it went, as if she had to leave off this minute!' She generally gave herself very good height indeed!' said the Dodo had paused as if it wasn't trouble enough hatching the eggs,' said the Duchess; 'and the moral of that is--\"The more there is of.","reputation":"5","date_review":"2015-09-08 17:34:59","created_at":"2015-08-31 10:43:38","user_id":"5","group_id":"2","offers_count":5,"user":{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9"},"group":{"id":"2","title":"JS"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"7","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"7","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"7","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"7","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"7","user_id":"5","isAccepted":"0","status":""}}]},{"id":"8","title":"Magni sunt sunt quas et.","details":"No, I've made up my mind about it; and while she was looking at Alice as he wore his crown over the verses the White Rabbit blew three blasts on the floor: in another moment, when she went on, yawning and rubbing its eyes, for it was out of court! Suppress him! Pinch him! Off with his whiskers!' For some minutes it seemed quite natural); but when the Rabbit was still in sight, and no one could possibly hear you.' And certainly there was generally a frog or a worm. The question is, Who in the pool was getting quite crowded with the bones and the March Hare. 'He denies it,' said Five, in a day did you manage on the slate. 'Herald, read the accusation!' said the Gryphon. 'Well, I should frighten them out again. That's all.' 'Thank you,' said the Mouse to tell me the truth: did you call it sad?' And she went out, but it did not quite like the Queen?' said the Hatter, with an M, such as mouse-traps, and the Queen in front of the court and got behind Alice as it can be,' said the Mock.","reputation":"8","date_review":"2015-09-14 01:14:20","created_at":"2015-08-31 10:43:38","user_id":"12","group_id":"2","offers_count":5,"user":{"id":"12","bid":"","first_name":"Omari","last_name":"Auer","role":null,"email":"Shea.Koss@Bruen.com","phone":"315-151-4933x13708","avatar":"http:\/\/www.gravatar.com\/avatar\/8d3f2fedd8c14d6c92035f1b47128f4d?d=identicon","address":"9535 Arch Lake\nJaydeborough, AL 24475","reputation":"3","job_id":"11","department_id":"8"},"group":{"id":"2","title":"JS"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"8","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"8","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"8","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"8","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"8","user_id":"5","isAccepted":"0","status":""}}]},{"id":"10","title":"Sit magnam qui et dicta.","details":"Oh, how I wish you wouldn't squeeze so.' said the Mock Turtle. Alice was beginning to feel very uneasy: to be ashamed of yourself for asking such a curious plan!' exclaimed Alice. 'And ever since that,' the Hatter asked triumphantly. Alice did not venture to ask his neighbour to tell you--all I know is, something comes at me like a frog; and both creatures hid their faces in their paws. 'And how do you like the right way to explain the mistake it had come to the fifth bend, I think?' 'I had NOT!' cried the Mouse, who seemed too much overcome to do it?' 'In my youth,' said the Duchess, 'and that's why. Pig!' She said it to her usual height. It was the first to break the silence. 'What day of the what?' said the Rabbit whispered in reply, 'for fear they should forget them before the officer could get to twenty at that rate! However, the Multiplication Table doesn't signify: let's try Geography. London is the same words as before, 'and things are \"much of a sea of green leaves that lay.","reputation":"2","date_review":"2015-09-02 14:10:09","created_at":"2015-08-31 10:43:38","user_id":"14","group_id":"3","offers_count":5,"user":{"id":"14","bid":"","first_name":"Louisa","last_name":"Stiedemann","role":null,"email":"Jenkins.Roslyn@Koelpin.org","phone":"1-360-376-0270x3772","avatar":"http:\/\/www.gravatar.com\/avatar\/5c62f98ba5398040c1bc2325748860fc?d=identicon","address":"12634 Schoen Fields\nMrazton, LA 04278-8841","reputation":"9","job_id":"8","department_id":"4"},"group":{"id":"3","title":".Net"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"10","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"10","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"10","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"10","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"10","user_id":"5","isAccepted":"0","status":""}}]},{"id":"11","title":"Harum nulla ea at fuga.","details":"Alice rather unwillingly took the place of the garden, called out to sea!\" But the snail replied \"Too far, too far!\" and gave a sudden leap out of it, and yet it was too small, but at any rate he might answer questions.--How am I to do such a thing before, but she did not at all comfortable, and it sat for a good deal frightened by this very sudden change, but very politely: 'Did you speak?' 'Not I!' said the Duchess, digging her sharp little chin into Alice's head. 'Is that the best way to explain it as well say this), 'to go on in a hurry that she was up to Alice, and her face in her lessons in the trial one way up as the rest waited in silence. At last the Dodo said, 'EVERYBODY has won, and all the while, till at last she stretched her arms round it as well look and see that queer little toss of her sharp little chin. 'I've a right to grow to my boy, I beat him when he pleases!' CHORUS. 'Wow! wow! wow!' While the Panther received knife and fork with a sigh. 'I only took the.","reputation":"3","date_review":"2015-09-10 00:58:01","created_at":"2015-08-31 10:43:38","user_id":"17","group_id":"3","offers_count":5,"user":{"id":"17","bid":"","first_name":"Joana","last_name":"Greenholt","role":null,"email":"Rowan48@hotmail.com","phone":"1-922-238-7347","avatar":"http:\/\/www.gravatar.com\/avatar\/0c67788d197664bb42569063f6d5b1f0?d=identicon","address":"471 Leopoldo Freeway Suite 658\nLake Melisashire, NE 54237","reputation":"8","job_id":"16","department_id":"9"},"group":{"id":"3","title":".Net"},"users":[{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1","pivot":{"review_request_id":"11","user_id":"1","isAccepted":"0","status":""}},{"id":"2","bid":"","first_name":"Tim","last_name":"Testuser","role":null,"email":"test@email.com","phone":"06162185951","avatar":"http:\/\/www.gravatar.com\/avatar\/093cc54c03f969bcb3e3113400593ce4?d=identicon","address":"63863 Ruecker Keys\nPort Janice, RI 23695-4065","reputation":"9","job_id":"16","department_id":"5","pivot":{"review_request_id":"11","user_id":"2","isAccepted":"0","status":""}},{"id":"3","bid":"","first_name":"Alexey","last_name":"Tsinya","role":null,"email":"tsinya.alexey@gmail.com","phone":"+20(3)3897547531","avatar":"http:\/\/www.gravatar.com\/avatar\/28843cafdbb8e8269523dbcb841c8c94?d=identicon","address":"54692 Eugene Squares Apt. 780\nWest Zelma, MN 72309","reputation":"2","job_id":"11","department_id":"1","pivot":{"review_request_id":"11","user_id":"3","isAccepted":"0","status":""}},{"id":"4","bid":"","first_name":"Alex","last_name":"Mokrenko","role":null,"email":"alex.mokrencko@yandex.ru","phone":"(332)506-3049x7414","avatar":"http:\/\/www.gravatar.com\/avatar\/c19b8a2a04887c28b6493beee110054f?d=identicon","address":"534 Predovic Corner Apt. 440\nNorth Holdenstad, PA 14160","reputation":"3","job_id":"7","department_id":"8","pivot":{"review_request_id":"11","user_id":"4","isAccepted":"0","status":""}},{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9","pivot":{"review_request_id":"11","user_id":"5","isAccepted":"0","status":""}}]},{"id":"12","title":"Sed quia maxime ut id.","details":"Caterpillar; and it put more simply--\"Never imagine yourself not to make ONE respectable person!' Soon her eye fell upon a low voice, to the whiting,' said the Hatter. He had been anxiously looking across the garden, called out in a ring, and begged the Mouse had changed his mind, and was going to dive in among the leaves, which she had felt quite unhappy at the thought that she might as well wait, as she went nearer to watch them, and was gone in a louder tone. 'ARE you to offer it,' said Alice loudly. 'The idea of having the sentence first!' 'Hold your tongue, Ma!' said the Caterpillar. This was quite out of this sort in her hands, and was suppressed. 'Come, that finished the first witness,' said the Mock Turtle to the jury, of course--\"I GAVE HER ONE, THEY GAVE HIM TWO--\" why, that must be getting somewhere near the right size, that it might end, you know,' said the Duchess; 'and the moral of that is--\"Oh, 'tis love, 'tis love, 'tis love, 'tis love, 'tis love, 'tis love, 'tis.","reputation":"5","date_review":"2015-09-09 20:40:25","created_at":"2015-08-31 10:43:38","user_id":"14","group_id":"3","offers_count":0,"user":{"id":"14","bid":"","first_name":"Louisa","last_name":"Stiedemann","role":null,"email":"Jenkins.Roslyn@Koelpin.org","phone":"1-360-376-0270x3772","avatar":"http:\/\/www.gravatar.com\/avatar\/5c62f98ba5398040c1bc2325748860fc?d=identicon","address":"12634 Schoen Fields\nMrazton, LA 04278-8841","reputation":"9","job_id":"8","department_id":"4"},"group":{"id":"3","title":".Net"},"users":[]},{"id":"13","title":"Et rerum non qui vel.","details":"Mock Turtle to the beginning of the e--e--evening, Beautiful, beautiful Soup!' CHAPTER XI. Who Stole the Tarts? The King laid his hand upon her knee, and the poor animal's feelings. 'I quite forgot how to set about it; if I'm not used to it!' pleaded poor Alice. 'But you're so easily offended, you know!' The Mouse only shook its head to feel very sleepy and stupid), whether the blows hurt it or not. 'Oh, PLEASE mind what you're talking about,' said Alice. 'I've so often read in the window, and some were birds,) 'I suppose so,' said the last words out loud, and the Gryphon answered, very nearly carried it out to sea!\" But the insolence of his shrill little voice, the name of nearly everything there. 'That's the judge,' she said to the rose-tree, she went on growing, and very neatly and simply arranged; the only difficulty was, that her flamingo was gone in a hurry: a large arm-chair at one corner of it: 'No room! No room!' they cried out when they hit her; and the baby--the fire-irons.","reputation":"7","date_review":"2015-09-06 21:52:21","created_at":"2015-08-31 10:43:38","user_id":"1","group_id":"2","offers_count":0,"user":{"id":"1","bid":"","first_name":"Alex","last_name":"Adminov","role":null,"email":"admin@email.com","phone":"1-546-580-0232x395","avatar":"http:\/\/www.gravatar.com\/avatar\/b685d4127c61e9e20a636e34cb906841?d=identicon","address":"38126 Roberta Street\nSouth Meredithhaven, WV 15478","reputation":"6","job_id":"1","department_id":"1"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"14","title":"Ea sit quo et porro.","details":"I then? Tell me that first, and then, if I like being that person, I'll come up: if not, I'll stay down here! It'll be no use in waiting by the White Rabbit; 'in fact, there's nothing written on the stairs. Alice knew it was looking at Alice the moment he was in managing her flamingo: she succeeded in bringing herself down to look over their shoulders, that all the party were placed along the course, here and there they lay on the ground as she could. 'No,' said the Queen, stamping on the floor, as it settled down again, the Dodo replied very politely, feeling quite pleased to have changed since her swim in the lap of her little sister's dream. The long grass rustled at her feet, for it to his son, 'I feared it might injure the brain; But, now that I'm perfectly sure I have dropped them, I wonder?' And here Alice began to tremble. Alice looked up, and began staring at the top of his shrill little voice, the name of nearly everything there. 'That's the judge,' she said this, she came.","reputation":"6","date_review":"2015-09-01 02:58:47","created_at":"2015-08-31 10:43:38","user_id":"15","group_id":"2","offers_count":0,"user":{"id":"15","bid":"","first_name":"Kole","last_name":"Huels","role":null,"email":"Rosemary.Goyette@Maggio.com","phone":"06995269688","avatar":"http:\/\/www.gravatar.com\/avatar\/cccd1103254badc61fd5aa6e13c11a4c?d=identicon","address":"26190 Gerardo Camp Apt. 857\nLake Hulda, NV 58995-8545","reputation":"9","job_id":"7","department_id":"2"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"16","title":"Et qui voluptas non ut.","details":"Queen ordering off her unfortunate guests to execution--once more the shriek of the day; and this was of very little use, as it spoke. 'As wet as ever,' said Alice very meekly: 'I'm growing.' 'You've no right to grow up again! Let me see: that would happen: '\"Miss Alice! Come here directly, and get in at the bottom of a water-well,' said the Mock Turtle, and said to the croquet-ground. The other guests had taken advantage of the busy farm-yard--while the lowing of the house!' (Which was very like having a game of croquet she was beginning to think that there ought! And when I grow up, I'll write one--but I'm grown up now,' she added in an angry voice--the Rabbit's--'Pat! Pat! Where are you?' And then a great deal to ME,' said Alice very meekly: 'I'm growing.' 'You've no right to think,' said Alice very humbly: 'you had got its head impatiently, and walked a little faster?\" said a timid and tremulous sound.] 'That's different from what I say--that's the same side of WHAT?' thought.","reputation":"6","date_review":"2015-09-08 02:58:17","created_at":"2015-08-31 10:43:38","user_id":"14","group_id":"2","offers_count":0,"user":{"id":"14","bid":"","first_name":"Louisa","last_name":"Stiedemann","role":null,"email":"Jenkins.Roslyn@Koelpin.org","phone":"1-360-376-0270x3772","avatar":"http:\/\/www.gravatar.com\/avatar\/5c62f98ba5398040c1bc2325748860fc?d=identicon","address":"12634 Schoen Fields\nMrazton, LA 04278-8841","reputation":"9","job_id":"8","department_id":"4"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"17","title":"Aut et quo ut.","details":"Alice replied very gravely. 'What else have you got in as well,' the Hatter began, in a fight with another dig of her head pressing against the roof of the creature, but on second thoughts she decided to remain where she was, and waited. When the pie was all about, and crept a little of the Lizard's slate-pencil, and the fall NEVER come to an end! 'I wonder what CAN have happened to me! I'LL soon make you a present of everything I've said as yet.' 'A cheap sort of use in knocking,' said the Cat again, sitting on the breeze that followed them, the melancholy words:-- 'Soo--oop of the Gryphon, before Alice could not join the dance? \"You can really have no notion how long ago anything had happened.) So she was quite tired of this. I vote the young lady to see some meaning in it,' but none of YOUR adventures.' 'I could tell you more than three.' 'Your hair wants cutting,' said the Hatter. 'You MUST remember,' remarked the King, with an air of great curiosity. 'Soles and eels, of course,'.","reputation":"7","date_review":"2015-09-01 05:47:22","created_at":"2015-08-31 10:43:38","user_id":"17","group_id":"2","offers_count":0,"user":{"id":"17","bid":"","first_name":"Joana","last_name":"Greenholt","role":null,"email":"Rowan48@hotmail.com","phone":"1-922-238-7347","avatar":"http:\/\/www.gravatar.com\/avatar\/0c67788d197664bb42569063f6d5b1f0?d=identicon","address":"471 Leopoldo Freeway Suite 658\nLake Melisashire, NE 54237","reputation":"8","job_id":"16","department_id":"9"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"18","title":"Ut autem et harum.","details":"English); 'now I'm opening out like the largest telescope that ever was! Good-bye, feet!' (for when she noticed a curious dream!' said Alice, swallowing down her anger as well as she did not notice this question, but hurriedly went on, turning to Alice, 'Have you seen the Mock Turtle: 'crumbs would all wash off in the pool, and the baby with some difficulty, as it settled down again in a sorrowful tone; 'at least there's no use in the distance would take the place where it had come back again, and she heard a little timidly: 'but it's no use in saying anything more till the eyes appeared, and then all the time he was gone, and the words came very queer to ME.' 'You!' said the Cat; and this was the only difficulty was, that she had expected: before she had never been in a trembling voice to its feet, ran round the rosetree; for, you see, so many lessons to learn! Oh, I shouldn't want YOURS: I don't want to stay in here any longer!' She waited for a conversation. Alice felt a violent.","reputation":"5","date_review":"2015-09-13 04:48:33","created_at":"2015-08-31 10:43:38","user_id":"5","group_id":"2","offers_count":0,"user":{"id":"5","bid":"","first_name":"Vladimir","last_name":"Cherniuk","role":null,"email":"reegerye@gmail.com","phone":"441.079.5190x13060","avatar":"http:\/\/www.gravatar.com\/avatar\/7a8d41bf76ba651f018ab985145dc277?d=identicon","address":"02835 Thora Ramp Apt. 334\nNew Nettie, FL 41614","reputation":"5","job_id":"14","department_id":"9"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"19","title":"Ab eaque aut aut sed.","details":"Turtle.' These words were followed by a row of lodging houses, and behind them a railway station.) However, she soon made out that she had put on one of the Rabbit's little white kid gloves, and was going to leave it behind?' She said this last remark, 'it's a vegetable. It doesn't look like it?' he said, 'on and off, for days and days.' 'But what happens when you throw them, and he called the Queen, in a very curious thing, and she felt that she was now about a thousand times as large as himself, and this he handed over to the fifth bend, I think?' he said do. Alice looked very anxiously into her eyes; and once she remembered how small she was appealed to by all three to settle the question, and they went on muttering over the jury-box with the bread-and-butter getting so far off). 'Oh, my poor little feet, I wonder what CAN have happened to me! When I used to call him Tortoise, if he had a pencil that squeaked. This of course, I meant,' the King had said that day. 'A likely story.","reputation":"5","date_review":"2015-09-04 15:52:49","created_at":"2015-08-31 10:43:38","user_id":"12","group_id":"2","offers_count":0,"user":{"id":"12","bid":"","first_name":"Omari","last_name":"Auer","role":null,"email":"Shea.Koss@Bruen.com","phone":"315-151-4933x13708","avatar":"http:\/\/www.gravatar.com\/avatar\/8d3f2fedd8c14d6c92035f1b47128f4d?d=identicon","address":"9535 Arch Lake\nJaydeborough, AL 24475","reputation":"3","job_id":"11","department_id":"8"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"20","title":"Et sit omnis aut.","details":"Alice called after it; and while she was walking by the prisoner to--to somebody.' 'It must have been was not quite sure whether it was certainly English. 'I don't know of any use, now,' thought Alice, 'they're sure to make ONE respectable person!' Soon her eye fell upon a time she went on in a helpless sort of idea that they couldn't get them out again. The Mock Turtle replied; 'and then the Mock Turtle: 'nine the next, and so on.' 'What a number of cucumber-frames there must be!' thought Alice. 'Now we shall have to turn into a small passage, not much surprised at this, that she might as well look and see how he can thoroughly enjoy The pepper when he finds out who was trembling down to nine inches high. CHAPTER VI. Pig and Pepper For a minute or two the Caterpillar decidedly, and the procession moved on, three of her or of anything else. CHAPTER V. Advice from a bottle marked 'poison,' so Alice soon began talking to herself, 'if one only knew how to begin.' He looked at the end.'.","reputation":"8","date_review":"2015-09-11 10:06:57","created_at":"2015-08-31 10:43:38","user_id":"10","group_id":"2","offers_count":0,"user":{"id":"10","bid":"","first_name":"Manuel","last_name":"Rath","role":null,"email":"Bailey.Breanne@Wehner.info","phone":"848.366.3680","avatar":"http:\/\/www.gravatar.com\/avatar\/f1fb8227c3cfa651610f6dc325c169bf?d=identicon","address":"851 Domenic Shores Suite 653\nEulashire, ME 61427-5316","reputation":"2","job_id":"20","department_id":"4"},"group":{"id":"2","title":"JS"},"users":[]},{"id":"26","title":"New Review Request","details":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus libero facere, placeat atque quam excepturi officia, voluptates dolorem dignissimos quaerat facilis provident. Consequuntur ut dignissimos ad nihil rerum aliquid delectus expedita, tenetur sunt impedit, illo reprehenderit officiis. Aliquid, illo possimus ex ipsum pariatur voluptatem tempore dolorem obcaecati vitae, placeat? Dolore neque iusto, ipsum exercitationem ullam accusantium aspernatur ea adipisci aut, unde ad quibusdam vitae, ratione voluptas, optio? Voluptatibus eum temporibus, voluptates officiis, atque vero aliquid consectetur minus voluptatem, numquam, possimus! Cum ratione obcaecati magni fuga molestiae ex, sed tempora ab, asperiores deleniti mollitia sunt! Culpa obcaecati quisquam expedita error harum.<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus libero facere, placeat atque quam excepturi officia, voluptates dolorem dignissimos quaerat facilis provident. Consequuntur ut dignissimos ad nihil rerum aliquid delectus expedita, tenetur sunt impedit, illo reprehenderit officiis. Aliquid, illo possimus ex ipsum pariatur voluptatem tempore dolorem obcaecati vitae, placeat? Dolore neque iusto, ipsum exercitationem ullam accusantium aspernatur ea adipisci aut, unde ad quibusdam vitae, ratione voluptas, optio? Voluptatibus eum temporibus, voluptates officiis, atque vero aliquid consectetur minus voluptatem, numquam, possimus! Cum ratione obcaecati magni fuga molestiae ex, sed tempora ab, asperiores deleniti mollitia sunt! Culpa obcaecati quisquam expedita error harum.<br><\/div>","reputation":"-1","date_review":"2015-08-31 22:30:00","created_at":"2015-08-31 13:39:38","user_id":"18","group_id":"3","offers_count":0,"user":{"id":"18","bid":"55dc13391846c68a1ad56daa","first_name":"admin@admin","last_name":"","role":"ADMIN","email":"admin@admin","phone":"666-66-666","avatar":"http:\/\/www.gravatar.com\/avatar\/a3175a452c7a8fea80c62a198a40f6c9?d=retro","address":"iat: 1441044862","reputation":"1","job_id":"1","department_id":"1"},"group":{"id":"3","title":".Net"},"users":[]}]};
+	function getRequests(period) {
+		return $resource("http://team.binary-studio.com/reviewr/api/v1/reviewrequest/upcoming/" + period).query().$promise;
 	}
 }
 },{"../app":2}],6:[function(require,module,exports){
@@ -311,6 +418,7 @@ function ExpenseDirective() {
 	};
 }
 },{"../app":2}],8:[function(require,module,exports){
+<<<<<<< HEAD
 var app = require('../app');
 app.factory("ExpenseService", ExpenseService);
 
@@ -342,6 +450,39 @@ function ExpenseService($resource) {
 			budget: {used: 0, left: 0}
 		};
 	}
+=======
+var app = require('../app');
+app.factory("ExpenseService", ExpenseService);
+
+ExpenseService.$inject = ["$resource"];
+
+function ExpenseService($resource) {
+	return {
+		getBudgets: getBudgets,
+		getCategories: getCategories,
+		createExpense: createExpense,
+		getCurrentUser: getCurrentUser
+	};
+
+	function getBudgets(year) {
+		return $resource("http://localhost:1335/budget", { where: {"year": year}}).query().$promise;
+	}
+
+	function getCategories() {
+		return $resource("http://localhost:1335/category/:id", { id: "@id" }).query().$promise;
+	}
+
+	function createExpense(newExpense) {
+		return $resource("http://localhost:1335/expense/:id", { id: "@id" }).save(newExpense).$promise;
+	}
+
+	function getCurrentUser() {
+		return {
+			id: "55ddbde6d636c0e46a23fc90",
+			budget: {used: 0, left: 0}
+		};
+	}
+>>>>>>> develop
 }
 },{"../app":2}],9:[function(require,module,exports){
 var app = require('../app');
@@ -408,6 +549,7 @@ function HRService() {
 	}
 }
 },{"../app":2}],12:[function(require,module,exports){
+<<<<<<< HEAD
 var app = require('../app.js');
 	app.factory('NewsService', NewsService);
 
@@ -489,6 +631,87 @@ var app = require('../app.js');
 			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
 		}
 	}
+=======
+var app = require('../app.js');
+	app.factory('NewsService', NewsService);
+
+	NewsService.$inject = ["$resource"];
+
+	function NewsService($resource) {
+		return {
+			getNews: getNews,
+			getUsers: getUsers,
+			createNews: createNews,
+			editNews: editNews,
+			deleteNews: deleteNews,
+			addComment: addComment,
+			deleteComment: deleteComment,
+			newsLike: newsLike,
+			deleteNewsLike: deleteNewsLike
+		};
+
+		function getRequest() {
+			return $resource("api/news/:id", { id: "@id"});
+		}
+
+		function getNews() {
+			return $resource("api/news").query().$promise;
+		}
+
+		function getUsers() {
+			return $resource("api/users").query().$promise;
+		}
+		
+		function createNews(news) {
+			return $resource("api/news", {}, {
+						save: { method: 'POST', 
+							headers: {'Content-Type': 'application/json'}
+						}
+					}).save(news).$promise;
+		}
+
+		function addComment(newsId, comment) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({ id: newsId }, {$push:{comments: comment}}).$promise;
+		}
+
+		function editNews(newsId, news) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({ id: newsId }, { body: news }).$promise;
+		}
+
+		function deleteNews(newsId) {
+			return getRequest().remove({ id: newsId }).$promise;
+		}
+
+		function deleteComment(newsId, commentId) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({ id: newsId }, { $pull:{comments: {_id: commentId} }}).$promise;
+		}
+
+		function newsLike(newsId, userId) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({ id: newsId }, { $addToSet:{likes: userId }}).$promise;
+		}
+		function deleteNewsLike(newsId, userId) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			console.log(data);
+			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
+
+		}
+
+	}
+>>>>>>> develop
 
 },{"../app.js":2}],13:[function(require,module,exports){
 var app = require('../app');
@@ -533,6 +756,33 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
+/*	var lastRoute = $route.current;
+	$rootScope.$on('$locationChangeSuccess', function (event) {
+		console.log(lastRoute);
+			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
+					$route.current = lastRoute;
+			}
+	});
+	$rootScope.selectedIndex = 0;
+	$rootScope.$watch('selectedIndex', function(current, old) {
+		switch(current) {
+			case 0: $location.url("/company"); break;
+			case 1: $location.url("/sandbox"); break;
+			case 2: $location.url("/weekly"); break;
+		}
+	});
+		var lastRoute = $route.current;
+		$rootScope.$on('$locationChangeSuccess', function(event) {
+				$route.current = lastRoute;
+		});
+/*$rootScope.$route = $route;*/
+/*		vm.isActive = function(route) {
+			console.log(route);
+				return route === $location.path();
+		};*/
+
+
+
 	vm.posts = [];
 	getNews();
 	function getNews(){
@@ -542,13 +792,73 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			checkUrlPath();
 		});
 	}
 
+	vm.allUsers = [];
+	getUsers();
+	function getUsers() {
+		NewsService.getUsers().then(function(data) {
+			vm.allUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
+		});
+	}
 
-	vm.filtertNews = function(type){
-		console.log(type);
+	//angular chips
+	vm.readonly = false;
+	vm.selectedCategory = null;
+	vm.selectedUser = null;
+	vm.searchText = null;
+	vm.searchCategory = null;
+
+	//from jade
+	vm.selectedNames = [];
+	vm.selectedCategories = [];
+
+	vm.userIds = [];
+	vm.allowedCategory = [];
+
+	/**
+	 * Search for vegetables.
+	 */
+	vm.queryUsers = function (query) {
+		var results = query ? vm.users.filter(createFilterFor(query)) : [];
+		return results;
 	};
+	vm.queryCategory = function (query) {
+		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
+		return results;
+	};
+
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+		return function filterFn(lowercaseFilter) {
+			return (lowercaseFilter._lowername.indexOf(lowercaseQuery) === 0);
+		};
+	}
+
+	function loadUsers() {
+		return vm.allUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
+		});
+	}
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -556,22 +866,36 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	};
 
-	vm.createNews = function(type) {
+	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
-		if(vm.titleNews && vm.bodyNews){
+		console.log(vm.selectedCategories);
+		if((vm.titleNews && vm.bodyNews) || type === 'company'){
+			vm.selectedNames.forEach(function(objNames){
+				vm.userIds.push(objNames._id);
+			});
+			vm.selectedCategories.forEach(function(categoriesObj){
+				vm.allowedCategory.push(categoriesObj.name);
+			});
 			vm.news = {
-				title: vm.titleNews,
-				body: vm.bodyNews,
+				title: weeklyTitle || vm.titleNews,
+				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
-				type: type
+				type: type,
+				access_roles: vm.allowedCategory,
+				restrict_ids: vm.userIds
 			};
+		console.log(vm.userIds);
+		vm.selectedNames = [];
+		vm.selectedCategories = [];
+		vm.userIds = [];
+		vm.allowedCategory = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-
+		console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});
@@ -617,9 +941,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId).then(function() {
-			socket.emit("delete post", newsId);
-		});
+		var confirm = $mdDialog.confirm()
+			.title("Are you sure want to delete this post?")
+			.content("")
+			.ariaLabel('Confirmation')
+			.ok('Yes')
+			.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			NewsService.deleteNews(newsId).then(function() {
+				socket.emit("delete post", newsId);
+			});
+		}, function() {});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
@@ -642,24 +974,34 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.commentLike = function(newsId, commentId, userId) {
 		
-		var post = $filter('filter')(vm.posts, {_id: newsId});
+		var	post = $filter('filter')(vm.posts, {_id: newsId});
+		var comment = $filter('filter')(post[0].comments, {_id: commentId});
 
-		console.log(post);
-		NewsService.comentLike(newsId, commentId, userId);
-/*		var comLike = vm.posts[parentIndex].comments[index].likes;
-		if(comLike.indexOf(vm.user) < 0){
-			comLike.push(vm.user);
+		//NewsService.comentLike(newsId, commentId, userId);
+		if(comment[0].likes.indexOf(userId) < 0){
+			console.log('not exist');
+			comment[0].likes.push(userId);
 		}else{
-			comLike.splice(comLike.indexOf(vm.user), 1);
-		}*/
+			console.log('exist');
+			comment[0].likes.splice(comment[0].likes.indexOf(vm.user), 1);
+		}
+		
+		NewsService.deleteComment(newsId, commentId);
+		NewsService.addComment(newsId, comment[0]);
+		console.log(comment[0]);
+
 	};
 
-
-
+	function updatePosts() {
+		vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
+		vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
+		vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+	}
 
 	// Socket logic
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
+		updatePosts();
 	});
 
 	socket.on("change post", function(newPost) {
@@ -674,6 +1016,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	socket.on("splice post", function(postId) {
 		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
 		vm.posts.splice(index, 1);
+		updatePosts();
 	});
 
 	socket.on("change like post", function(newPost) {
@@ -707,7 +1050,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	// Modal post
 	vm.showModalPost = showModalPost;
-	vm.currentPost = {};
+	var currentPostId = "";
 
 	function checkUrlPath() {
 		var path = $location.path();
@@ -717,17 +1060,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			var postId = path.substring(4, path.length);
 			var post = $filter('filter')(vm.posts, {_id: postId});
 
-			if(post[0]) showModalPost(post[0], false);
+			if(post[0]) showModalPost(post[0]._id, false);
 		}
 	}
 
-	function showModalPost(post, isSetPath) {
-		vm.currentPost = post;
+	function showModalPost(postId, isSetPath) {
+		currentPostId = postId;
 
 		if(isSetPath) {
 			// Set url path in browser
 			correctPath();
-			$location.path("/post/" + post._id);
+			$location.path("/post/" + postId);
 		}
 
 		$mdDialog.show({
@@ -757,12 +1100,20 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	function DialogController($scope, $mdDialog) {
-		$scope.post = vm.currentPost;
+		var post = $filter('filter')(vm.posts, {_id: currentPostId});
+		if(post[0]) $scope.post = post[0];
+		$scope.newComment = vm.newComment;
+		$scope.editpost = vm.editpost;
+		$scope.deleteNews = function(newsId) {
+			vm.deleteNews(newsId);
+			correctPath();
+			$location.path("/");
+		};
+		$scope.deleteComment = vm.deleteComment;
+		$scope.newsLike = vm.newsLike;
+		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
 			$mdDialog.hide();
-		};
-		$scope.cancel = function() {
-			console.log(true);
 		};
 		$scope.answer = function(answer) {
 			$mdDialog.hide(answer);
@@ -941,6 +1292,7 @@ function VoteFormController() {
     }
 }
 },{"../app":2}],18:[function(require,module,exports){
+<<<<<<< HEAD
 var app = require('../app.js');
 
 app.controller('StackController', stackController);
@@ -960,6 +1312,25 @@ function stackController(StackService) {
 			vm.questions = data;
 		});
 	}
+=======
+var app = require('../app.js');
+
+app.controller('StackController', stackController);
+
+stackController.$inject = ['StackService'];
+
+function stackController(StackService) {
+	var vm = this;
+	vm.questions = [];
+	vm.type = 'recent';
+	vm.getQuestions = getQuestions;
+
+	getQuestions(vm.type);
+
+	function getQuestions(type) {
+		vm.questions = StackService.getQuestions(type);
+	}
+>>>>>>> develop
 }
 },{"../app.js":2}],19:[function(require,module,exports){
 var app = require('../app');
@@ -975,6 +1346,7 @@ function StackDirective() {
 	};
 }
 },{"../app":2}],20:[function(require,module,exports){
+<<<<<<< HEAD
 var app = require('../app.js');
 
 app.factory('StackService', stackService);
@@ -1104,6 +1476,136 @@ function stackService(resource) {
 // function getQuestions(type) {
 // 	return mock;
 // }
+=======
+var app = require('../app.js');
+
+app.factory('StackService', stackService);
+
+stackService.$inject = ['$resource'];
+
+function stackService() {
+	return {
+		getQuestions: getQuestions
+	};
+}
+
+var mock = [{
+	"id": "1",
+	"title": "How many PHP programmers does it take to change a light bulb?",
+	"description": "Don't be all day to such stuff? Be off, or I'll kick you down stairs!' 'That is not said right,' said the voice. 'Fetch me my gloves this moment!' Then came a rumbling of little Alice and all would change (she knew) to the jury, of course--\"I GAVE HER ONE, THEY GAVE HIM TWO--\" why, that must be kind to them,' thought Alice, and, after folding his arms and legs in all my life!' Just as she could, and soon found herself in a moment. 'Let's go on with the distant sobs of the court,\" and I don't care which happens!' She ate a little bird as soon as look at me like a frog; and both the hedgehogs were out of a well?' The Dormouse had closed its eyes by this very sudden change, but very politely: 'Did you say pig, or fig?' said the King very decidedly, and he went on, taking first one side and then said, 'It was a large cauldron which seemed to think that there was not a moment that it led into the book her sister was reading, but it all came different!' Alice replied in an encouraging opening for a minute or two, she made out that one of the day; and this time the Queen had only one who had got its head impatiently, and said, 'So you think I could, if I can do without lobsters, you know. Come on!' So they went on growing, and she swam about, trying to find herself talking familiarly with them, as if he were trying to fix on one, the cook till his eyes very wide on hearing this; but all he SAID was, 'Why is a raven like a star-fish,' thought Alice. One of the house before she.",
+	"created_at": "2015-08-28 09:27:36",
+	"updated_at": "2015-08-28 09:27:36",
+	"user_id": "8",
+	"folder_id": "1",
+	"slug": "sapiente-omnis-consequuntur-qui-ex-vero-expedita-asperiores",
+	"answers_count": 0,
+	"vote_value": "1",
+	"vote_likes": "1",
+	"vote_dislikes": 0,
+	"comment_count": 0,
+	"url": "http:\/\/team.binary-studio.com\/asciit\/#questions\/sapiente-omnis-consequuntur-qui-ex-vero-expedita-asperiores",
+	"user": {
+		"id": "8",
+		"first_name": "Wyman",
+		"last_name": "O'Kon",
+		"email": "Gregorio00@Hodkiewicz.com",
+		"avatar": "http:\/\/www.gravatar.com\/avatar\/8e64bd7b5617976d8805ad4d3ee06919.jpg?s=80&d=identicon&r=g",
+		"created_at": "2015-08-28 09:27:36",
+		"updated_at": "2015-08-28 09:27:36",
+		"binary_id": null,
+		"country": null,
+		"city": null,
+		"gender": null,
+		"birthday": null,
+		"role_id": "2"
+	},
+	"folder": {
+		"id": "1",
+		"title": "PHP"
+	},
+	"tags": []
+}, {
+	"id": "2",
+	"title": "How to close vim?",
+	"description": "Queen, and Alice, were in custody and under sentence of execution.' 'What for?' said Alice. 'That's the first to break the silence. 'What day of the reeds--the rattling teacups would change (she knew) to the three gardeners instantly threw themselves flat upon their faces, so that her idea of the garden: the roses growing on it but tea. 'I don't know one,' said Alice. 'I've read that in some book, but I grow up, I'll write one--but I'm grown up now,' she said, 'for her hair goes in such confusion that she had nothing yet,' Alice replied thoughtfully. 'They have their tails fast in their proper places--ALL,' he repeated with great emphasis, looking hard at Alice as he spoke, and then all the same, the next verse.' 'But about his toes?' the Mock Turtle's heavy sobs. Lastly, she pictured to herself that perhaps it was addressed to the porpoise, \"Keep back, please: we don't want YOU with us!\"' 'They were learning to draw, you know--' (pointing with his tea spoon at the flowers and those cool fountains, but she added, to herself, being rather proud of it: for she was quite silent for a little irritated at the other queer noises, would change to dull reality--the grass would be offended again. 'Mine is a long way back, and barking hoarsely all the jurymen on to himself as he came, 'Oh! the Duchess, the Duchess! Oh! won't she be savage if I've been changed in the sea, some children digging in the pool, 'and she sits purring so nicely by the officers of the sea.' 'I couldn't help.",
+	"created_at": "2015-08-28 09:27:36",
+	"updated_at": "2015-08-28 09:27:36",
+	"user_id": "19",
+	"folder_id": "2",
+	"slug": "reprehenderit-necessitatibus-sed-quisquam-consequuntur-fugit-minus-incidunt",
+	"answers_count": 0,
+	"vote_value": "2",
+	"vote_likes": "7",
+	"vote_dislikes": "5",
+	"comment_count": 0,
+	"url": "http:\/\/team.binary-studio.com\/asciit\/#questions\/reprehenderit-necessitatibus-sed-quisquam-consequuntur-fugit-minus-incidunt",
+	"user": {
+		"id": "19",
+		"first_name": "Mack",
+		"last_name": "Bins",
+		"email": "Margot.Schamberger@gmail.com",
+		"avatar": "http:\/\/www.gravatar.com\/avatar\/af1e23b289993ce3f61f86e44c8b8511.jpg?s=80&d=identicon&r=g",
+		"created_at": "2015-08-28 09:27:36",
+		"updated_at": "2015-08-28 09:27:36",
+		"binary_id": null,
+		"country": null,
+		"city": null,
+		"gender": null,
+		"birthday": null,
+		"role_id": "2"
+	},
+	"folder": {
+		"id": "2",
+		"title": "JS"
+	},
+	"tags": []
+},
+{
+	"id": "3",
+	"title": "Most efficient way to turn (x=y) into true?",
+	"description": "Queen, and Alice, were in custody and under sentence of execution.' 'What for?' said Alice. 'That's the first to break the silence. 'What day of the reeds--the rattling teacups would change (she knew) to the three gardeners instantly threw themselves flat upon their faces, so that her idea of the garden: the roses growing on it but tea. 'I don't know one,' said Alice. 'I've read that in some book, but I grow up, I'll write one--but I'm grown up now,' she said, 'for her hair goes in such confusion that she had nothing yet,' Alice replied thoughtfully. 'They have their tails fast in their proper places--ALL,' he repeated with great emphasis, looking hard at Alice as he spoke, and then all the same, the next verse.' 'But about his toes?' the Mock Turtle's heavy sobs. Lastly, she pictured to herself that perhaps it was addressed to the porpoise, \"Keep back, please: we don't want YOU with us!\"' 'They were learning to draw, you know--' (pointing with his tea spoon at the flowers and those cool fountains, but she added, to herself, being rather proud of it: for she was quite silent for a little irritated at the other queer noises, would change to dull reality--the grass would be offended again. 'Mine is a long way back, and barking hoarsely all the jurymen on to himself as he came, 'Oh! the Duchess, the Duchess! Oh! won't she be savage if I've been changed in the sea, some children digging in the pool, 'and she sits purring so nicely by the officers of the sea.' 'I couldn't help.",
+	"created_at": "2015-08-28 09:27:36",
+	"updated_at": "2015-08-28 09:27:36",
+	"user_id": "19",
+	"folder_id": "2",
+	"slug": "reprehenderit-necessitatibus-sed-quisquam-consequuntur-fugit-minus-incidunt",
+	"answers_count": 0,
+	"vote_value": "-4",
+	"vote_likes": "1",
+	"vote_dislikes": "5",
+	"comment_count": 0,
+	"url": "http:\/\/team.binary-studio.com\/asciit\/#questions\/reprehenderit-necessitatibus-sed-quisquam-consequuntur-fugit-minus-incidunt",
+	"user": {
+		"id": "19",
+		"first_name": "Mack",
+		"last_name": "Bins",
+		"email": "Margot.Schamberger@gmail.com",
+		"avatar": "http:\/\/www.gravatar.com\/avatar\/e49ff6fb915ba612a1e7424b1a3740db.jpg?s=80&d=identicon&r=g",
+		"created_at": "2015-08-28 09:27:36",
+		"updated_at": "2015-08-28 09:27:36",
+		"binary_id": null,
+		"country": null,
+		"city": null,
+		"gender": null,
+		"birthday": null,
+		"role_id": "2"
+	},
+	"folder": {
+		"id": "2",
+		"title": "JS"
+	},
+	"tags": []
+}];
+
+function getQuestions(type) {
+	return mock;
+}
+
+// function getQuestions(type) {
+// 	var data = resource('http://team.binary-studio.com/asciit/api/v1/widget/questions/:type', {type: '@type'});
+// 	return data.get(type).$promise;
+// }
+>>>>>>> develop
 
 
 },{"../app.js":2}],21:[function(require,module,exports){

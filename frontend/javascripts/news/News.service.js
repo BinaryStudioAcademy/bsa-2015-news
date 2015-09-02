@@ -6,14 +6,14 @@ var app = require('../app.js');
 	function NewsService($resource) {
 		return {
 			getNews: getNews,
+			getUsers: getUsers,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
 			addComment: addComment,
 			deleteComment: deleteComment,
 			newsLike: newsLike,
-			deleteNewsLike: deleteNewsLike,
-			comentLike: comentLike
+			deleteNewsLike: deleteNewsLike
 		};
 
 		function getRequest() {
@@ -24,6 +24,10 @@ var app = require('../app.js');
 			return $resource("api/news").query().$promise;
 		}
 
+		function getUsers() {
+			return $resource("api/users").query().$promise;
+		}
+		
 		function createNews(news) {
 			return $resource("api/news", {}, {
 						save: { method: 'POST', 
