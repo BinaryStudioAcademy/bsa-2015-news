@@ -7,8 +7,6 @@ ReviewController.$inject = ["ReviewService", "$mdDialog"];
 function ReviewController(ReviewService, $mdDialog) {
 	var vm = this;
 
-	vm.currentUser = {id: '1'};
-
 	vm.periods = [
 	{
 		value: 'today',
@@ -16,22 +14,30 @@ function ReviewController(ReviewService, $mdDialog) {
 	},
 	{
 		value: 'week',
-		text: 'this week'
+		text: 'in a week'
 	},
 	{
 		value: 'month',
-		text: 'this month'
+		text: 'in a month'
 	}
 	];
 	vm.period = vm.periods[0];
 
-	vm.upcoming = ReviewService.getPopular();
-	vm.upcoming.week = vm.upcoming.month.slice(0, 5);
-	vm.upcoming.today = vm.upcoming.month.slice(0, 2);
+	ReviewService.getUser().then(function(data) {
+		vm.currentUser = data;
+	});
 
 	vm.getRequestStatus = function(request) {
 		return _.find(request.users, {id: vm.currentUser.id});
 	};
+
+	vm.updateUpcoming = function() {
+		ReviewService.getRequests(vm.period.value).then(function(data) {
+			vm.upcoming = data;
+		});
+	};
+
+	vm.updateUpcoming();
 
 	vm.showDetails = function(ev, request) {
 		$mdDialog.show(
@@ -44,5 +50,17 @@ function ReviewController(ReviewService, $mdDialog) {
 				.ok('Close')
 				.targetEvent(ev)
 		);
+	};
+
+	vm.sendOffer = function(request) {
+		ReviewService.sendOffer(request, vm.currentUser).then(function(data) {
+			vm.updateUpcoming();
+		});
+	};
+
+	vm.cancelOffer = function(request) {
+		ReviewService.cancelOffer(request).then(function(data) {
+			vm.updateUpcoming();
+		});
 	};
 }
