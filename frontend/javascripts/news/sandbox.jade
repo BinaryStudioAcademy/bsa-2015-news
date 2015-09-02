@@ -9,6 +9,20 @@ md-content#sandbox
 		.form-group
 			input.form-control(type='text' placeholder='Title' ng-model='newsCtrl.titleNews' required)
 			textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.bodyNews" required)
+		md-chips(ng-model='newsCtrl.selectedCategories', md-autocomplete-snap='', md-require-match='')
+			md-autocomplete(md-selected-item='newsCtrl.selectedCategory', md-search-text='newsCtrl.searchCategory', md-items='category in newsCtrl.queryCategory(newsCtrl.searchCategory)', md-item-text='category.name', placeholder='Show only for:')
+				span(md-highlight-text='newsCtrl.searchCategory') {{category.name}} 
+			md-chip-template
+				span
+					strong {{$chip.name}}
+		br
+		md-chips(ng-model='newsCtrl.selectedNames', md-autocomplete-snap='', md-require-match='')
+			md-autocomplete(md-selected-item='newsCtrl.selectedUser', md-search-text='newsCtrl.searchText', md-items='user in newsCtrl.queryUsers(newsCtrl.searchText)', md-item-text='user.name', placeholder='Show for all except:')
+				span(md-highlight-text='newsCtrl.searchText') {{user.name}} 
+			md-chip-template
+				span
+					strong {{$chip.name}}
+		br
 		md-button.md-create(type='submit' ng-click='newsCtrl.createNews("sandbox")') Create
 		md-button.md-cancel(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 	.news
