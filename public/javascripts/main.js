@@ -31,6 +31,8 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/company.html',
+/*					controller: 'NewsController',
+					controllerAs: 'newsCtrl',*/
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
@@ -430,6 +432,7 @@ var app = require('../app.js');
 	function NewsService($resource) {
 		return {
 			getNews: getNews,
+			getUsers: getUsers,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
@@ -447,6 +450,10 @@ var app = require('../app.js');
 			return $resource("api/news").query().$promise;
 		}
 
+		function getUsers() {
+			return $resource("api/users").query().$promise;
+		}
+		
 		function createNews(news) {
 			return $resource("api/news", {}, {
 						save: { method: 'POST', 
@@ -546,25 +553,25 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
 					$route.current = lastRoute;
 			}
-	});*/
-
-/*	$rootScope.$watch('selectedIndex', function(current, old) {
+	});
+	$rootScope.selectedIndex = 0;
+	$rootScope.$watch('selectedIndex', function(current, old) {
 		switch(current) {
 			case 0: $location.url("/company"); break;
 			case 1: $location.url("/sandbox"); break;
 			case 2: $location.url("/weekly"); break;
-			
 		}
-	});*/
-/*		var lastRoute = $route.current;
+	});
+		var lastRoute = $route.current;
 		$rootScope.$on('$locationChangeSuccess', function(event) {
 				$route.current = lastRoute;
-		});*/
+		});
 /*$rootScope.$route = $route;*/
-		vm.isActive = function(route) {
+/*		vm.isActive = function(route) {
 			console.log(route);
 				return route === $location.path();
-		};
+		};*/
+
 
 
 	vm.posts = [];
@@ -580,10 +587,69 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	}
 
+	vm.allUsers = [];
+	getUsers();
+	function getUsers() {
+		NewsService.getUsers().then(function(data) {
+			vm.allUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
+		});
+	}
 
-	vm.filtertNews = function(type){
-		console.log(type);
+	//angular chips
+	vm.readonly = false;
+	vm.selectedCategory = null;
+	vm.selectedUser = null;
+	vm.searchText = null;
+	vm.searchCategory = null;
+
+	//from jade
+	vm.selectedNames = [];
+	vm.selectedCategories = [];
+
+	vm.userIds = [];
+	vm.allowedCategory = [];
+
+	/**
+	 * Search for vegetables.
+	 */
+	vm.queryUsers = function (query) {
+		var results = query ? vm.users.filter(createFilterFor(query)) : [];
+		return results;
 	};
+	vm.queryCategory = function (query) {
+		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
+		return results;
+	};
+
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+		return function filterFn(lowercaseFilter) {
+			return (lowercaseFilter._lowername.indexOf(lowercaseQuery) === 0);
+		};
+	}
+
+	function loadUsers() {
+		return vm.allUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
+		});
+	}
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -593,20 +659,34 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
+		console.log(vm.selectedCategories);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
+			vm.selectedNames.forEach(function(objNames){
+				vm.userIds.push(objNames._id);
+			});
+			vm.selectedCategories.forEach(function(categoriesObj){
+				vm.allowedCategory.push(categoriesObj.name);
+			});
 			vm.news = {
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
-				type: type
+				type: type,
+				access_roles: vm.allowedCategory,
+				restrict_ids: vm.userIds
 			};
+		console.log(vm.userIds);
+		vm.selectedNames = [];
+		vm.selectedCategories = [];
+		vm.userIds = [];
+		vm.allowedCategory = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-console.log(vm.news);
+		console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});

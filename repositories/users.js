@@ -7,5 +7,7 @@ var NewsRepository = function(){
 };
 
 NewsRepository.prototype = new Repository();
-
+/*NewsRepository.prototype.getAllUsers = function(callback) {
+	News.find().exec(callback);
+};*/
 module.exports = new NewsRepository();
