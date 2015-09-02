@@ -30,13 +30,22 @@ md-content#company
 		.news-message(ng-repeat='news in newsCtrl.companyPosts | filter: search track by $index ')
 			.title
 				span {{news.title}}
-				md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
+				md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 				md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=news.body')
 			.body
 				div(ng-if='!edit', style='white-space: pre-wrap')
 					div(ng-bind-html='news.body | unsafe')
 				div(ng-if='edit')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
+					br
+					.allow
+						div Allowed сategory:
+							div.rolse-back(ng-repeat='roles in news.access_roles') {{roles}}
+								i.fa.fa-times
+						div Restricted view for user:
+							div(ng-repeat='userId in news.restrict_ids'){{userId.name}}
+								i.fa.fa-times
+						br
 					md-button(ng-click='newsCtrl.editpost(news._id, newpost);edit=!edit') submit
 						//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 					//- span(ng-hide='news.body.length < 200 ')

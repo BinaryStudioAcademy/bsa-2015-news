@@ -13,6 +13,7 @@ NewsRepository.prototype.getAllNews = function(user, callback) {
 	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
 		.populate('author', 'name')
 		.populate('comments.author', 'name')
+		.populate('restrict_ids', 'name')
 		.sort({date:-1})
 		.exec(callback);
 };

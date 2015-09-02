@@ -21,6 +21,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
 	vm.author = 'Veronika Balko';
+	vm.foreAll = "All";
 
 	vm.tinymceOptions = {
 		inline: false,
