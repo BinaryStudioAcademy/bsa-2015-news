@@ -3,8 +3,11 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Questions
-		//- md-select(ng-model='rwCtrl.period.value' aria-label='select period')
-		//- 	md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') {{period.text}}
+		md-select(ng-model='stackCtrl.type', ng-change='stackCtrl.getQuestions(stackCtrl.type)')
+			md-option(value='recent') Recent
+			md-option(value='commented') Top commented
+			md-option(value='popular') Popular
+			md-option(value='upvoted') Upvoted
 		md-content
 			.list-item(ng-repeat='question in stackCtrl.questions')
 				.item-content
@@ -17,11 +20,3 @@
 							|  {{question.answers_count}}&nbsp;
 							i(class="fa fa-thumbs-up fa-1")
 							|  {{question.vote_value}}
-
-					//- div
-					//- 	b Group: 
-					//- 	| {{question.folder.title}}
-					//- div
-					//- 	b Author: 
-					//- 	| {{question.user.first_name}} {{question.user.last_name}}
-				//- md-divider(ng-if='!$last')
