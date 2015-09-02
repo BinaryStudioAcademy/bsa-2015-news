@@ -9,8 +9,8 @@ var NewsRepository = function(){
 NewsRepository.prototype = new Repository();
 
 NewsRepository.prototype.getAllNews = function(user, callback) {
-	var query = user.role === 'ADMIN' ? {} : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } } ] };
-	News.find(query)
+	var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
+	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
 		.populate('author', 'name')
 		.populate('comments.author', 'name')
 		.sort({date:-1})
@@ -18,6 +18,3 @@ NewsRepository.prototype.getAllNews = function(user, callback) {
 };
 
 module.exports = new NewsRepository();
-
-
-

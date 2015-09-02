@@ -46,25 +46,25 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
 					$route.current = lastRoute;
 			}
-	});*/
-
-/*	$rootScope.$watch('selectedIndex', function(current, old) {
+	});
+	$rootScope.selectedIndex = 0;
+	$rootScope.$watch('selectedIndex', function(current, old) {
 		switch(current) {
 			case 0: $location.url("/company"); break;
 			case 1: $location.url("/sandbox"); break;
 			case 2: $location.url("/weekly"); break;
-			
 		}
-	});*/
-/*		var lastRoute = $route.current;
+	});
+		var lastRoute = $route.current;
 		$rootScope.$on('$locationChangeSuccess', function(event) {
 				$route.current = lastRoute;
-		});*/
+		});
 /*$rootScope.$route = $route;*/
-		vm.isActive = function(route) {
+/*		vm.isActive = function(route) {
 			console.log(route);
 				return route === $location.path();
-		};
+		};*/
+
 
 
 	vm.posts = [];
@@ -80,10 +80,69 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	}
 
+	vm.allUsers = [];
+	getUsers();
+	function getUsers() {
+		NewsService.getUsers().then(function(data) {
+			vm.allUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
+		});
+	}
 
-	vm.filtertNews = function(type){
-		console.log(type);
+	//angular chips
+	vm.readonly = false;
+	vm.selectedCategory = null;
+	vm.selectedUser = null;
+	vm.searchText = null;
+	vm.searchCategory = null;
+
+	//from jade
+	vm.selectedNames = [];
+	vm.selectedCategories = [];
+
+	vm.userIds = [];
+	vm.allowedCategory = [];
+
+	/**
+	 * Search for vegetables.
+	 */
+	vm.queryUsers = function (query) {
+		var results = query ? vm.users.filter(createFilterFor(query)) : [];
+		return results;
 	};
+	vm.queryCategory = function (query) {
+		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
+		return results;
+	};
+
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+		return function filterFn(lowercaseFilter) {
+			return (lowercaseFilter._lowername.indexOf(lowercaseQuery) === 0);
+		};
+	}
+
+	function loadUsers() {
+		return vm.allUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
+		});
+	}
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -93,20 +152,34 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
+		console.log(vm.selectedCategories);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
+			vm.selectedNames.forEach(function(objNames){
+				vm.userIds.push(objNames._id);
+			});
+			vm.selectedCategories.forEach(function(categoriesObj){
+				vm.allowedCategory.push(categoriesObj.name);
+			});
 			vm.news = {
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
 				comments: [],
 				likes: [],
-				type: type
+				type: type,
+				access_roles: vm.allowedCategory,
+				restrict_ids: vm.userIds
 			};
+		console.log(vm.userIds);
+		vm.selectedNames = [];
+		vm.selectedCategories = [];
+		vm.userIds = [];
+		vm.allowedCategory = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-console.log(vm.news);
+		console.log(vm.news);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});
@@ -152,9 +225,17 @@ console.log(vm.news);
 	};
 
 	vm.deleteNews = function(newsId) {
-		NewsService.deleteNews(newsId).then(function() {
-			socket.emit("delete post", newsId);
-		});
+		var confirm = $mdDialog.confirm()
+			.title("Are you sure want to delete this post?")
+			.content("")
+			.ariaLabel('Confirmation')
+			.ok('Yes')
+			.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			NewsService.deleteNews(newsId).then(function() {
+				socket.emit("delete post", newsId);
+			});
+		}, function() {});
 	};
 
 	vm.deleteComment = function(newsId, commentId) {
@@ -195,12 +276,16 @@ console.log(vm.news);
 
 	};
 
-
-
+	function updatePosts() {
+		vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
+		vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
+		vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+	}
 
 	// Socket logic
 	socket.on("push post", function(post) {
 		if(post) vm.posts.unshift(post);
+		updatePosts();
 	});
 
 	socket.on("change post", function(newPost) {
@@ -215,6 +300,7 @@ console.log(vm.news);
 	socket.on("splice post", function(postId) {
 		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
 		vm.posts.splice(index, 1);
+		updatePosts();
 	});
 
 	socket.on("change like post", function(newPost) {
@@ -302,7 +388,14 @@ console.log(vm.news);
 		if(post[0]) $scope.post = post[0];
 		$scope.newComment = vm.newComment;
 		$scope.editpost = vm.editpost;
-		$scope.deleteNews = vm.deleteNews;
+		$scope.deleteNews = function(newsId) {
+			vm.deleteNews(newsId);
+			correctPath();
+			$location.path("/");
+		};
+		$scope.deleteComment = vm.deleteComment;
+		$scope.newsLike = vm.newsLike;
+		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
 			$mdDialog.hide();
 		};
