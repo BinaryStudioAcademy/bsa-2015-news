@@ -18,6 +18,3 @@ NewsRepository.prototype.getAllNews = function(user, callback) {
 };
 
 module.exports = new NewsRepository();
-
-
-
