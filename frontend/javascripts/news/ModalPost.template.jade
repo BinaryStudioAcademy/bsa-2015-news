@@ -5,7 +5,6 @@ md-dialog(aria-label='post.title')
             .title-modal
                h2.title {{ post.title }}
                md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
-               md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='deleteNews(post._id)')
       md-dialog-content
          .body
             div(ng-show='!edit', style='white-space: pre-wrap')
