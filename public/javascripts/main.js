@@ -432,6 +432,7 @@ var app = require('../app.js');
 	function NewsService($resource) {
 		return {
 			getNews: getNews,
+			getUsers: getUsers,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
@@ -449,6 +450,10 @@ var app = require('../app.js');
 			return $resource("api/news").query().$promise;
 		}
 
+		function getUsers() {
+			return $resource("api/users").query().$promise;
+		}
+		
 		function createNews(news) {
 			return $resource("api/news", {}, {
 						save: { method: 'POST', 
@@ -567,54 +572,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				return route === $location.path();
 		};*/
 
-//angular chips
-	 vm.readonly = false;
-		vm.selectedItem = null;
-		vm.searchText = null;
-		vm.querySearch = querySearch;
-		vm.users = loadUsers();
-		vm.selectedNames = [];
 
-
-		/**
-		 * Search for vegetables.
-		 */
-		function querySearch (query) {
-			var results = query ? vm.users.filter(createFilterFor(query)) : [];
-			return results;
-		}
-		
-		//get user id
-		vm.names = [];
-		vm.showArr = function(){
-
-			console.log(vm.names);
-		};
-
-
-		/**
-		 * Create filter function for a query string
-		 */
-		function createFilterFor(query) {
-			var lowercaseQuery = angular.lowercase(query);
-			return function filterFn(vegetable) {
-				return (vegetable._lowername.indexOf(lowercaseQuery) === 0);
-			};
-		}
-
-		function loadUsers() {
-			var veggies = [
-				{
-					'name': 'HR'},
-				{
-					'name': 'Manager'}
-			];
-
-			return veggies.map(function (veg) {
-				veg._lowername = veg.name.toLowerCase();
-				return veg;
-			});
-		}
 
 	vm.posts = [];
 	getNews();
@@ -629,10 +587,69 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	}
 
+	vm.allUsers = [];
+	getUsers();
+	function getUsers() {
+		NewsService.getUsers().then(function(data) {
+			vm.allUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
+		});
+	}
 
-	vm.filtertNews = function(type){
-		console.log(type);
+	//angular chips
+	vm.readonly = false;
+	vm.selectedCategory = null;
+	vm.selectedUser = null;
+	vm.searchText = null;
+	vm.searchCategory = null;
+
+	//from jade
+	vm.selectedNames = [];
+	vm.selectedCategories = [];
+
+	vm.userIds = [];
+	vm.allowedCategory = [];
+
+	/**
+	 * Search for vegetables.
+	 */
+	vm.queryUsers = function (query) {
+		var results = query ? vm.users.filter(createFilterFor(query)) : [];
+		return results;
 	};
+	vm.queryCategory = function (query) {
+		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
+		return results;
+	};
+
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+		return function filterFn(lowercaseFilter) {
+			return (lowercaseFilter._lowername.indexOf(lowercaseQuery) === 0);
+		};
+	}
+
+	function loadUsers() {
+		return vm.allUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
+		});
+	}
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -642,9 +659,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
+		console.log(vm.selectedCategories);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
-				vm.names.push(objNames.name);
+				vm.userIds.push(objNames._id);
+			});
+			vm.selectedCategories.forEach(function(categoriesObj){
+				vm.allowedCategory.push(categoriesObj.name);
 			});
 			vm.news = {
 				title: weeklyTitle || vm.titleNews,
@@ -653,11 +674,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				comments: [],
 				likes: [],
 				type: type,
-				access_roles: vm.names,
-				restrict_ids: []
+				access_roles: vm.allowedCategory,
+				restrict_ids: vm.userIds
 			};
-		console.log(vm.names);
-		vm.names = [];
+		console.log(vm.userIds);
+		vm.selectedNames = [];
+		vm.selectedCategories = [];
+		vm.userIds = [];
+		vm.allowedCategory = [];
 		vm.titleNews = '';
 		vm.bodyNews = '';
 		vm.formView = true;
