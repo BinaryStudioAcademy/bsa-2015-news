@@ -28,7 +28,7 @@ md-content#sandbox
 	.news
 		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: search track by $index ')
 			.title
-				img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon') 
+				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon') 
 				span(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index); newpost=news.body')
@@ -55,7 +55,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{news.author}}
+				span.author {{news.author.name ||newsCtrl.author}}
 				span on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}
