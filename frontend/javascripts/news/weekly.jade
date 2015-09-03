@@ -37,6 +37,7 @@ md-content#weekly
 					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 						md-tooltip Delete
 			.body
+				md-button(ng-click='newsCtrl.createNews("company", news.body, news.title )') send to company
 				div(ng-if='!newsCtrl.edit[$index]', style='white-space: pre-wrap', ng-click="newsCtrl.showModalPost(news._id, true)")
 					div.inner-news(ng-bind-html='news.body | unsafe')
 				div(ng-if='newsCtrl.edit[$index]')
