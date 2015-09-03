@@ -15,7 +15,7 @@ module.exports = function(req, res, next){
 			}
 		});
 	} else {
-		var current_url = req.protocol + '://' + req.get('host') + req.url;
+		var current_url = req.protocol + '://' + 'team.binary-studio.com' + req.url; //req.get('host')
 
 		var cookies = new Cookies(req, res);
 		cookies.set('referer', current_url);
