@@ -10,7 +10,7 @@
 			md-option(value='upvoted') Upvoted
 		md-content
 			.list-item(ng-repeat='question in stackCtrl.questions')
-				.item-content
+				a(href="{{question.url}}").item-content
 					div.stack-av
 						img(src="{{question.user.avatar}}", class='img-thumbnail')
 					div.stack-body
