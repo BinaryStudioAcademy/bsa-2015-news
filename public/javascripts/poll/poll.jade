@@ -1,4 +1,4 @@
-#poll-widget(ng-controller="PollController as pollCtrl", md-theme='pollWidget')
+#poll-widget(ng-controller="PollController as pollCtrl")
     md-card.md-whiteframe-z3
         md-toolbar.md-primary
             .md-toolbar-tools
@@ -21,7 +21,7 @@
                         ng-model="voteCtrl.vote.option", ng-if="pollCtrl.currentQuestion.type != 'text'", ng-value="option" aria-label="{{ option.text }}")
                             | {{ option.text }}
                 md-divider.divider
-                md-button#vote-button.md-raised.md-primary.md-button.md-default-theme(type="submit") Vote
+                md-button#vote-button.md-raised.md-primary.md-button(type="submit") Vote
             .confirm-container(ng-if="pollCtrl.isShowConfirm")
                 i.fa.fa-check
                 strong &nbsp;Thank you for answers

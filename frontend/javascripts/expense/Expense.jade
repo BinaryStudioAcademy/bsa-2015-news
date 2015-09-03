@@ -1,4 +1,4 @@
-#add-expense-widget(md-theme='addExpenseWidget')
+#add-expense-widget
 	md-card.md-whiteframe-z3
 		md-toolbar.md-primary
 			.md-toolbar-tools
@@ -38,4 +38,4 @@
 					#form-subcategory-left(ng-hide="formCtrl.expense.personal")
 						b {{subcategoryModel.name}} budget left:&nbsp;
 						span.green {{formCtrl.leftSubcategoryBudget - formCtrl.expense.price | currency:""}} {{formCtrl.expense.currency}}
-				button#add-expense-button.md-raised.md-primary.md-button.md-default-theme(type="submit") Add expense
+				button#add-expense-button.md-raised.md-primary.md-button(type="submit") Add expense
