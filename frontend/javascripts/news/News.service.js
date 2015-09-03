@@ -13,8 +13,13 @@ var app = require('../app.js');
 			addComment: addComment,
 			deleteComment: deleteComment,
 			newsLike: newsLike,
-			deleteNewsLike: deleteNewsLike
+			deleteNewsLike: deleteNewsLike,
+			getMe: getMe
 		};
+
+		function getMe() {
+			return $resource("api/me").get().$promise;
+		}
 
 		function getRequest() {
 			return $resource("api/news/:id", { id: "@id"});

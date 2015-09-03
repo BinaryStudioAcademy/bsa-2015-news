@@ -451,8 +451,13 @@ var app = require('../app.js');
 			addComment: addComment,
 			deleteComment: deleteComment,
 			newsLike: newsLike,
-			deleteNewsLike: deleteNewsLike
+			deleteNewsLike: deleteNewsLike,
+			getMe: getMe
 		};
+
+		function getMe() {
+			return $resource("api/me").get().$promise;
+		}
 
 		function getRequest() {
 			return $resource("api/news/:id", { id: "@id"});
@@ -545,6 +550,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.text = 'News';
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
+	vm.author = 'Ressie Huel';
 	vm.foreAll = "All";
 
 	vm.tinymceOptions = {
@@ -596,6 +602,19 @@ vm.switchTab = function(url) {
 	}
 
 	vm.allUsers = [];
+
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
+
 	getUsers();
 	function getUsers() {
 		NewsService.getUsers().then(function(data) {
@@ -650,16 +669,6 @@ vm.switchTab = function(url) {
 		});
 	}
 
-	function loadCategory() {
-		var allCategories =[
-			{'name': 'HR'},
-			{'name': 'DEVELOPER'}
-		];
-		return allCategories.map(function (category) {
-			category._lowername = category.name.toLowerCase();
-			return category;
-		});
-	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
@@ -667,19 +676,28 @@ vm.switchTab = function(url) {
 		});
 	};
 
-	vm.createNews = function(type, weeklyNews, weeklyTitle) {
+	
+	vm.createNews = function (type, weeklyNews, weeklyTitle){
+		NewsService.getMe().then(function(data) {
+			vm.userName = data;
+			console.log('user',vm.userName);
+			postNews(type, weeklyNews, weeklyTitle);
+		});
+	};
+
+	 function postNews(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
-		console.log(vm.selectedCategories);
-		console.log(vm.users);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
 				vm.userIds.push(objNames._id);
 			});
-			console.log();
+
 			vm.selectedCategories.forEach(function(categoriesObj){
 				vm.allowedCategory.push(categoriesObj.name);
 			});
+			console.log('name9999999', vm.userName);
 			vm.news = {
+				author: vm.userName.id,
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
@@ -689,7 +707,7 @@ vm.switchTab = function(url) {
 				access_roles: vm.allowedCategory,
 				restrict_ids: vm.userIds
 			};
-		console.log(vm.userIds);
+
 		vm.selectedNames = [];
 		vm.selectedCategories = [];
 		vm.userIds = [];
@@ -699,10 +717,11 @@ vm.switchTab = function(url) {
 		vm.formView = true;
 		}
 		console.log(vm.news);
+		console.log(vm.news.author);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});
-	};
+	}
 
 /*	vm.toggleText = [];
 	vm.textLength = [];
