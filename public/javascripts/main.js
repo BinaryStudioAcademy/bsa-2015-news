@@ -18,36 +18,32 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			delete $httpProvider.defaults.headers.common["X-Requested-With"];
 			$httpProvider.defaults.headers.common["Accept"] = "application/json";
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+
 			$routeProvider
-			.when('/company', {
-				templateUrl: './templates/news/company.html',
-				reloadOnSearch: false,
-				activetab: 'company'
-			})
+				.when('/company', {
+					templateUrl: './templates/news/company.html',
+					reloadOnSearch: false
+				})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
-					reloadOnSearch: false,
-					activetab:'sandbox'
+					reloadOnSearch: false
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/company.html',
-/*					controller: 'NewsController',
-					controllerAs: 'newsCtrl',*/
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
 					templateUrl: './templates/news/weekly.html',
-					reloadOnSearch: false,
-					activetab: 'weekly'
+					reloadOnSearch: false
 				})
 				.when('/activity', {
 					templateUrl: './templates/news/activity.html',
-					reloadOnSearch: false,
-					activetab: 'activity'
+					reloadOnSearch: false
 				})
 				.otherwise({
 					redirectTo: '/company'
 				});
+
 			$resourceProvider.defaults.stripTrailingSlashes = false;
 			$mdThemingProvider.theme('reviewWidget')
 				.primaryPalette('orange', {
@@ -527,7 +523,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.text = 'News';
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
-	vm.author = 'Veronika Balko';
 	vm.foreAll = "All";
 
 	vm.tinymceOptions = {
@@ -548,32 +543,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
-/*	var lastRoute = $route.current;
-	$rootScope.$on('$locationChangeSuccess', function (event) {
-		console.log(lastRoute);
-			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
-					$route.current = lastRoute;
-			}
-	});
-	$rootScope.selectedIndex = 0;
-	$rootScope.$watch('selectedIndex', function(current, old) {
-		switch(current) {
-			case 0: $location.url("/company"); break;
-			case 1: $location.url("/sandbox"); break;
-			case 2: $location.url("/weekly"); break;
+vm.switchTab = function(url) {
+	$location.url(url);
+};
+
+	$rootScope.$watch('$location.url()', function(current, old) {
+		switch($location.url(current)) {
+			case "/company": vm.selectedIndex = 0; break;
+			case "/sandbox": vm.selectedIndex = 1; break;
+			case "/weekly": vm.selectedIndex = 2; break;
 		}
 	});
-		var lastRoute = $route.current;
-		$rootScope.$on('$locationChangeSuccess', function(event) {
-				$route.current = lastRoute;
-		});
-/*$rootScope.$route = $route;*/
-/*		vm.isActive = function(route) {
-			console.log(route);
-				return route === $location.path();
-		};*/
-
-
 
 	vm.posts = [];
 	getNews();
@@ -614,11 +594,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	/**
 	 * Search for vegetables.
-	 */
+	 **/
+
 	vm.queryUsers = function (query) {
 		var results = query ? vm.users.filter(createFilterFor(query)) : [];
 		return results;
 	};
+
 	vm.queryCategory = function (query) {
 		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
 		return results;
@@ -661,10 +643,12 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
 		console.log(vm.selectedCategories);
+		console.log(vm.users);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
 				vm.userIds.push(objNames._id);
 			});
+			console.log();
 			vm.selectedCategories.forEach(function(categoriesObj){
 				vm.allowedCategory.push(categoriesObj.name);
 			});

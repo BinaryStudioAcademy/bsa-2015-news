@@ -1,32 +1,35 @@
 md-dialog(aria-label='post.title')
-   form
-      md-toolbar
-         .md-toolbar-tools
-            .title-modal
-               h2.title {{ post.title }}
-               md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
-               md-button.md-icon-button.fa.fa-times.delete-post(aria-label='delete' ng-click='deleteNews(post._id)')
-      md-dialog-content
-         .body
-            div(ng-show='!edit', style='white-space: pre-wrap')
-               div(ng-bind-html='post.body | unsafe')
-            div(ng-show='edit')
-               textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
-               md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
-         .footer
-            span.author {{post.author.name || newsCtrl.author}} on {{post.date | date:'yyyy-MM-dd HH:mm'}}
-            span.comments-count
-               md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
-                  md-tooltip Comment
-               md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsLike(post._id, newsCtrl.user, 0)') {{post.likes.length}}
-         .comments(ng-show='toggleCommentModal')
-            textarea.form-control(ui-tinymce='newsCtrl.tinymceOptionsComment' ng-model="commentText" placeholder='Comment')
-            button.btn.btn-info.form-control(type='submit' ng-click='newComment(commentText, post._id, 0); commentText = ""; toggleCommentModal = !toggleCommentModal') Add comment
-         .comment-wrap
-            .comment(ng-repeat='comment in post.comments')
-               i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
-               span.author {{comment.author.name}}
-               .body(ng-bind-html='comment.body| unsafe')
-               span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
-               span.right-thumb
-                  md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='commentLike(post._id, comment._id, newsCtrl.user)') {{comment.likes.length}}
+	form
+		md-toolbar
+			.md-toolbar-tools
+				.title-modal
+					h2.title {{ post.title }}
+					span.comments-count
+						md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
+							md-tooltip Edit
+						md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='deleteNews(post._id)')
+							md-tooltip Delete
+		md-dialog-content
+			.body
+				div(ng-show='!edit', style='white-space: pre-wrap')
+					div(ng-bind-html='post.body | unsafe')
+				div(ng-show='edit')
+					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
+					md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
+			.footer
+				span.author {{post.author.name || newsCtrl.author}} on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
+				span.comments-count
+					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
+						md-tooltip Comment
+					md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsLike(post._id, newsCtrl.user, 0)') {{post.likes.length}}
+			.comments(ng-show='toggleCommentModal')
+				textarea.form-control(ui-tinymce='newsCtrl.tinymceOptionsComment' ng-model="commentText" placeholder='Comment')
+				button.btn.btn-info.form-control(type='submit' ng-click='newComment(commentText, post._id, 0); commentText = ""; toggleCommentModal = !toggleCommentModal') Add comment
+			.comment-wrap
+				.comment(ng-repeat='comment in post.comments')
+					i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
+					span.author {{comment.author.name}}
+					.body(ng-bind-html='comment.body| unsafe')
+					span {{comment.date | date:'yyyy-MM-dd HH:mm'}}
+					span.right-thumb
+						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='commentLike(post._id, comment._id, newsCtrl.user)') {{comment.likes.length}}

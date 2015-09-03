@@ -1,7 +1,7 @@
 extends ./layout.jade
 
 block content
-	#news-viev(ng-controller='NewsController as newsCtrl')
+	#news-viev
 		header#header
 		aside#left
 			code-review-widget
@@ -13,16 +13,16 @@ block content
 			#left-block
 				code-review-widget
 				expense-widget
-		#content
+		#content(ng-controller='NewsController as newsCtrl')
 			.tabsdemoDynamicHeight
 				md-content(ng-class="{showMenu: isMenuShow}")
-					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="selectedIndex" )
-						md-tab
-							a(href='#/company') Company news
-						md-tab
-							a(href ='#/sandbox') Sandbox
-						md-tab
-							a(href ='#/weekly') weekly
-						md-tab
-							a(href ='#/activity') activity log
+					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
+						md-tab(ng-click='newsCtrl.switchTab("/company")')
+							| Company news
+						md-tab(ng-click='newsCtrl.switchTab("/sandbox")')
+							| Sandbox
+						md-tab(ng-click='newsCtrl.switchTab("/weekly")')
+							| weekly
+						md-tab(ng-click='newsCtrl.switchTab("/activity")')
+							| activity log
 			#main(ng-view)

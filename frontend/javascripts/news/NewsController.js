@@ -20,7 +20,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.text = 'News';
 	vm.formView = true;
 	vm.user ='55ddbde6d636c0e46a23fc90';
-	vm.author = 'Veronika Balko';
 	vm.foreAll = "All";
 
 	vm.tinymceOptions = {
@@ -41,32 +40,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
-/*	var lastRoute = $route.current;
-	$rootScope.$on('$locationChangeSuccess', function (event) {
-		console.log(lastRoute);
-			if (lastRoute.$route.originalPath === $route.current.$route.originalPath) {
-					$route.current = lastRoute;
-			}
-	});
-	$rootScope.selectedIndex = 0;
-	$rootScope.$watch('selectedIndex', function(current, old) {
-		switch(current) {
-			case 0: $location.url("/company"); break;
-			case 1: $location.url("/sandbox"); break;
-			case 2: $location.url("/weekly"); break;
+vm.switchTab = function(url) {
+	$location.url(url);
+};
+
+	$rootScope.$watch('$location.url()', function(current, old) {
+		switch($location.url(current)) {
+			case "/company": vm.selectedIndex = 0; break;
+			case "/sandbox": vm.selectedIndex = 1; break;
+			case "/weekly": vm.selectedIndex = 2; break;
 		}
 	});
-		var lastRoute = $route.current;
-		$rootScope.$on('$locationChangeSuccess', function(event) {
-				$route.current = lastRoute;
-		});
-/*$rootScope.$route = $route;*/
-/*		vm.isActive = function(route) {
-			console.log(route);
-				return route === $location.path();
-		};*/
-
-
 
 	vm.posts = [];
 	getNews();
@@ -107,11 +91,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	/**
 	 * Search for vegetables.
-	 */
+	 **/
+
 	vm.queryUsers = function (query) {
 		var results = query ? vm.users.filter(createFilterFor(query)) : [];
 		return results;
 	};
+
 	vm.queryCategory = function (query) {
 		var results = query ? vm.categories.filter(createFilterFor(query)) : [];
 		return results;
@@ -154,10 +140,12 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.createNews = function(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
 		console.log(vm.selectedCategories);
+		console.log(vm.users);
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
 				vm.userIds.push(objNames._id);
 			});
+			console.log();
 			vm.selectedCategories.forEach(function(categoriesObj){
 				vm.allowedCategory.push(categoriesObj.name);
 			});

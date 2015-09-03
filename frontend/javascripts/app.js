@@ -6,36 +6,32 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			delete $httpProvider.defaults.headers.common["X-Requested-With"];
 			$httpProvider.defaults.headers.common["Accept"] = "application/json";
 			$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+
 			$routeProvider
-			.when('/company', {
-				templateUrl: './templates/news/company.html',
-				reloadOnSearch: false,
-				activetab: 'company'
-			})
+				.when('/company', {
+					templateUrl: './templates/news/company.html',
+					reloadOnSearch: false
+				})
 				.when('/sandbox', {
 					templateUrl: './templates/news/sandbox.html',
-					reloadOnSearch: false,
-					activetab:'sandbox'
+					reloadOnSearch: false
 				})
 				.when('/post/:postId/', {
 					templateUrl: './templates/news/company.html',
-/*					controller: 'NewsController',
-					controllerAs: 'newsCtrl',*/
 					reloadOnSearch: false
 				})
 				.when('/weekly', {
 					templateUrl: './templates/news/weekly.html',
-					reloadOnSearch: false,
-					activetab: 'weekly'
+					reloadOnSearch: false
 				})
 				.when('/activity', {
 					templateUrl: './templates/news/activity.html',
-					reloadOnSearch: false,
-					activetab: 'activity'
+					reloadOnSearch: false
 				})
 				.otherwise({
 					redirectTo: '/company'
 				});
+
 			$resourceProvider.defaults.stripTrailingSlashes = false;
 			$mdThemingProvider.theme('reviewWidget')
 				.primaryPalette('orange', {
