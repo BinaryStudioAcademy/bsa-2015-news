@@ -76,4 +76,10 @@ var app = require('../app.js');
 
 		}
 
+		function comentLike(newsId, commentId, userId) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
+		}
 	}

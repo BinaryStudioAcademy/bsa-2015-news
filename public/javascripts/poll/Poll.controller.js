@@ -10,6 +10,7 @@ function PollController(PollService) {
     vm.questions = [];
     vm.currentQuestion = {};
     vm.currentSection = {};
+    vm.isShowConfirm = false;
     var currentQuestionCounter = 0;
     var currentSectionCounter = 0;
 
@@ -33,6 +34,7 @@ function PollController(PollService) {
             currentSectionCounter++;
             if(currentSectionCounter == vm.sections.length) {
                 currentSectionCounter = 0;
+                vm.isShowConfirm = true;
             }
             getQuestions();
         } else {
