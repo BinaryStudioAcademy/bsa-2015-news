@@ -33,25 +33,9 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 				});
 
 			$resourceProvider.defaults.stripTrailingSlashes = false;
-			$mdThemingProvider.theme('reviewWidget')
+			$mdThemingProvider.theme('default')
 				.primaryPalette('orange', {
-					'default': '800'
-				});
-			$mdThemingProvider.theme('hrWidget')
-				.primaryPalette('teal', {
-					'default': '800'
-				});
-			$mdThemingProvider.theme('addExpenseWidget')
-				.primaryPalette('green', {
-					'default': '800'
-				});
-			$mdThemingProvider.theme('pollWidget')
-				.primaryPalette('indigo', {
-					'default': '800'
-				});
-			$mdThemingProvider.theme('stackWidget')
-				.primaryPalette('pink', {
-					'default': '800'
+					'default': '900'
 				});
 
 			// Приклад теми:

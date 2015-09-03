@@ -40,11 +40,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
-	vm.edit = false;
-	vm.submitBtn = function() {
-		console.log('before ', vm.edit );
-		vm.edit = vm.edit ? false: true;
-		console.log('after ', vm.edit );
+	vm.edit = [];
+	vm.submitBtn = function(index) {
+		vm.edit[index] = !vm.edit[index];
 	};
 
 vm.switchTab = function(url) {
