@@ -35,7 +35,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			$resourceProvider.defaults.stripTrailingSlashes = false;
 			$mdThemingProvider.theme('default')
 				.primaryPalette('orange', {
-					'default': '800'
+					'default': '900'
 				});
 
 			// Приклад теми:
