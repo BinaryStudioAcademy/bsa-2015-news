@@ -67,7 +67,7 @@ md-content#sandbox
 			.comment-wrap
 				.comment(ng-repeat='comment in news.comments' ng-if='!newsCtrl.commentsViev[$parent.$index]')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)') 
-					span.author {{comment.author.name}}
+					span.author {{news.author.name ||newsCtrl.author}}
 					.body(ng-bind-html='comment.body| unsafe')
 					span {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
