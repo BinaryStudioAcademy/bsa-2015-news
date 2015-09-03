@@ -1,10 +1,42 @@
 var app = require('../app');
 app.factory("PollService", PollService);
 
-function PollService() {
+PollService.$inject = ["$resource"];
+
+function PollService($resource) {
     return {
         getQuestionnaire: getQuestionnaire
     };
+
+    //function getQuestionnaire(newCode) {
+    //    var data = $resource('http://team.binary-studio.com/newsletter/api/quiz/:code', {code: '@code'});
+    //    return data.get({ code: newCode }).$promise;
+    //}
+
+    //function getQuestionnaire() {
+    //    var questionnaire = {
+    //        text: "Some text",
+    //        title: "Some title",
+    //        type: "",
+    //        date: new Date(),
+    //        options: [
+    //            {
+    //                body: "",
+    //                value: 1,
+    //                count: 1
+    //            }
+    //        ],
+    //        hasOwn: false,
+    //        own: [
+    //            {
+    //                text: ""
+    //            }
+    //        ],
+    //        code: "",
+    //        browserIds: [1]
+    //    };
+    //    return questionnaire;
+    //}
 
     function getQuestionnaire() {
         var questionnaire = {

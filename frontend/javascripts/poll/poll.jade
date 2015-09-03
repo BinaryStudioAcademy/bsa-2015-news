@@ -4,13 +4,13 @@
             .md-toolbar-tools
                 h2.md-flex &nbsp;Questionnaire
         md-content(ng-class="{showMenu: isPollShow}")
-            .section-container
-                i.fa.fa-question-circle
-                strong &nbsp;Section:&nbsp;
-                span {{ pollCtrl.currentSection.name }}
-            md-divider.divider
+            //.section-container
+            //    i.fa.fa-question-circle
+            //    strong &nbsp;Section:&nbsp;
+            //    span {{ pollCtrl.currentSection.name }}
+            //md-divider.divider
             form#vote-form(name="voteForm", ng-controller="VoteFormController as voteCtrl",
-                ng-submit="voteCtrl.sendVote(); pollCtrl.showResults()", novalidate)
+                ng-submit="voteCtrl.sendVote(); pollCtrl.showResults()", ng-if="!pollCtrl.isShowConfirm", novalidate)
                 strong {{ pollCtrl.currentQuestion.name }}
                 md-divider.divider
                 md-radio-group.md-primary(ng-model="pollCtrl.selectedElement")
@@ -22,3 +22,6 @@
                             | {{ option.text }}
                 md-divider.divider
                 md-button#vote-button.md-raised.md-primary.md-button.md-default-theme(type="submit") Vote
+            .confirm-container(ng-if="pollCtrl.isShowConfirm")
+                i.fa.fa-check
+                strong &nbsp;Thank you for answers

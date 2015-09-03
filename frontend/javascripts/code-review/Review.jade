@@ -3,13 +3,13 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Code review requests
-		md-select(ng-model='rwCtrl.period.value' aria-label='select period')
+		md-select(ng-model='rwCtrl.period.value' aria-label='select period' ng-change='rwCtrl.updateUpcoming()')
 			md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') Upcoming {{period.text}}
 		md-content(ng-class="{showMenu: isReviewShow}")
-			.list-item(ng-if='rwCtrl.upcoming[rwCtrl.period.value].length === 0')
+			.list-item(ng-if='rwCtrl.upcoming.length === 0')
 				.item-content
 					.align-center Nothing
-			.list-item(ng-repeat='request in rwCtrl.upcoming[rwCtrl.period.value]')
+			.list-item(ng-repeat='request in rwCtrl.upcoming')
 				.item-content
 					img.avatar(ng-src='{{request.user.avatar}}' alt='avatar')
 					.info
@@ -25,7 +25,7 @@
 						b Coming: 
 						| {{request.date_review}}
 					.align-center
-						md-button.md-raised.md-primary(ng-if='!rwCtrl.getRequestStatus(request)') Send offer
-						md-button.md-raised.md-warn(ng-if='rwCtrl.getRequestStatus(request)') Cancel offer
+						md-button.md-raised.md-primary(ng-if='!rwCtrl.getRequestStatus(request)' ng-click='rwCtrl.sendOffer(request)') Send offer
+						md-button.md-raised.md-warn(ng-if='rwCtrl.getRequestStatus(request)' ng-click='rwCtrl.cancelOffer(request)') Cancel offer
 						md-button.md-raised(ng-click='rwCtrl.showDetails($event, request)') Details
 				md-divider(ng-if='!$last')

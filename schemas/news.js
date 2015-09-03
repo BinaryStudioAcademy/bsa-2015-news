@@ -24,7 +24,8 @@ var newsSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 		default: []
-	 }]
+	}]
+
 });
 
 module.exports = mongoose.model('News', newsSchema);

@@ -7,8 +7,6 @@ md-dialog(aria-label='post.title')
 					span.comments-count
 						md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
 							md-tooltip Edit
-						md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='deleteNews(post._id)')
-							md-tooltip Delete
 		md-dialog-content
 			.body
 				div(ng-show='!edit', style='white-space: pre-wrap')
@@ -17,7 +15,8 @@ md-dialog(aria-label='post.title')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
 					md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
 			.footer
-				span.author {{post.author.name || newsCtrl.author}} on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
+				span.author {{post.author.name || newsCtrl.author}} 
+				span on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
 						md-tooltip Comment
