@@ -72,6 +72,19 @@ vm.switchTab = function(url) {
 	}
 
 	vm.allUsers = [];
+
+
+	function loadCategory() {
+		var allCategories =[
+			{'name': 'HR'},
+			{'name': 'DEVELOPER'}
+		];
+		return allCategories.map(function (category) {
+			category._lowername = category.name.toLowerCase();
+			return category;
+		});
+	}
+
 	getUsers();
 	function getUsers() {
 		NewsService.getUsers().then(function(data) {
@@ -126,16 +139,6 @@ vm.switchTab = function(url) {
 		});
 	}
 
-	function loadCategory() {
-		var allCategories =[
-			{'name': 'HR'},
-			{'name': 'DEVELOPER'}
-		];
-		return allCategories.map(function (category) {
-			category._lowername = category.name.toLowerCase();
-			return category;
-		});
-	}
 
 	vm.editpost = function(newsId, newpost) {
 		NewsService.editNews(newsId, newpost).then(function() {
