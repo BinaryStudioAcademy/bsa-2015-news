@@ -40,6 +40,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
+	vm.edit = false;
+	vm.submitBtn = function() {
+		console.log('before ', vm.edit );
+		vm.edit = vm.edit ? false: true;
+		console.log('after ', vm.edit );
+	};
+
 vm.switchTab = function(url) {
 	$location.url(url);
 };
@@ -246,7 +253,6 @@ vm.switchTab = function(url) {
 	};
 
 	vm.commentLike = function(newsId, commentId, userId) {
-		
 		var	post = $filter('filter')(vm.posts, {_id: newsId});
 		var comment = $filter('filter')(post[0].comments, {_id: commentId});
 

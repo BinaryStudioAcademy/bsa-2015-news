@@ -31,14 +31,14 @@ md-content#sandbox
 				img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon') 
 				span(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
 				span.comments-count
-					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=news.body')
+					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index); newpost=news.body')
 						md-tooltip Edit
 					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
 						md-tooltip Delete
 			.body
-				div(ng-if='!edit', style='white-space: pre-wrap', ng-click="newsCtrl.showModalPost(news._id, true)")
+				div(ng-if='!newsCtrl.edit[$index]', style='white-space: pre-wrap', ng-click="newsCtrl.showModalPost(news._id, true)")
 					div.inner-news(ng-bind-html='news.body | unsafe')
-				div(ng-if='edit')
+				div(ng-if='newsCtrl.edit[$index]')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
 					br
 					.allow
@@ -49,7 +49,7 @@ md-content#sandbox
 							div(ng-repeat='userId in news.restrict_ids'){{userId.name}}
 								i.fa.fa-times
 						br
-					md-button(ng-click='newsCtrl.editpost(news._id, newpost);edit=!edit') submit
+					md-button(ng-click='newsCtrl.editpost(news._id, newpost);newsCtrl.submitBtn($index)') submit
 						//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 					//- span(ng-hide='news.body.length < 200 ')
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
