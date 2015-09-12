@@ -68,7 +68,7 @@ md-content#company
 				.comment(ng-repeat='comment in news.comments' ng-if='!newsCtrl.commentsViev[$parent.$index]')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)') 
 					.body(ng-bind-html='comment.body| unsafe')
-					span.author {{news.author.name ||newsCtrl.author}}
+					span.author {{news.author.name }} {{news.author.surname}}
 					span on {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
 						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike(news._id, comment._id, newsCtrl.user)') {{comment.likes.length}}

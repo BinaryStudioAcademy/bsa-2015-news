@@ -63,7 +63,6 @@ vm.switchTab = function(url) {
 	function getNews(){
 		NewsService.getNews().then(function(data){
 			vm.posts = data.slice(0,20);
-			console.log(vm.posts);
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
@@ -71,8 +70,14 @@ vm.switchTab = function(url) {
 		});
 	}
 
-	vm.allUsers = [];
-
+	vm.fullUsers = [];
+	getFullUsers();
+	function getFullUsers(){
+		NewsService.getFullUsers().then(function(data) {
+			vm.fullUsers = data;
+			console.log(vm.fullUsers);
+		});
+	}
 
 	function loadCategory() {
 		var allCategories =[
@@ -85,6 +90,7 @@ vm.switchTab = function(url) {
 		});
 	}
 
+	vm.allUsers = [];
 	getUsers();
 	function getUsers() {
 		NewsService.getUsers().then(function(data) {
@@ -150,7 +156,6 @@ vm.switchTab = function(url) {
 	vm.createNews = function (type, weeklyNews, weeklyTitle){
 		NewsService.getMe().then(function(data) {
 			vm.userName = data;
-			console.log('user',vm.userName);
 			postNews(type, weeklyNews, weeklyTitle);
 		});
 	};
@@ -186,8 +191,6 @@ vm.switchTab = function(url) {
 		vm.bodyNews = '';
 		vm.formView = true;
 		}
-		console.log(vm.news);
-		console.log(vm.news.author);
 		NewsService.createNews(vm.news).then(function(post) {
 			socket.emit("new post", post);
 		});

@@ -7,6 +7,7 @@ var app = require('../app.js');
 		return {
 			getNews: getNews,
 			getUsers: getUsers,
+			getFullUsers: getFullUsers,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
@@ -21,6 +22,7 @@ var app = require('../app.js');
 			return $resource("api/me").get().$promise;
 		}
 
+
 		function getRequest() {
 			return $resource("api/news/:id", { id: "@id"});
 		}
@@ -32,7 +34,11 @@ var app = require('../app.js');
 		function getUsers() {
 			return $resource("api/users").query().$promise;
 		}
-		
+
+		function getFullUsers() {
+			return $resource("profile/api/users").query().$promise;
+		}
+
 		function createNews(news) {
 			return $resource("api/news", {}, {
 						save: { method: 'POST', 

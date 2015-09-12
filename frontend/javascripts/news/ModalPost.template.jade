@@ -27,7 +27,7 @@ md-dialog(aria-label='post.title')
 			.comment-wrap
 				.comment(ng-repeat='comment in post.comments')
 					i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
-					span.author {{comment.author.name}}
+					span.author {{news.author.name }} {{news.author.surname}}
 					.body(ng-bind-html='comment.body| unsafe')
 					span {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
