@@ -142,15 +142,17 @@ vm.switchTab = function(url) {
 		});
 	};
 
-	
+	vm.user = [];
 	vm.createNews = function (type, weeklyNews, weeklyTitle){
 		NewsService.getMe().then(function(data) {
 			vm.userName = data;
+			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: vm.userName.id});
 			postNews(type, weeklyNews, weeklyTitle);
 		});
 	};
 
-	 function postNews(type, weeklyNews, weeklyTitle) {
+	function postNews(type, weeklyNews, weeklyTitle) {
+		console.log(vm.user);
 		vm.news = {};
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
 			vm.selectedNames.forEach(function(objNames){
@@ -163,7 +165,7 @@ vm.switchTab = function(url) {
 			console.log('name', vm.userName);
 
 			vm.news = {
-				author: vm.userName.serverUserId,
+				author: vm.user.serverUserId,
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
