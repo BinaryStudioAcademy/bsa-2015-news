@@ -19,8 +19,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	var vm = this;
 	vm.text = 'News';
 	vm.formView = true;
-	vm.user ='55ddbde6d636c0e46a23fc90';
-	vm.author = 'Ressie Huel';
 	vm.foreAll = "All";
 
 	vm.tinymceOptions = {
@@ -75,6 +73,8 @@ vm.switchTab = function(url) {
 	function getFullUsers(){
 		NewsService.getFullUsers().then(function(data) {
 			vm.fullUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
 			console.log(vm.fullUsers);
 		});
 	}
@@ -87,16 +87,6 @@ vm.switchTab = function(url) {
 		return allCategories.map(function (category) {
 			category._lowername = category.name.toLowerCase();
 			return category;
-		});
-	}
-
-	vm.allUsers = [];
-	getUsers();
-	function getUsers() {
-		NewsService.getUsers().then(function(data) {
-			vm.allUsers = data;
-			vm.users = loadUsers();
-			vm.categories = loadCategory();
 		});
 	}
 
@@ -139,7 +129,7 @@ vm.switchTab = function(url) {
 	}
 
 	function loadUsers() {
-		return vm.allUsers.map(function (user) {
+		return vm.fullUsers.map(function (user) {
 			user._lowername = user.name.toLowerCase();
 			return user;
 		});
@@ -170,9 +160,10 @@ vm.switchTab = function(url) {
 			vm.selectedCategories.forEach(function(categoriesObj){
 				vm.allowedCategory.push(categoriesObj.name);
 			});
-			console.log('name9999999', vm.userName);
+			console.log('name', vm.userName);
+
 			vm.news = {
-				author: vm.userName.id,
+				author: vm.userName.serverUserId,
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
@@ -182,6 +173,7 @@ vm.switchTab = function(url) {
 				access_roles: vm.allowedCategory,
 				restrict_ids: vm.userIds
 			};
+		console.log(vm.news);
 
 		vm.selectedNames = [];
 		vm.selectedCategories = [];
@@ -223,7 +215,7 @@ vm.switchTab = function(url) {
 
 	vm.newComment = function(commentText, newsId, index) {
 		var comment = {
-			author: vm.user,
+			author: vm.userName.serverUserId,
 			body: commentText,
 			date: Date.parse(new Date()),
 			likes: []

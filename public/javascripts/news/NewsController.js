@@ -75,6 +75,8 @@ vm.switchTab = function(url) {
 	function getFullUsers(){
 		NewsService.getFullUsers().then(function(data) {
 			vm.fullUsers = data;
+			vm.users = loadUsers();
+			vm.categories = loadCategory();
 			console.log(vm.fullUsers);
 		});
 	}
@@ -87,16 +89,6 @@ vm.switchTab = function(url) {
 		return allCategories.map(function (category) {
 			category._lowername = category.name.toLowerCase();
 			return category;
-		});
-	}
-
-	vm.allUsers = [];
-	getUsers();
-	function getUsers() {
-		NewsService.getUsers().then(function(data) {
-			vm.allUsers = data;
-			vm.users = loadUsers();
-			vm.categories = loadCategory();
 		});
 	}
 
@@ -139,7 +131,7 @@ vm.switchTab = function(url) {
 	}
 
 	function loadUsers() {
-		return vm.allUsers.map(function (user) {
+		return vm.fullUsers.map(function (user) {
 			user._lowername = user.name.toLowerCase();
 			return user;
 		});

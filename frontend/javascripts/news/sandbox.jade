@@ -55,7 +55,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{news.author.name ||newsCtrl.author}}
+				span.author {{news.author.name }} {{news.author.surname}}
 				span on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}

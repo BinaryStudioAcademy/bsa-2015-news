@@ -15,7 +15,7 @@ md-dialog(aria-label='post.title')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
 					md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
 			.footer
-				span.author {{post.author.name || newsCtrl.author}} 
+				span.author {{news.author.name }} {{news.author.surname}}
 				span on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}

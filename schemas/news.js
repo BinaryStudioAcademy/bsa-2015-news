@@ -12,19 +12,18 @@ var newsSchema = new Schema({
 	title: String,
 	body: String,
 	type: String,
-	author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+	author: mongoose.Schema.ObjectId,
 	date: Number,
 	comments: [commentSchema],
 	likes: [mongoose.Schema.ObjectId],
 	access_roles: {
-		type: [String],
+		type: [mongoose.Schema.ObjectId],
 		default: []
 	},
-	restrict_ids: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+	restrict_ids: {
+		type: [mongoose.Schema.ObjectId],
 		default: []
-	}]
+	}
 
 });
 

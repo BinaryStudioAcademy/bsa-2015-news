@@ -6,7 +6,6 @@ var app = require('../app.js');
 	function NewsService($resource) {
 		return {
 			getNews: getNews,
-			getUsers: getUsers,
 			getFullUsers: getFullUsers,
 			createNews: createNews,
 			editNews: editNews,
@@ -29,10 +28,6 @@ var app = require('../app.js');
 
 		function getNews() {
 			return $resource("api/news").query().$promise;
-		}
-
-		function getUsers() {
-			return $resource("api/users").query().$promise;
 		}
 
 		function getFullUsers() {
