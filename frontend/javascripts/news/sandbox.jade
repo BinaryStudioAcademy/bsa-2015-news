@@ -28,15 +28,15 @@ md-content#sandbox
 	.news
 		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: search track by $index ')
 			.title
-				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon') 
-				span(ng-click="newsCtrl.showModalPost(news, true)") {{news.title}}
+				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon')
+				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index); newpost=news.body')
 						md-tooltip Edit
-					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' )
+					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)')
 						md-tooltip Delete
 			.body
-				div(ng-if='!newsCtrl.edit[$index]', style='white-space: pre-wrap', ng-click="newsCtrl.showModalPost(news._id, true)")
+				div(ng-if='!newsCtrl.edit[$index]', style='white-space: pre-wrap')
 					div.inner-news(ng-bind-html='news.body | unsafe')
 				div(ng-if='newsCtrl.edit[$index]')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
@@ -46,7 +46,7 @@ md-content#sandbox
 							div.rolse-back(ng-repeat='roles in news.access_roles') {{roles}}
 								i.fa.fa-times
 						div Restricted view for user:
-							div(ng-repeat='userId in news.restrict_ids'){{userId.name}}
+							div(ng-repeat='userId in news.restrict_ids') {{newsCtrl.userIdConvert(userId)}}
 								i.fa.fa-times
 						br
 					md-button(ng-click='newsCtrl.editpost(news._id, newpost);newsCtrl.submitBtn($index)') submit
@@ -55,7 +55,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{news.author.name }} {{news.author.surname}}
+				span.author {{newsCtrl.userIdConvert(news.author)}}
 				span on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}
@@ -65,10 +65,10 @@ md-content#sandbox
 				textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="commentText" placeholder='Comment')
 				button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment(commentText, news._id, $index)') Add comment
 			.comment-wrap
-				.comment(ng-repeat='comment in news.comments' ng-if='!newsCtrl.commentsViev[$parent.$index]')
+				.comment(ng-repeat='comment in news.comments')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)') 
 					.body(ng-bind-html='comment.body| unsafe')
-					span.author {{news.author.name }} {{news.author.surname}}
+					span.author {{newsCtrl.userIdConvert(news.author)}}
 					span {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
 						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike(news._id, comment._id, newsCtrl.user)') {{comment.likes.length}}

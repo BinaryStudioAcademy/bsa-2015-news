@@ -14,13 +14,22 @@ module.exports = function(req, res, next){
 				next();
 			}
 		});
-	} else {
+	} /*else {
 		var current_url = req.protocol + '://' + 'team.binary-studio.com'; //req.get('host')
 
 		var cookies = new Cookies(req, res);
 		cookies.set('referer', current_url);
 
 		res.redirect('http://team.binary-studio.com/auth');
+		// res.status(403).send({ success: false, message: "No Token Provided"});
+	}*/
+	else {
+		var current_url = req.protocol + '://' + req.get('host') + req.url;
+
+		var cookies = new Cookies(req, res);
+		cookies.set('referer', current_url);
+
+		res.redirect('http://localhost:2020/');
 		// res.status(403).send({ success: false, message: "No Token Provided"});
 	}
 };

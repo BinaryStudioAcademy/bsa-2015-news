@@ -15,7 +15,7 @@ md-dialog(aria-label='post.title')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
 					md-button(ng-click='editpost(post._id, newpost);edit=!edit') submit
 			.footer
-				span.author {{news.author.name }} {{news.author.surname}}
+				span.author {{userIdConvert(post.author)}}
 				span on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
@@ -27,8 +27,8 @@ md-dialog(aria-label='post.title')
 			.comment-wrap
 				.comment(ng-repeat='comment in post.comments')
 					i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
-					span.author {{news.author.name }} {{news.author.surname}}
 					.body(ng-bind-html='comment.body| unsafe')
+					span.author {{userIdConvert(comment.author)}}
 					span {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
 						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='commentLike(post._id, comment._id, newsCtrl.user)') {{comment.likes.length}}

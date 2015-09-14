@@ -7,6 +7,7 @@ var app = require('../app.js');
 		return {
 			getNews: getNews,
 			getFullUsers: getFullUsers,
+			getRoles:getRoles,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
@@ -21,7 +22,6 @@ var app = require('../app.js');
 			return $resource("api/me").get().$promise;
 		}
 
-
 		function getRequest() {
 			return $resource("api/news/:id", { id: "@id"});
 		}
@@ -31,7 +31,13 @@ var app = require('../app.js');
 		}
 
 		function getFullUsers() {
-			return $resource("profile/api/users").query().$promise;
+			//return $resource("profile/api/users").query().$promise;
+			return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
+		}
+
+		function getRoles() {
+			//return $resource("profile/api/users").query().$promise;
+			return $resource("http://team.binary-studio.com/auth/api/roles").query().$promise;
 		}
 
 		function createNews(news) {

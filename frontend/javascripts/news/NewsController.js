@@ -58,19 +58,29 @@ vm.switchTab = function(url) {
 
 	vm.posts = [];
 	getNews();
-	function getNews(){
+	function getNews() {
 		NewsService.getNews().then(function(data){
-			vm.posts = data.slice(0,20);
+			vm.posts = data.slice(0,10);
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			console.log(vm.sandboxPosts);
 			checkUrlPath();
+		});
+	}
+
+	vm.roles =[];
+	getRoles();
+	function getRoles() {
+		NewsService.getRoles().then(function(data) {
+			vm.roles = data;
+			console.log("role ",vm.roles);
 		});
 	}
 
 	vm.fullUsers = [];
 	getFullUsers();
-	function getFullUsers(){
+	function getFullUsers() {
 		NewsService.getFullUsers().then(function(data) {
 			vm.fullUsers = data;
 			vm.users = loadUsers();
@@ -147,25 +157,28 @@ vm.switchTab = function(url) {
 		NewsService.getMe().then(function(data) {
 			vm.userName = data;
 			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: vm.userName.id});
+			vm.userServerId = vm.user[0].serverUserId;
 			postNews(type, weeklyNews, weeklyTitle);
 		});
 	};
 
+
 	function postNews(type, weeklyNews, weeklyTitle) {
-		console.log(vm.user);
 		vm.news = {};
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
+			console.log(vm.selectedNames);
 			vm.selectedNames.forEach(function(objNames){
-				vm.userIds.push(objNames._id);
+				vm.userIds.push(objNames.serverUserId);
 			});
 
 			vm.selectedCategories.forEach(function(categoriesObj){
 				vm.allowedCategory.push(categoriesObj.name);
 			});
-			console.log('name', vm.userName);
-
+			console.log(vm.allowedCategory);
+			console.log(vm.userIds);
+			
 			vm.news = {
-				author: vm.user.serverUserId,
+				author: vm.userServerId,
 				title: weeklyTitle || vm.titleNews,
 				body: weeklyNews || vm.bodyNews,
 				date: Date.parse(new Date()),
@@ -189,6 +202,11 @@ vm.switchTab = function(url) {
 			socket.emit("new post", post);
 		});
 	}
+
+	vm.userIdConvert = function(id) {
+		vm.user = $filter('filter')(vm.fullUsers, {serverUserId: id});
+		return vm.user[0].name + ' ' + vm.user[0].surname;
+	};
 
 /*	vm.toggleText = [];
 	vm.textLength = [];
@@ -216,8 +234,17 @@ vm.switchTab = function(url) {
 	};
 
 	vm.newComment = function(commentText, newsId, index) {
+		NewsService.getMe().then(function(data) {
+			vm.userName = data;
+			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: vm.userName.id});
+			commentFun(commentText, newsId, index);
+		});
+	};
+
+	function commentFun(commentText, newsId, index) {
+		console.log(vm.user[0].serverUserId);
 		var comment = {
-			author: vm.userName.serverUserId,
+			author: vm.user[0].serverUserId,
 			body: commentText,
 			date: Date.parse(new Date()),
 			likes: []
@@ -227,7 +254,7 @@ vm.switchTab = function(url) {
 			socket.emit("new comment", comment);
 		});
 		vm.commentForm[index] = false;
-	};
+	}
 
 	vm.deleteNews = function(newsId) {
 		var confirm = $mdDialog.confirm()
@@ -271,7 +298,7 @@ vm.switchTab = function(url) {
 			comment[0].likes.push(userId);
 		}else{
 			console.log('exist');
-			comment[0].likes.splice(comment[0].likes.indexOf(vm.user), 1);
+			comment[0].likes.splice(comment[0].likes.indexOf(userId), 1);
 		}
 		
 		NewsService.deleteComment(newsId, commentId);
@@ -398,6 +425,7 @@ vm.switchTab = function(url) {
 			$location.path("/");
 		};
 		$scope.deleteComment = vm.deleteComment;
+		$scope.userIdConvert = vm.userIdConvert;
 		$scope.newsLike = vm.newsLike;
 		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
