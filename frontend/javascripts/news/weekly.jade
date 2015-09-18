@@ -56,7 +56,7 @@ md-content#weekly
 							span
 								strong {{newsCtrl.userIdConvert($chip)}}
 					br
-					md-button(ng-click='newsCtrl.editpost(news._id, newpost);newsCtrl.submitBtn($index)') submit
+					md-button(ng-click='newsCtrl.editpost(news._id, newpost, news.restrict_ids, news.access_roles);newsCtrl.submitBtn($index)') submit
 						//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 					//- span(ng-hide='news.body.length < 200 ')
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
