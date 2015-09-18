@@ -445,7 +445,8 @@ var app = require('../app.js');
 		return {
 			getNews: getNews,
 			getFullUsers: getFullUsers,
-			getRoles:getRoles,
+			getRoles: getRoles,
+			update_Role_User: update_Role_User,
 			createNews: createNews,
 			editNews: editNews,
 			deleteNews: deleteNews,
@@ -469,13 +470,20 @@ var app = require('../app.js');
 		}
 
 		function getFullUsers() {
-			//return $resource("profile/api/users").query().$promise;
-			return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
+			return $resource("profile/api/users").query().$promise;
+			//return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
 		}
 
 		function getRoles() {
-			//return $resource("profile/api/users").query().$promise;
-			return $resource("http://team.binary-studio.com/auth/api/roles").query().$promise;
+			return $resource("auth/api/roles").query().$promise;
+			//return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
+		}
+
+		function update_Role_User(newsId, roleId, userId) {
+			var data = $resource("api/news/:id", { id: "@id" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({ id: newsId }, { $set:{access_roles: roleId, restrict_ids: userId }}).$promise;
 		}
 
 		function createNews(news) {
@@ -517,11 +525,11 @@ var app = require('../app.js');
 			});
 			return data.update({ id: newsId }, { $addToSet:{likes: userId }}).$promise;
 		}
+
 		function deleteNewsLike(newsId, userId) {
 			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
-			console.log(data);
 			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
 
 		}
@@ -576,6 +584,15 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		statusbar: false
 	};
 
+	function unique(arr) {
+		var obj = {};
+		for (var i = 0; i < arr.length; i++) {
+			var str = arr[i];
+			obj[str] = true;
+		}
+		return Object.keys(obj);
+	}
+
 	vm.edit = [];
 	vm.submitBtn = function(index) {
 		vm.edit[index] = !vm.edit[index];
@@ -601,17 +618,7 @@ vm.switchTab = function(url) {
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
 			vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
-			console.log(vm.sandboxPosts);
 			checkUrlPath();
-		});
-	}
-
-	vm.roles =[];
-	getRoles();
-	function getRoles() {
-		NewsService.getRoles().then(function(data) {
-			vm.roles = data;
-			console.log("role ",vm.roles);
 		});
 	}
 
@@ -621,19 +628,37 @@ vm.switchTab = function(url) {
 		NewsService.getFullUsers().then(function(data) {
 			vm.fullUsers = data;
 			vm.users = loadUsers();
-			vm.categories = loadCategory();
-			console.log(vm.fullUsers);
 		});
 	}
 
+	vm.roles =[];
+	getRoles();
+	function getRoles() {
+		NewsService.getRoles().then(function(data) {
+			vm.roles = [{
+				"_id":"55e0756e79547bdf270d6437",
+				"role":"ADMIN"
+			},{
+				"_id":"55e0756e79547bdf270d6438",
+				"role":"DEVELOPER"
+			},{
+				"_id":"55e0756e79547bdf270d6439",
+				"role":"HR"
+			}];
+			vm.categories = loadCategory();
+		});
+	}
 	function loadCategory() {
-		var allCategories =[
-			{'name': 'HR'},
-			{'name': 'DEVELOPER'}
-		];
-		return allCategories.map(function (category) {
-			category._lowername = category.name.toLowerCase();
+		return vm.roles.map(function (category) {
+			category._lowername = category.role.toLowerCase();
 			return category;
+		});
+	}
+
+	function loadUsers() {
+		return vm.fullUsers.map(function (user) {
+			user._lowername = user.name.toLowerCase();
+			return user;
 		});
 	}
 
@@ -675,15 +700,24 @@ vm.switchTab = function(url) {
 		};
 	}
 
-	function loadUsers() {
-		return vm.fullUsers.map(function (user) {
-			user._lowername = user.name.toLowerCase();
-			return user;
+	vm.editpost = function(newsId, newpost, restrict_ids, access_roles) {
+		var restrictIds = [];
+		var accessRole = [];
+		restrict_ids.forEach(function(data) {
+			if(typeof data === "string"){
+				restrictIds.push(data);
+			}else{
+				restrictIds.push(data.serverUserId);
+			}
 		});
-	}
-
-
-	vm.editpost = function(newsId, newpost) {
+		access_roles.forEach(function(data) {
+			if(typeof data === "string"){
+				accessRole.push(data);
+			}else{
+				accessRole.push(data._id);
+			}
+		});
+		NewsService.update_Role_User(newsId, unique(accessRole),unique(restrictIds));
 		NewsService.editNews(newsId, newpost).then(function() {
 			socket.emit("edit post", {postId: newsId, body: newpost});
 		});
@@ -699,21 +733,16 @@ vm.switchTab = function(url) {
 		});
 	};
 
-
 	function postNews(type, weeklyNews, weeklyTitle) {
 		vm.news = {};
 		if((vm.titleNews && vm.bodyNews) || type === 'company'){
-			console.log(vm.selectedNames);
 			vm.selectedNames.forEach(function(objNames){
 				vm.userIds.push(objNames.serverUserId);
 			});
 
 			vm.selectedCategories.forEach(function(categoriesObj){
-				vm.allowedCategory.push(categoriesObj.name);
+				vm.allowedCategory.push(categoriesObj._id);
 			});
-			console.log(vm.allowedCategory);
-			console.log(vm.userIds);
-			
 			vm.news = {
 				author: vm.userServerId,
 				title: weeklyTitle || vm.titleNews,
@@ -725,8 +754,6 @@ vm.switchTab = function(url) {
 				access_roles: vm.allowedCategory,
 				restrict_ids: vm.userIds
 			};
-		console.log(vm.news);
-
 		vm.selectedNames = [];
 		vm.selectedCategories = [];
 		vm.userIds = [];
@@ -740,14 +767,37 @@ vm.switchTab = function(url) {
 		});
 	}
 
-	vm.userIdConvert = function(id) {
-		vm.user = $filter('filter')(vm.fullUsers, {serverUserId: id});
-		return vm.user[0].name + ' ' + vm.user[0].surname;
+	vm.userIdConvert = function(userElement) {
+		if(typeof userElement === "string"){
+			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: userElement});
+			return vm.user[0].name + ' ' + vm.user[0].surname;
+		}else{
+			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: userElement.serverUserId});
+			return vm.user[0].name + ' ' + vm.user[0].surname;
+		}
 	};
+
+	vm.deleteResUser = function(userId, newsId) {
+		NewsService.deleteResUser(newsId, userId);
+	};
+
+	vm.rolesIdConvert = function(roleElement) {
+		if(typeof roleElement === "string"){
+			vm.filteredRole = $filter('filter')(vm.roles, {_id: roleElement});
+			return vm.filteredRole[0].role;
+		}else{
+			vm.filteredRole = $filter('filter')(vm.roles, {_id: roleElement._id});
+			return vm.filteredRole[0].role;
+		}
+	};
+
+	vm.deleteAllovedRole = function(newsId, roleId, news) {
+		NewsService.deleteAllovedRole(newsId, roleId);
+	};
+
 
 /*	vm.toggleText = [];
 	vm.textLength = [];
-
 	vm.loadMore = function(index) {
 		vm.toggleText[index] = !vm.toggleText[index];
 		if(vm.toggleText[index]){
@@ -756,6 +806,7 @@ vm.switchTab = function(url) {
 			vm.textLength[index] = 200;
 		}
 	};*/
+
 	vm.toggleForm = function() {
 		vm.formView = !vm.formView;
 	};
@@ -779,7 +830,6 @@ vm.switchTab = function(url) {
 	};
 
 	function commentFun(commentText, newsId, index) {
-		console.log(vm.user[0].serverUserId);
 		var comment = {
 			author: vm.user[0].serverUserId,
 			body: commentText,
@@ -831,17 +881,13 @@ vm.switchTab = function(url) {
 
 		//NewsService.comentLike(newsId, commentId, userId);
 		if(comment[0].likes.indexOf(userId) < 0){
-			console.log('not exist');
 			comment[0].likes.push(userId);
 		}else{
-			console.log('exist');
 			comment[0].likes.splice(comment[0].likes.indexOf(userId), 1);
 		}
-		
+
 		NewsService.deleteComment(newsId, commentId);
 		NewsService.addComment(newsId, comment[0]);
-		console.log(comment[0]);
-
 	};
 
 	function updatePosts() {

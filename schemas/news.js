@@ -17,13 +17,13 @@ var newsSchema = new Schema({
 	comments: [commentSchema],
 	likes: [mongoose.Schema.ObjectId],
 	access_roles: {
-		type: [String],
+		type: [mongoose.Schema.ObjectId],
 		default: []
 	},
-	restrict_ids: [{
-		type: mongoose.Schema.ObjectId,
+	restrict_ids:{
+		type: [mongoose.Schema.ObjectId],
 		default: []
-	}]
+	}
 
 });
 
