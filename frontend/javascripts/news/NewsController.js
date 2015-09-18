@@ -90,7 +90,8 @@ vm.switchTab = function(url) {
 	getRoles();
 	function getRoles() {
 		NewsService.getRoles().then(function(data) {
-			vm.roles = [{
+			vm.roles = data;
+/*			[{
 				"_id":"55e0756e79547bdf270d6437",
 				"role":"ADMIN"
 			},{
@@ -99,7 +100,7 @@ vm.switchTab = function(url) {
 			},{
 				"_id":"55e0756e79547bdf270d6439",
 				"role":"HR"
-			}];
+			}];*/
 			vm.categories = loadCategory();
 		});
 	}
