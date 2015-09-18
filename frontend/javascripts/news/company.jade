@@ -40,18 +40,13 @@ md-content#company
 					div.inner-news(ng-bind-html='news.body | unsafe')
 				div(ng-if='newsCtrl.edit[$index]')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
-
-
 					md-chips(ng-model='news.access_roles' md-autocomplete-snap='', md-require-match='')
 						md-autocomplete(md-selected-item='newsCtrl.selectedCategory', md-search-text='newsCtrl.searchCategory', md-items='category in newsCtrl.queryCategory(newsCtrl.searchCategory)', md-item-text='category.role', placeholder='Show only for:')
 							span {{category.role}} 
-
 						md-chip-template
 							span
 								strong {{newsCtrl.rolesIdConvert($chip)}}
 					br
-
-
 					md-chips(ng-model='news.restrict_ids', md-autocomplete-snap='', md-require-match='')
 						md-autocomplete(md-selected-item='newsCtrl.selectedUser', md-search-text='newsCtrl.searchText', md-items='user in newsCtrl.queryUsers(newsCtrl.searchText)', md-item-text='user.name', placeholder='Show for all except:')
 							span(md-highlight-text='newsCtrl.searchText') {{user.name}} 
@@ -59,15 +54,6 @@ md-content#company
 							span
 								strong {{newsCtrl.userIdConvert($chip)}}
 					br
-					.allow
-						div Allowed сategory:
-							div.rolse-back(ng-repeat='rolesId in news.access_roles') {{newsCtrl.rolesIdConvert(rolesId)}} 
-								i.fa.fa-times(ng-click='newsCtrl.deleteAllovedRole(news._id , rolesId, news)')
-
-						div Restricted view for user:
-							div(ng-repeat='userId in news.restrict_ids') {{newsCtrl.userIdConvert(userId)}}
-								i.fa.fa-times(ng-click='newsCtrl.deleteResUser(userId, news._id, news)')
-						br
 					md-button(ng-click='newsCtrl.editpost(news._id, newpost, news.restrict_ids, news.access_roles);newsCtrl.submitBtn($index)') submit
 						//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 					//- span(ng-hide='news.body.length < 200 ')

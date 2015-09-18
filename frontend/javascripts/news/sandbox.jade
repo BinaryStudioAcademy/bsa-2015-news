@@ -40,15 +40,20 @@ md-content#sandbox
 					div.inner-news(ng-bind-html='news.body | unsafe')
 				div(ng-if='newsCtrl.edit[$index]')
 					textarea(ng-model='newpost', ui-tinymce='newsCtrl.tinymceOptions')
+					md-chips(ng-model='news.access_roles' md-autocomplete-snap='', md-require-match='')
+						md-autocomplete(md-selected-item='newsCtrl.selectedCategory', md-search-text='newsCtrl.searchCategory', md-items='category in newsCtrl.queryCategory(newsCtrl.searchCategory)', md-item-text='category.role', placeholder='Show only for:')
+							span {{category.role}} 
+						md-chip-template
+							span
+								strong {{newsCtrl.rolesIdConvert($chip)}}
 					br
-					.allow
-						div Allowed сategory:
-							div.rolse-back(ng-repeat='roles in news.access_roles') {{roles}}
-								i.fa.fa-times
-						div Restricted view for user:
-							div(ng-repeat='userId in news.restrict_ids') {{newsCtrl.userIdConvert(userId)}}
-								i.fa.fa-times
-						br
+					md-chips(ng-model='news.restrict_ids', md-autocomplete-snap='', md-require-match='')
+						md-autocomplete(md-selected-item='newsCtrl.selectedUser', md-search-text='newsCtrl.searchText', md-items='user in newsCtrl.queryUsers(newsCtrl.searchText)', md-item-text='user.name', placeholder='Show for all except:')
+							span(md-highlight-text='newsCtrl.searchText') {{user.name}} 
+						md-chip-template
+							span
+								strong {{newsCtrl.userIdConvert($chip)}}
+					br
 					md-button(ng-click='newsCtrl.editpost(news._id, newpost);newsCtrl.submitBtn($index)') submit
 						//-p{{news.body | limitTo: newsCtrl.textLength[$index] || 200 }}
 					//- span(ng-hide='news.body.length < 200 ')

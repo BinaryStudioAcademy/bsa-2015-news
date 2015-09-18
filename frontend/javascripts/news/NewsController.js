@@ -91,16 +91,6 @@ vm.switchTab = function(url) {
 	function getRoles() {
 		NewsService.getRoles().then(function(data) {
 			vm.roles = data;
-/*			[{
-				"_id":"55e0756e79547bdf270d6437",
-				"role":"ADMIN"
-			},{
-				"_id":"55e0756e79547bdf270d6438",
-				"role":"DEVELOPER"
-			},{
-				"_id":"55e0756e79547bdf270d6439",
-				"role":"HR"
-			}];*/
 			vm.categories = loadCategory();
 		});
 	}
@@ -233,10 +223,6 @@ vm.switchTab = function(url) {
 		}
 	};
 
-	vm.deleteResUser = function(userId, newsId) {
-		NewsService.deleteResUser(newsId, userId);
-	};
-
 	vm.rolesIdConvert = function(roleElement) {
 		if(typeof roleElement === "string"){
 			vm.filteredRole = $filter('filter')(vm.roles, {_id: roleElement});
@@ -246,11 +232,6 @@ vm.switchTab = function(url) {
 			return vm.filteredRole[0].role;
 		}
 	};
-
-	vm.deleteAllovedRole = function(newsId, roleId, news) {
-		NewsService.deleteAllovedRole(newsId, roleId);
-	};
-
 
 /*	vm.toggleText = [];
 	vm.textLength = [];
