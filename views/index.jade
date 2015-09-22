@@ -6,6 +6,28 @@ block content
 		aside#left
 			code-review-widget
 			expense-widget
+		ul.mobile-aside
+			li
+				i.fa.fa-sticky-note-o
+				div
+					poll-widget
+			li
+				i.fa.fa-users
+				div
+					hr-widget
+			li
+				i.fa.fa-question
+				div
+					stack-widget
+			li
+				i.fa.fa-code
+				div
+					code-review-widget
+			li
+				i.fa.fa-money
+				div
+					expense-widget
+
 		aside#right
 			poll-widget
 			hr-widget
@@ -18,11 +40,23 @@ block content
 				md-content(ng-class="{showMenu: isMenuShow}")
 					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
 						md-tab(ng-click='newsCtrl.switchTab("/company")')
-							| Company news
+							span.tabs-icon
+								i.fa.fa-contao 
+							span.tab-text
+								| Company news
 						md-tab(ng-click='newsCtrl.switchTab("/sandbox")')
-							| Sandbox
+							span.tabs-icon
+								i.fa.fa-comments-o 
+							span.tab-text
+								| Sandbox
 						md-tab(ng-click='newsCtrl.switchTab("/weekly")')
-							| Pack of news
+							span.tabs-icon
+								i.fa.fa-stack-exchange 
+							span.tab-text
+								| Pack of news
 						md-tab(ng-click='newsCtrl.switchTab("/activity")')
-							| activity log
+							span.tabs-icon
+								i.fa.fa-pencil-square-o 
+							span.tab-text
+								| activity log
 			#main(ng-view)
