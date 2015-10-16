@@ -303,6 +303,7 @@ vm.switchTab = function(url) {
 	vm.newsLike = function(newsId, user, index) {
 		console.log("Da newsId", newsId);
 		console.log("Da index", index);
+		console.log("Da user", user);
 		var userId = user.serverUserId;
 		console.log("Da userId", userId);
 		if(vm.posts[index].likes.indexOf(userId) < 0) {
