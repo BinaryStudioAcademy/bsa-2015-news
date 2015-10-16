@@ -22,6 +22,7 @@ module.exports = function (app) {
 	}, apiResponse);
 
 	app.put('/api/news/:id', function(req, res, next){
+		console.log('News update get: ', req.params.id, req.body);
 		NewsRepository.update(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
