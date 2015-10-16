@@ -300,10 +300,11 @@ vm.switchTab = function(url) {
 		});
 	};
 
-	vm.newsLike = function(newsId, userId, index) {
+	vm.newsLike = function(newsId, user, index) {
 		console.log("Da newsId", newsId);
 		console.log("Da userId", userId);
 		console.log("Da index", index);
+		var userId = user.serverUserId;
 		if(vm.posts[index].likes.indexOf(userId) < 0) {
 			NewsService.newsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: true});
