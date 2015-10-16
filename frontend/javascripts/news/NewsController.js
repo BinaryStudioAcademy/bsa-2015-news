@@ -304,7 +304,7 @@ vm.switchTab = function(url) {
 		console.log("Da newsId", newsId);
 		console.log("Da index", index);
 		console.log("Da user", user);
-		var userId = user.serverUserId;
+		var userId = user[0].serverUserId;
 		console.log("Da userId", userId);
 		if(vm.posts[index].likes.indexOf(userId) < 0) {
 			NewsService.newsLike(newsId, userId).then(function() {
