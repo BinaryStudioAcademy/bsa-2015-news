@@ -302,19 +302,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.newsLike = function(newsId, user, index, type) {
-		console.log("Da newsId", newsId);
-		console.log("Da index", index);
-		console.log("Da user", user);
 		var userId = user[0].serverUserId;
-		console.log("Da userId", userId);
-		console.log('Da posts', vm.posts);
-		if(!(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId))) {
-			NewsService.newsLike(newsId, userId).then(function() {
-				socket.emit("like post", {post: newsId, user: userId, isLike: true});
-			});
-		} else {
+		if(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId)) {
 			NewsService.deleteNewsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: false});
+			});
+		} else {
+			NewsService.newsLike(newsId, userId).then(function() {
+				socket.emit("like post", {post: newsId, user: userId, isLike: true});
 			});
 		}
 	};
