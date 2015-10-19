@@ -65,7 +65,7 @@ md-content#company
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)') {{news.comments.length}}
 						md-tooltip Comment
-					md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.newsLike(news._id, newsCtrl.user, $index)') {{news.likes.length}}
+					md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.newsLike(news._id, newsCtrl.user, $index, "company")') {{news.likes.length}}
 			.comments(ng-if='newsCtrl.commentForm[$index]')
 				textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="commentText" placeholder='Comment')
 				button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment(commentText, news._id, $index)') Add comment

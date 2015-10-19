@@ -68,7 +68,7 @@ md-content#sandbox
 					md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.newsLike(news._id, newsCtrl.user, $index)') {{news.likes.length}}
 			.comments(ng-if='newsCtrl.commentForm[$index]')
 				textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="commentText" placeholder='Comment')
-				button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment(commentText, news._id, $index)') Add comment
+				button.btn.btn-info.form-control(type='submit' ng-click='newsCtrl.newComment(commentText, news._id, $index, "sandbox")') Add comment
 			.comment-wrap
 				.comment(ng-repeat='comment in news.comments')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)') 

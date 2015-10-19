@@ -301,15 +301,14 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		});
 	};
 
-	vm.newsLike = function(newsId, user, index) {
+	vm.newsLike = function(newsId, user, index, type) {
 		console.log("Da newsId", newsId);
 		console.log("Da index", index);
 		console.log("Da user", user);
 		var userId = user[0].serverUserId;
 		console.log("Da userId", userId);
 		console.log('Da posts', vm.posts);
-		// if(vm.posts[index].likes.indexOf(userId) < 0) {
-		if(!(_.contains(_.filter(vm.posts, {type: 'company'})[index].likes, userId))) {
+		if(!(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId))) {
 			NewsService.newsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: true});
 			});
