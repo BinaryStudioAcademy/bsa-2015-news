@@ -53,9 +53,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		vm.edit[index] = !vm.edit[index];
 	};
 
-vm.switchTab = function(url) {
-	$location.url(url);
-};
+	vm.switchTab = function(url) {
+		$location.url(url);
+	};
 
 	$rootScope.$watch('$location.url()', function(current, old) {
 		switch($location.url(current)) {
@@ -306,6 +306,7 @@ vm.switchTab = function(url) {
 		console.log("Da user", user);
 		var userId = user[0].serverUserId;
 		console.log("Da userId", userId);
+		console.log('Da posts', vm.posts);
 		if(vm.posts[index].likes.indexOf(userId) < 0) {
 			NewsService.newsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: true});
