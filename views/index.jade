@@ -30,7 +30,7 @@ block content
 
 		aside#right
 			poll-widget
-			hr-widget
+			//- hr-widget
 			stack-widget
 			#left-block
 				code-review-widget
@@ -53,10 +53,10 @@ block content
 							span.tabs-icon
 								i.fa.fa-stack-exchange 
 							span.tab-text
-								| Pack of news
-						md-tab(ng-click='newsCtrl.switchTab("/activity")')
-							span.tabs-icon
-								i.fa.fa-pencil-square-o 
-							span.tab-text
-								| activity log
+								| Weeklies
+						//- md-tab(ng-click='newsCtrl.switchTab("/activity")')
+						//- 	span.tabs-icon
+						//- 		i.fa.fa-pencil-square-o 
+						//- 	span.tab-text
+						//- 		| activity log
 			#main(ng-view)

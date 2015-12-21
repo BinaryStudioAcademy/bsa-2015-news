@@ -148,6 +148,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	vm.editpost = function(newsId, newpost, restrict_ids, access_roles) {
+		console.log(arguments);
 		var restrictIds = [];
 		var accessRole = [];
 		restrict_ids.forEach(function(data) {
@@ -275,8 +276,12 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			likes: []
 			};
 		NewsService.addComment(newsId, comment).then(function(){
-			comment.postId = newsId;
-			socket.emit("new comment", comment);
+			NewsService.getComments(newsId).then(function(data) {
+				var post = _.find(vm.posts, {_id: newsId});
+				//post.comments = data.comments;
+				var i = data.comments.length - 1;
+				socket.emit("new comment", {postId: newsId, comment: data.comments[i]});
+			});
 		});
 		vm.commentForm[index] = false;
 	}
@@ -314,19 +319,10 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 	};
 
-	vm.commentLike = function(newsId, commentId, userId) {
-		var	post = $filter('filter')(vm.posts, {_id: newsId});
-		var comment = $filter('filter')(post[0].comments, {_id: commentId});
-
-		//NewsService.comentLike(newsId, commentId, userId);
-		if(comment[0].likes.indexOf(userId) < 0){
-			comment[0].likes.push(userId);
-		}else{
-			comment[0].likes.splice(comment[0].likes.indexOf(userId), 1);
-		}
-
-		NewsService.deleteComment(newsId, commentId);
-		NewsService.addComment(newsId, comment[0]);
+	vm.commentLike = function(newsId, commentId) {
+		NewsService.toggleCommentLike(newsId, commentId).then(function(data) {
+			socket.emit("like comment", {news: newsId, comment: commentId, like: data.like});
+		});
 	};
 
 	function updatePosts() {
@@ -368,12 +364,21 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			}
 		}
 	});
+
+	socket.on("change like comment", function(comment) {
+		if(comment) {
+			console.log(vm.posts);
+		}
+	});
+
+	/*socket.on("like comment", function(newPost) {
+		console.log(vm.posts);
+	});*/
 	
-	socket.on("push comment", function(comment) {
-		var post = $filter('filter')(vm.posts, {_id: comment.postId});
+	socket.on("push comment", function(data) {
+		var post = $filter('filter')(vm.posts, {_id: data.postId});
 		if(post[0]) {
-			delete post[0].postId;
-			post[0].comments.push(comment);
+			post[0].comments.push(data.comment);
 		}
 	});
 

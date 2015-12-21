@@ -24,10 +24,10 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					templateUrl: './templates/news/weekly.html',
 					reloadOnSearch: false
 				})
-				.when('/activity', {
+				/*.when('/activity', {
 					templateUrl: './templates/news/activity.html',
 					reloadOnSearch: false
-				})
+				})*/
 				.otherwise({
 					redirectTo: '/company'
 				});

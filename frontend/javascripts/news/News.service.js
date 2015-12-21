@@ -14,7 +14,9 @@ var app = require('../app.js');
 			deleteNews: deleteNews,
 			addComment: addComment,
 			deleteComment: deleteComment,
+			getComments: getComments,
 			newsLike: newsLike,
+			toggleCommentLike: toggleCommentLike,
 			deleteNewsLike: deleteNewsLike,
 			getMe: getMe
 		};
@@ -39,6 +41,10 @@ var app = require('../app.js');
 		function getRoles() {
 			return $resource("auth/api/roles").query().$promise;
 			//return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
+		}
+
+		function getComments(newsId) {
+			return $resource("/api/news/:id/comments", { id: "@id"}).get({id: newsId}).$promise;
 		}
 
 		function update_Role_User(newsId, roleId, userId) {
@@ -96,10 +102,12 @@ var app = require('../app.js');
 
 		}
 
-		function comentLike(newsId, commentId, userId) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
+		function toggleCommentLike(newsId, commentId) {
+			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
 				update: {method: "PUT"}
 			});
-			return data.update( {id: newsId}, { $addToSet:{'comments.$.likes': userId} }).$promise;
+			//return data.update({newsId: newsId, commentId: commentId}, {like: true}).$promise;
+			//return data.update({newsId: newsId, commentId: commentId}, {$addToSet:{likes: userId }}).$promise;
+			return data.update({newsId: newsId, commentId: commentId}).$promise;
 		}
 	}
