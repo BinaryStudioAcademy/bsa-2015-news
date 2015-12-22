@@ -3,60 +3,61 @@ extends ./layout.jade
 block content
 	#news-viev
 		header#header
-		aside#left
-			code-review-widget
-			expense-widget
-		ul.mobile-aside
-			li
-				i.icon-widget.fa.fa-sticky-note-o
-				div
-					poll-widget
-			li
-				i.icon-widget.fa.fa-users
-				div
-					hr-widget
-			li
-				i.icon-widget.fa.fa-question
-				div
-					stack-widget
-			li
-				i.icon-widget.fa.fa-code
-				div
-					code-review-widget
-			li
-				i.icon-widget.fa.fa-money
-				div
-					expense-widget
-
-		aside#right
-			poll-widget
-			//- hr-widget
-			stack-widget
-			#left-block
+		#all-content
+			aside#left
 				code-review-widget
 				expense-widget
-		#content(ng-controller='NewsController as newsCtrl')
-			.tabsdemoDynamicHeight
-				md-content
-					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
-						md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-							span.tabs-icon
-								i.fa.fa-contao 
-							span.tab-text
-								| Company news
-						md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-							span.tabs-icon
-								i.fa.fa-comments-o 
-							span.tab-text
-								| Sandbox
-						md-tab(ng-click='newsCtrl.switchTab("/weekly");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-							span.tabs-icon
-								i.fa.fa-stack-exchange 
-							span.tab-text
-								| Weeklies
-						//- md-tab(ng-click='newsCtrl.switchTab("/activity")')
-						//- 	span.tabs-icon
-						//- 		i.fa.fa-pencil-square-o 
-						//- 	span.tab-text
-						//- 		| activity log
-			#main(ng-view)
+			ul.mobile-aside
+				li
+					i.icon-widget.fa.fa-sticky-note-o
+					div
+						poll-widget
+				li
+					i.icon-widget.fa.fa-users
+					div
+						hr-widget
+				li
+					i.icon-widget.fa.fa-question
+					div
+						stack-widget
+				li
+					i.icon-widget.fa.fa-code
+					div
+						code-review-widget
+				li
+					i.icon-widget.fa.fa-money
+					div
+						expense-widget
+
+			aside#right
+				poll-widget
+				//- hr-widget
+				stack-widget
+				#left-block
+					code-review-widget
+					expense-widget
+			#content(ng-controller='NewsController as newsCtrl')
+				.tabsdemoDynamicHeight
+					md-content
+						md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
+							md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+								span.tabs-icon
+									i.fa.fa-contao 
+								span.tab-text
+									| Company news
+							md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+								span.tabs-icon
+									i.fa.fa-comments-o 
+								span.tab-text
+									| Sandbox
+							md-tab(ng-click='newsCtrl.switchTab("/weekly");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+								span.tabs-icon
+									i.fa.fa-stack-exchange 
+								span.tab-text
+									| Weeklies
+							//- md-tab(ng-click='newsCtrl.switchTab("/activity")')
+							//- 	span.tabs-icon
+							//- 		i.fa.fa-pencil-square-o 
+							//- 	span.tab-text
+							//- 		| activity log
+				#main(ng-view)

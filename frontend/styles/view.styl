@@ -17,6 +17,35 @@ form[name=newsForm]
 	background ghostwhite
 
 
+#header
+	position fixed
+	width 100%
+	z-index 200
+
+#all-content
+	position fixed
+	top 60px
+	bottom 0
+	left 0
+	right 0
+#right
+	position absolute
+	top 0
+	right 0
+	bottom 0
+	overflow auto
+	margin 0
+#content
+	position absolute
+	top 0
+	right 400px
+	bottom 0
+	/* overflow: auto; */
+	margin 0
+	left 0
+	/*.news*/
+
+
 
 
 
@@ -49,7 +78,7 @@ aside
 	margin 1%
 
 #content
-	margin 0 400px
+	/*margin 0 400px*/
 	padding 10px
 	height 100%
 	& > .news-massage
@@ -87,6 +116,7 @@ aside
 		max-width 1000px
 		margin auto
 		/*max-height 700px*/
+		/*max-height 800px*/
 		overflow-y auto
 		.title
 			padding 10px
@@ -325,8 +355,8 @@ md-tooltip
 
 
 @media screen and (max-width: 1600px)
-	#content
-		margin 0 390px 0 50px
+	/*#content
+		margin 0 390px 0 50px*/
 	aside#left
 		display none
 	#left-block
