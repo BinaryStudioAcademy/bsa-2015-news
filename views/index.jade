@@ -39,17 +39,17 @@ block content
 			.tabsdemoDynamicHeight
 				md-content
 					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
-						md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms()')
+						md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
 							span.tabs-icon
 								i.fa.fa-contao 
 							span.tab-text
 								| Company news
-						md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms()')
+						md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
 							span.tabs-icon
 								i.fa.fa-comments-o 
 							span.tab-text
 								| Sandbox
-						md-tab(ng-click='newsCtrl.switchTab("/weekly");newsCtrl.resetEditingForms()')
+						md-tab(ng-click='newsCtrl.switchTab("/weekly");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
 							span.tabs-icon
 								i.fa.fa-stack-exchange 
 							span.tab-text

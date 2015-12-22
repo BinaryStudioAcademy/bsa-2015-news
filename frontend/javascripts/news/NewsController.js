@@ -508,4 +508,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			$location.path(path);
 		};
 	}
+
+	vm.newsFilter = '';
+
+	vm.newsSearch = function(item) {
+		if ( (item.title.indexOf(vm.newsFilter) > -1) || (item.body.indexOf(vm.newsFilter) > -1) ){
+			return true;
+		}
+		return false;
+	};
 }

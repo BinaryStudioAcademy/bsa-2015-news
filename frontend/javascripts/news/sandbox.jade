@@ -87,7 +87,7 @@ md-content#sandbox
 	.search
 		md-input-container
 			md-icon.fa.fa-search
-			input(type='text', placeholder='Search' ng-model="search.title")
+			input(type='text', placeholder='Search' ng-model="newsCtrl.newsFilter")
 		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()') New post
 
 	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('sandbox')" novalidate)
@@ -114,7 +114,7 @@ md-content#sandbox
 		md-button(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 
 	.news
-		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: search track by $index ')
+		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: newsCtrl.newsSearch track by $index ')
 			.title
 				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon')
 				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}

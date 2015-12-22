@@ -87,7 +87,7 @@ md-content#weekly
 	.search
 		md-input-container
 			md-icon.fa.fa-search
-			input(type='text', placeholder='Search' ng-model="search.title")
+			input(type='text', placeholder='Search' ng-model="newsCtrl.newsFilter")
 		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.WhyCouldntYouMadeThisVariableUser.role === "ADMIN"') New post
 
 	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('weekly')" novalidate)
@@ -114,7 +114,7 @@ md-content#weekly
 		md-button(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
 
 	.news
-		.news-message(ng-repeat='news in newsCtrl.weeklyPosts | filter: search track by $index ')
+		.news-message(ng-repeat='news in newsCtrl.weeklyPosts | filter: newsCtrl.newsSearch track by $index ')
 			.title
 				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
 				span.comments-count(ng-if='newsCtrl.checkRights(news.author)')
