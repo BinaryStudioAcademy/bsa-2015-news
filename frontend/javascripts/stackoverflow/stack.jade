@@ -9,6 +9,9 @@
 			md-option(value='popular') Popular
 			md-option(value='upvoted') Upvoted
 		md-content
+			.list-item(ng-if='!stackCtrl.questions.length')
+				.item-content
+					.align-center Nothing
 			.list-item(ng-repeat='question in stackCtrl.questions')
 				a(href="{{question.url}}").item-content
 					div.stack-av

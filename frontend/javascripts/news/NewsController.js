@@ -22,6 +22,15 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.formView = true;
 	vm.foreAll = "All";
 
+	NewsService.getMe().then(function(data) {
+		vm.WhyCouldntYouMadeThisVariableUser = data;
+	});
+
+
+	vm.checkRights = function(id) {
+		return vm.WhyCouldntYouMadeThisVariableUser.role === 'ADMIN' || vm.WhyCouldntYouMadeThisVariableUser.id === id;
+	};
+
 	vm.tinymceOptions = {
 		inline: false,
 		plugins: [
@@ -248,6 +257,15 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.toggleForm = function() {
 		vm.formView = !vm.formView;
+		vm.titleNews = undefined;
+		vm.bodyNews = undefined;
+	};
+
+	vm.resetEditingForms = function() {
+		vm.formView = true;
+		vm.titleNews = undefined;
+		vm.bodyNews = undefined;
+		vm.edit = [];
 	};
 
 	vm.commentForm = [];

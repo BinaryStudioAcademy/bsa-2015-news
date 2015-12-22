@@ -118,7 +118,7 @@ md-content#sandbox
 			.title
 				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon')
 				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
-				span.comments-count
+				span.comments-count(ng-if='newsCtrl.checkRights(news.author)')
 					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index)' ng-show='!newsCtrl.edit[$index]')
 						md-tooltip Edit
 					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' ng-show='!newsCtrl.edit[$index]')
@@ -168,7 +168,7 @@ md-content#sandbox
 					md-button(ng-click='newsCtrl.toggleCommentForm($index)') Cancel
 			.comment-wrap
 				.comment(ng-repeat='comment in news.comments')
-					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)') 
+					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)' ng-if='newsCtrl.checkRights(comment.author)') 
 					.body(ng-bind-html='comment.body| unsafe')
 					span.author {{newsCtrl.userIdConvert(news.author)}}
 					span on {{comment.date | date:'yyyy-MMM-dd HH:mm'}}

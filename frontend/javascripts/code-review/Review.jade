@@ -5,8 +5,8 @@
 				h2.md-flex Code review requests
 		md-select(ng-model='rwCtrl.period.value' aria-label='select period' ng-change='rwCtrl.updateUpcoming()')
 			md-option(ng-repeat='period in rwCtrl.periods' value='{{period.value}}') Upcoming {{period.text}}
-		md-content(ng-class="{showMenu: isReviewShow}")
-			.list-item(ng-if='rwCtrl.upcoming.length === 0')
+		md-content
+			.list-item(ng-if='!rwCtrl.upcoming.length')
 				.item-content
 					.align-center Nothing
 			.list-item(ng-repeat='request in rwCtrl.upcoming')
