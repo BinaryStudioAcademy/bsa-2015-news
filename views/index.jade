@@ -37,7 +37,7 @@ block content
 				expense-widget
 		#content(ng-controller='NewsController as newsCtrl')
 			.tabsdemoDynamicHeight
-				md-content(ng-class="{showMenu: isMenuShow}")
+				md-content
 					md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
 						md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms()')
 							span.tabs-icon

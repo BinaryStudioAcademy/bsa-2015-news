@@ -3,7 +3,7 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Latest HR activity log
-		md-content(ng-class="{showMenu: isHrShow}")
+		md-content
 			.list-item(ng-repeat='action in hrCtrl.activities')
 				.item-content
 					a.message(href='{{action.url}}') {{action.message}}

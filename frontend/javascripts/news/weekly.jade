@@ -88,7 +88,7 @@ md-content#weekly
 		md-input-container
 			md-icon.fa.fa-search
 			input(type='text', placeholder='Search' ng-model="search.title")
-		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()') New post
+		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.WhyCouldntYouMadeThisVariableUser.role === "ADMIN"') New post
 
 	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('weekly')" novalidate)
 		.form-group

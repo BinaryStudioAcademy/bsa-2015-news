@@ -26,7 +26,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		vm.WhyCouldntYouMadeThisVariableUser = data;
 	});
 
-
 	vm.checkRights = function(id) {
 		return vm.WhyCouldntYouMadeThisVariableUser.role === 'ADMIN' || vm.WhyCouldntYouMadeThisVariableUser.id === id;
 	};
@@ -68,6 +67,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	$rootScope.$watch('$location.url()', function(current, old) {
+
 		switch($location.url(current)) {
 			case "/company": vm.selectedIndex = 0; break;
 			case "/sandbox": vm.selectedIndex = 1; break;
@@ -157,7 +157,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	}
 
 	vm.editpost = function(newsId, newpost, restrict_ids, access_roles) {
-		console.log(arguments);
 		var restrictIds = [];
 		var accessRole = [];
 		restrict_ids.forEach(function(data) {
@@ -416,10 +415,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		var path = $location.path();
 
 		if(path.indexOf("post") > -1) {
-			path = path.split("/").join("");
-			var postId = path.substring(4, path.length);
+			//path = path.split("/").join("");
+			path = path.split("/");
+			console.log(path);
+			//var postId = path.substring(4, path.length);
+			var postId = path[path.length - 2];
 			var post = $filter('filter')(vm.posts, {_id: postId});
-
+			switch(path[1]) {
+				case "company": vm.selectedIndex = 0; break;
+				case "sandbox": vm.selectedIndex = 1; break;
+				case "weekly": vm.selectedIndex = 2; break;
+			}
 			if(post[0]) showModalPost(post[0]._id, false);
 		}
 	}
@@ -427,10 +433,19 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	function showModalPost(postId, isSetPath) {
 		currentPostId = postId;
 
+		var path;
+
+		switch(vm.selectedIndex) {
+			case 0: path = "company"; break;
+			case 1: path = "sandbox"; break;
+			case 2: path = "weekly"; break;
+		}
+
 		if(isSetPath) {
 			// Set url path in browser
 			correctPath();
-			$location.path("/post/" + postId);
+			//$location.path("/post/" + postId);
+			$location.path(path + "/post/" + postId);
 		}
 
 		$mdDialog.show({
@@ -443,7 +458,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}, function() {
 			// Reset path in browser
 			correctPath();
-			$location.path("/");
+			$location.path(path);
+			//$location.path("/");
 		});
 	}
 
@@ -453,8 +469,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			var lastRoute = $route.current;
 			var un = $rootScope.$on('$locationChangeSuccess', function () {
 				$route.current = lastRoute;
-				un();
+				//un();
 			});
+			un();
 			return original.apply($location, [path]);
 		};
 	}
@@ -478,6 +495,17 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		};
 		$scope.answer = function(answer) {
 			$mdDialog.hide(answer);
+		};
+		$scope.close = function() {
+			$mdDialog.hide();
+			var path;
+			switch(vm.selectedIndex) {
+				case 0: path = "company"; break;
+				case 1: path = "sandbox"; break;
+				case 2: path = "weekly"; break;
+			}
+			correctPath();
+			$location.path(path);
 		};
 	}
 }

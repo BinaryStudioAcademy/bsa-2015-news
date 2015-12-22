@@ -1,4 +1,4 @@
-module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io'])
+module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io', 'ui.bootstrap'])
 	.config(['$routeProvider', '$resourceProvider', '$httpProvider', '$locationProvider', '$mdThemingProvider',
 		function($routeProvider, $resourceProvider, $httpProvider, $locationProvider, $mdThemingProvider) {
 			$httpProvider.defaults.useXDomain = true;
@@ -16,11 +16,19 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					templateUrl: './templates/news/sandbox.html',
 					reloadOnSearch: false
 				})
-				.when('/post/:postId/', {
+				.when('/weekly', {
+					templateUrl: './templates/news/weekly.html',
+					reloadOnSearch: false
+				})
+				.when('/company/post/:postId/', {
 					templateUrl: './templates/news/company.html',
 					reloadOnSearch: false
 				})
-				.when('/weekly', {
+				.when('/sandbox/post/:postId/', {
+					templateUrl: './templates/news/sandbox.html',
+					reloadOnSearch: false
+				})
+				.when('/weekly/post/:postId/', {
 					templateUrl: './templates/news/weekly.html',
 					reloadOnSearch: false
 				})

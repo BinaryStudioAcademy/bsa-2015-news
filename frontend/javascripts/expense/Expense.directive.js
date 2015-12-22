@@ -7,6 +7,6 @@ function ExpenseDirective() {
 		templateUrl: "./templates/expense/Expense.html",
 		replace: true,
 		controller: "ExpenseController",
-		controllerAs: "formCtrl"
+		controllerAs: "expCtrl"
 	};
 }

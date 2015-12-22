@@ -3,12 +3,12 @@
         md-toolbar.md-primary
             .md-toolbar-tools
                 h2.md-flex &nbsp;Questionnaire
-        md-content(ng-class="{showMenu: isPollShow}")
-            //.section-container
-            //    i.fa.fa-question-circle
-            //    strong &nbsp;Section:&nbsp;
-            //    span {{ pollCtrl.currentSection.name }}
-            //md-divider.divider
+        md-content
+            //-.section-container
+            //-    i.fa.fa-question-circle
+            //-    strong &nbsp;Section:&nbsp;
+            //-    span {{ pollCtrl.currentSection.name }}
+            //-md-divider.divider
             form#vote-form(name="voteForm", ng-controller="VoteFormController as voteCtrl",
                 ng-submit="voteCtrl.sendVote(); pollCtrl.showResults()", ng-if="!pollCtrl.isShowConfirm", novalidate)
                 strong {{ pollCtrl.currentQuestion.name }}

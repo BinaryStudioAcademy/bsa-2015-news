@@ -4,9 +4,12 @@ md-dialog(aria-label='post.title')
 			.md-toolbar-tools
 				.title-modal
 					h2.title {{ post.title }}
+					//- span.comments-count
+					//- 	md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
+					//- 		md-tooltip Edit
 					span.comments-count
-						md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='edit=!edit; newpost=post.body')
-							md-tooltip Edit
+						md-button.md-icon-button.fa.fa-times(aria-label='Close' ng-click='close()')
+							md-tooltip Close
 		md-dialog-content
 			.body
 				div(ng-show='!edit', style='white-space: pre-wrap')
@@ -18,15 +21,15 @@ md-dialog(aria-label='post.title')
 				span.author {{userIdConvert(post.author)}}
 				span on {{post.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
-					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
-						md-tooltip Comment
+					//- md-button.md-icon-button.fa.fa-commenting-o(aria-label='Comment' ng-click='toggleCommentModal = !toggleCommentModal') {{post.comments.length}}
+					//- 	md-tooltip Comment
 					md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsLike(post._id, newsCtrl.user, 0)') {{post.likes.length}}
-			.comments(ng-show='toggleCommentModal')
-				textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="commentText" placeholder='Comment')
-				button.btn.btn-info.form-control(type='submit' ng-click='newComment(commentText, post._id, 0); commentText = ""; toggleCommentModal = !toggleCommentModal') Add comment
+			//- .comments(ng-show='toggleCommentModal')
+			//- 	textarea.form-control(ui-tinymce='newsCtrl.tinymceOptions' ng-model="commentText" placeholder='Comment')
+			//- 	button.btn.btn-info.form-control(type='submit' ng-click='newComment(commentText, post._id, 0); commentText = ""; toggleCommentModal = !toggleCommentModal') Add comment
 			.comment-wrap
 				.comment(ng-repeat='comment in post.comments')
-					i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
+					//- i.fa.fa-times.delete-post(ng-click='deleteComment(post._id, comment._id)')
 					.body(ng-bind-html='comment.body| unsafe')
 					span.author {{userIdConvert(comment.author)}}
 					span {{comment.date | date:'yyyy-MMM-dd HH:mm'}}

@@ -3,7 +3,7 @@
 		md-toolbar.md-primary
 			.md-toolbar-tools
 				h2.md-flex Questions
-		md-select(ng-model='stackCtrl.type', ng-change='stackCtrl.getQuestions(stackCtrl.type)')
+		md-select(ng-model='stackCtrl.type', ng-change='stackCtrl.getQuestions(stackCtrl.type)' aria-label='Type')
 			md-option(value='recent') Recent
 			md-option(value='commented') Top commented
 			md-option(value='popular') Popular

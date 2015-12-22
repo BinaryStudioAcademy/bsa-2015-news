@@ -1,11 +1,111 @@
 var app = require('../app');
 app.controller("ExpenseController", ExpenseController);
 
-ExpenseController.$inject = ["ExpenseService", "$filter"];
+var _ = require('lodash');
 
-function ExpenseController(ExpenseService, $filter) {
+ExpenseController.$inject = ["ExpenseService", "$filter", "$scope"];
+
+function ExpenseController(ExpenseService, $filter, $scope) {
 	var vm = this;
 
+	vm.minDate = new Date(0);
+
+	vm.currencies = ['UAH', 'USD'];
+
+	$scope.format = 'dd-MMMM-yyyy';
+	$scope.status = {
+		opened: false
+	};
+	$scope.open = function() {
+		$scope.status.opened = true;
+	};
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
+
+	ExpenseService.getFirstRate().then(function(data) {
+		vm.minDate = new Date(data[0].time * 1000);
+		vm.minDate.setHours(0);
+		vm.minDate.setMinutes(0);
+		vm.minDate.setSeconds(0);
+		vm.minDate.setMilliseconds(0);
+	});
+
+	vm.updateAnnualCategories = function() {
+		vm.maxDate = new Date();
+		if (vm.newExpense.date) {
+			ExpenseService.getBudgets(vm.newExpense.date.getFullYear()).then(function(data) {
+
+				vm.annualCategories = [];
+				data.forEach(function(budget) {
+					var access = _.find(vm.accUser.categories, function(cat) {
+						return cat.id === budget.category.id;
+					});
+					access = access && access.level > 1;
+					if (access || vm.accUser.admin || vm.accUser.role === 'ADMIN') {
+						vm.annualCategories.push({
+							id: budget.category.id,
+							name: budget.category.name,
+							left: budget.category.budget - budget.category.used,
+							subcategories: _.map(budget.category.subcategories, function(subcategory) {
+								return {
+									id: subcategory.id,
+									name: subcategory.name,
+									left: subcategory.budget - subcategory.used
+								};
+							})
+						});
+					}
+				});
+			});
+		}
+	};
+
+	function resetNewExpense() {
+		var date = new Date();
+		date.setHours(0);//
+		date.setMinutes(0);//
+		date.setSeconds(0);
+		date.setMilliseconds(0);
+		vm.maxDate = new Date();
+		vm.newExpense = { date: date, currency: "UAH" };
+	}
+
+	resetNewExpense();
+
+	ExpenseService.getAccUser().then(function(user) {
+		vm.accUser = user;
+		vm.updateAnnualCategories();
+	});
+
+	vm.createExpense = function() {
+		vm.newExpense.creatorId = vm.accUser.global_id;
+		vm.newExpense.time = Number((vm.newExpense.date.getTime() / 1000).toFixed());
+		delete vm.newExpense.date;
+		ExpenseService.createExpense(vm.newExpense).then(function() {
+			resetNewExpense();
+			$scope.expenseForm.$setPristine();
+		});
+	};
+
+	vm.getAnnualCategory = function() {
+		return _.find(vm.annualCategories, function(category) {
+			return category.id === vm.newExpense.categoryId;
+		});
+	};
+
+	vm.getAnnualSubcategory = function() {
+		return _.find(vm.getAnnualSubcategories(), function(subcategory) {
+			return subcategory.id === vm.newExpense.subcategoryId;
+		});
+	};
+
+	vm.getAnnualSubcategories = function() {
+		var cat = vm.getAnnualCategory();
+		return cat ? cat.subcategories : [];
+	};
+	/*
 	// Create new expense
 	vm.expense = {};
 	vm.expense.currency = "UAH";
@@ -135,5 +235,5 @@ function ExpenseController(ExpenseService, $filter) {
 	function changeCurrency(categoryModel, subcategoryModel) {
 		setPersonalLeftBudget(categoryModel);
 		setLeftSubcategoryBudget(categoryModel, subcategoryModel);
-	}
+	}*/
 }
