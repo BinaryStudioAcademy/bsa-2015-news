@@ -116,7 +116,7 @@ md-content#sandbox
 	.news
 		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: newsCtrl.newsSearch track by $index ')
 			.title
-				img.title-img(src='http://www.gravatar.com/avatar/b685d4127c61e9e20a636e34cb906842?d=identicon')
+				img.title-img(ng-src='/profile/{{newsCtrl.getUserById(news.author).avatar.urlAva}}')
 				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
 				span.comments-count(ng-if='newsCtrl.checkRights(news.author)')
 					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index)' ng-show='!newsCtrl.edit[$index]')

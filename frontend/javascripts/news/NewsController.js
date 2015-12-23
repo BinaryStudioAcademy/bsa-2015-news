@@ -338,7 +338,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 
 	vm.commentLike = function(newsId, commentId) {
 		NewsService.toggleCommentLike(newsId, commentId).then(function(data) {
-			socket.emit("like comment", {news: newsId, comment: commentId, like: data.like});
+			socket.emit("like comment", {newsId: newsId, commentId: commentId, like: data.like});
 		});
 	};
 
@@ -382,15 +382,22 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		}
 	});
 
-	socket.on("change like comment", function(comment) {
-		if(comment) {
-			console.log(vm.posts);
+	socket.on("change like comment", function(data) {
+		var news = _.find(vm.posts, function(post) {
+			return post._id == data.newsId;
+		});
+		var comment = _.find(news.comments, function(comment) {
+			return comment._id == data.commentId;
+		});
+		if (data.like === "added") {
+			comment.likes.push(vm.WhyCouldntYouMadeThisVariableUser.id);
+		}
+		else if (data.like === "removed") {
+			_.remove(comment.likes, function (from) {
+				return from == vm.WhyCouldntYouMadeThisVariableUser.id;
+			});
 		}
 	});
-
-	/*socket.on("like comment", function(newPost) {
-		console.log(vm.posts);
-	});*/
 	
 	socket.on("push comment", function(data) {
 		var post = $filter('filter')(vm.posts, {_id: data.postId});
@@ -516,5 +523,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			return true;
 		}
 		return false;
+	};
+
+	vm.getUserById = function(id) {
+		return $filter('filter')(vm.fullUsers, {serverUserId: id})[0];
 	};
 }
