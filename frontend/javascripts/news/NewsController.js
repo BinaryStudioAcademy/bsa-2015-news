@@ -331,8 +331,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		//var userId = user[0].serverUserId;
 		var userId = vm.WhyCouldntYouMadeThisVariableUser.id;
 
-
-		if(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId)) {
+		/*if(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId)) {*/
+		if(_.contains(_.find(vm.posts, {_id: newsId}).likes, userId)) {
 			NewsService.deleteNewsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: false});
 			});
@@ -503,6 +503,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		$scope.deleteComment = vm.deleteComment;
 		$scope.userIdConvert = vm.userIdConvert;
 		$scope.newsLike = vm.newsLike;
+		$scope.commentLike = vm.commentLike;
+		$scope.findLike = vm.findLike;
 		$scope.commentLike = vm.commentLike;
 		$scope.hide = function() {
 			$mdDialog.hide();
