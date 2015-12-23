@@ -27,7 +27,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	});
 
 	vm.checkRights = function(id) {
-		return vm.WhyCouldntYouMadeThisVariableUser.role === 'ADMIN' || vm.WhyCouldntYouMadeThisVariableUser.id === id;
+		return vm.WhyCouldntYouMadeThisVariableUser.role === 'ADMIN' || 'CEO' || 'Tech Lead' || vm.WhyCouldntYouMadeThisVariableUser.id === id;
 	};
 
 	vm.tinymceOptions = {
