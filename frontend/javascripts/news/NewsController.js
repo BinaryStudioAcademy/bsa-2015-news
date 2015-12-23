@@ -38,6 +38,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				'print textcolor',
 				"insertdatetime media table contextmenu paste"
 		],
+		height: 300,
+		content_css : ['styles/css/libs.css', 'styles/css/style.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'],
+		body_class: 'body',
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor | backcolor",
 		skin: 'lightgray',
 		theme : 'modern'
