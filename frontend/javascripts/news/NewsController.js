@@ -327,7 +327,11 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.newsLike = function(newsId, user, index, type) {
-		var userId = user[0].serverUserId;
+
+		//var userId = user[0].serverUserId;
+		var userId = vm.WhyCouldntYouMadeThisVariableUser.id;
+
+
 		if(_.contains(_.filter(vm.posts, {type: type})[index].likes, userId)) {
 			NewsService.deleteNewsLike(newsId, userId).then(function() {
 				socket.emit("like post", {post: newsId, user: userId, isLike: false});
