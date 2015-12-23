@@ -531,4 +531,10 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.getUserById = function(id) {
 		return $filter('filter')(vm.fullUsers, {serverUserId: id})[0];
 	};
+
+	vm.findLike = function(likes) {
+		return _.find(likes, function(like) {
+			return like == vm.WhyCouldntYouMadeThisVariableUser.id;
+		});
+	};
 }
