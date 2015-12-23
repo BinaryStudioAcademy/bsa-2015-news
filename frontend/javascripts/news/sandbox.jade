@@ -117,8 +117,8 @@ md-content#sandbox
 		.news-message(ng-repeat='news in newsCtrl.sandboxPosts | filter: newsCtrl.newsSearch track by $index ')
 			.title
 				img.title-img(ng-src='{{newsCtrl.getUserById(news.author).avatar.urlAva}}')
-				span(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
-				span.comments-count(ng-if='newsCtrl.checkRights(news.author)')
+				span.title-text(ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
+				span.title-ctrls.comments-count.hide-mobile(ng-if='newsCtrl.checkRights(news.author)')
 					md-button.md-icon-button.fa.fa-pencil-square-o(aria-label='edit' ng-click='newsCtrl.submitBtn($index)' ng-show='!newsCtrl.edit[$index]')
 						md-tooltip Edit
 					md-button.md-icon-button.fa.fa-trash-o(aria-label='delete' ng-click='newsCtrl.deleteNews(news._id)' ng-show='!newsCtrl.edit[$index]')
@@ -154,7 +154,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
 				span.author {{newsCtrl.userIdConvert(news.author)}}
-				span on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
+				span.hide-mobile on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)')  {{news.comments.length}}
 						md-tooltip Comment
@@ -172,7 +172,7 @@ md-content#sandbox
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)' ng-if='newsCtrl.checkRights(comment.author)') 
 					.body(ng-bind-html='comment.body| unsafe')
 					span.author {{newsCtrl.userIdConvert(news.author)}}
-					span on {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+					span.hide-mobile on {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
 						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike(news._id, comment._id)' ng-if='!newsCtrl.findLike(comment.likes)')  {{comment.likes.length}}
 						md-button.md-icon-button.fa.fa-thumbs-up(ng-click='newsCtrl.commentLike(news._id, comment._id)' ng-if='newsCtrl.findLike(comment.likes)')  {{comment.likes.length}}
