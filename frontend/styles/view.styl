@@ -28,21 +28,21 @@ form[name=newsForm]
 	bottom 0
 	left 0
 	right 0
-#right
+/*#right
 	position absolute
 	top 0
 	right 0
 	bottom 0
 	overflow auto
-	margin 0
+	margin 0*/
 #content
 	position absolute
 	top 0
 	right 400px
 	bottom 0
-	 overflow auto
+	overflow auto
 	margin 0
-	left 0
+	left 400px
 	/*.news*/
 
 
@@ -354,6 +354,16 @@ md-tooltip
 
 
 @media screen and (max-width: 1600px)
+	#right
+		position absolute
+		top 0
+		right 0
+		bottom 0
+		overflow auto
+		margin 0
+	#content
+		left 0
+
 	/*#content
 		margin 0 390px 0 50px*/
 	aside#left
@@ -365,7 +375,8 @@ md-tooltip
 
 @media screen and (max-width: 1090px)
 	#content
-		margin 60px 10px 10px
+		/*margin 60px 10px 10px*/
+		right 45px
 	.news
 		margin-right 20px
 	header
@@ -402,7 +413,7 @@ md-tooltip
 				color #FFFFFF
 		li
 			&:hover
-				width 300px
+				width 380px
 				height auto
 				.icon-widget
 					height 64px
@@ -411,17 +422,17 @@ md-tooltip
 						margin-top -20px
 						margin-right -5px
 
-@media screen and (max-width: 750px)
+/*@media screen and (max-width: 750px)
 	.tabs-icon
 		display inline
 	.tab-text
-		display none
+		display none*/
 
 @media screen and (max-width: 500px)
-	#content
-		margin 60px 0 0
+	/*#content
+		margin 60px 0 0*/
 		
-	.news
+	/*.news
 		margin 0 45px 0 0
 	.news-message 
-		margin 0
+		margin 0*/
