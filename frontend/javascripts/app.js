@@ -46,6 +46,16 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					'default': '900'
 				});
 
+			$mdThemingProvider.theme('company')
+				.primaryPalette('blue', {
+					'default': '900'
+				});
+
+			$mdThemingProvider.theme('sandbox')
+				.primaryPalette('green', {
+					'default': '900'
+				});
+
 			// Приклад теми:
 			//$mdThemingProvider.theme('default')
 			//	.primaryPalette('blue')
