@@ -533,7 +533,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.newsFilter = '';
 
 	vm.newsSearch = function(item) {
-		if ( (item.title.indexOf(vm.newsFilter) > -1) || (item.body.indexOf(vm.newsFilter) > -1) ){
+		if ( (item.title.toLowerCase().indexOf(vm.newsFilter.toLowerCase()) > -1) || (item.body.toLowerCase().indexOf(vm.newsFilter.toLowerCase()) > -1) ){
 			return true;
 		}
 		return false;
