@@ -51,7 +51,8 @@
 					| Use personal budget
 				md-input-container.input-container
 					label Description
-					textarea(ng-model="expCtrl.newExpense.description")
+					input(type="text", name='Description', ng-model="expCtrl.newExpense.description")
+					//- textarea(ng-model="expCtrl.newExpense.description")
 				//- .money-left(ng-show="showMoneyLeft")
 				//- 	#form-category-left
 				//- 		b {{expCtrl.budgetType}} budget left:
