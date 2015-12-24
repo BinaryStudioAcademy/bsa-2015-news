@@ -239,10 +239,10 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	vm.userIdConvert = function(userElement) {
 		if(typeof userElement === "string"){
 			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: userElement});
-			return vm.user[0].name + ' ' + vm.user[0].surname;
+			return vm.user.length ? vm.user[0].name + ' ' + vm.user[0].surname : '';
 		}else{
 			vm.user = $filter('filter')(vm.fullUsers, {serverUserId: userElement.serverUserId});
-			return vm.user[0].name + ' ' + vm.user[0].surname;
+			return vm.user.length ? vm.user[0].name + ' ' + vm.user[0].surname : '';
 		}
 	};
 
