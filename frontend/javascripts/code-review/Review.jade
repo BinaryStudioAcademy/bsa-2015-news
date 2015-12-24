@@ -18,7 +18,7 @@
 						br
 						b Author: 
 						| {{request.user.first_name}} {{request.user.last_name}}
-						b(ng-if='request.user.binary_id != vm.currentUser.id') (you)
+						b(ng-if='request.user.binary_id == rwCtrl.currentUser.id')  (you)
 						br
 						b Group: 
 						| {{request.group.title}}
@@ -26,8 +26,7 @@
 						b Coming: 
 						| {{request.date_review}}
 					.align-center
-						div(ng-if='request.user.binary_id != vm.currentUser.id')
-							md-button.md-raised.md-primary(ng-if='!rwCtrl.getRequestStatus(request)' ng-click='rwCtrl.sendOffer(request)') Send offer
-							md-button.md-raised.md-warn(ng-if='rwCtrl.getRequestStatus(request)' ng-click='rwCtrl.cancelOffer(request)') Cancel offer
+						md-button.md-raised.md-primary(ng-if='!rwCtrl.getRequestStatus(request) && request.user.binary_id != rwCtrl.currentUser.id' ng-click='rwCtrl.sendOffer(request)') Send offer
+						md-button.md-raised.md-warn(ng-if='rwCtrl.getRequestStatus(request)' ng-click='rwCtrl.cancelOffer(request)') Cancel offer
 						md-button.md-raised(ng-click='rwCtrl.showDetails($event, request)') Details
 				md-divider(ng-if='!$last')
