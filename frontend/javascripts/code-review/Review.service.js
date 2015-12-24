@@ -24,6 +24,6 @@ function ReviewService($resource) {
 	}
 
 	function cancelOffer(request) {
-		return $resource("reviewr/api/v1/user/offeroff/3" + request.id).get().$promise;
+		return $resource("reviewr/api/v1/user/offeroff/" + request.id).get().$promise;
 	}
 }

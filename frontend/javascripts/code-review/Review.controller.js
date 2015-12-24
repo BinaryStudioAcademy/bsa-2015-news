@@ -28,7 +28,7 @@ function ReviewController(ReviewService, $mdDialog) {
 	});
 
 	vm.getRequestStatus = function(request) {
-		return _.find(request.users, {id: vm.currentUser.id});
+		return _.find(request.users, {binary_id: vm.currentUser.id});
 	};
 
 	vm.updateUpcoming = function() {
