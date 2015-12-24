@@ -82,7 +82,7 @@ md-content#company
 					md-button.md-raised.md-primary(type='submit') Add comment
 					md-button(ng-click='newsCtrl.toggleCommentForm($index)') Cancel
 			.comment-wrap
-				.comment(ng-repeat='comment in news.comments')
+				.comment(ng-repeat='comment in news.comments | reverse')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)' ng-if='newsCtrl.checkRights(comment.author)') 
 					.body(ng-bind-html='comment.body| unsafe')
 					span.author {{newsCtrl.userIdConvert(comment.author)}}

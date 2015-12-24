@@ -5,6 +5,11 @@ app.controller('NewsController', NewsController);
 app.filter('unsafe', function($sce) { 
 	return $sce.trustAsHtml; 
 });
+app.filter('reverse', function() {
+	return function(items) {
+		return items.slice().reverse();
+	};
+});
 
 NewsController.$inject = [
 	'NewsService',
