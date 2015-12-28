@@ -1,4 +1,3 @@
-var User = require('../../schemas/user.js');
 var News = require('../../schemas/news.js');
 var apiResponse = require('express-api-response');
 var NewsRepository = require('../../repositories/news');

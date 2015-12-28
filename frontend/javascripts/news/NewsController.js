@@ -87,7 +87,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		switch($location.url(current)) {
 			case "/company": vm.selectedIndex = 0; break;
 			case "/sandbox": vm.selectedIndex = 1; break;
-			case "/weekly": vm.selectedIndex = 2; break;
+			case "/weeklies": vm.selectedIndex = 2; break;
+			case "/administration": vm.selectedIndex = 3; break;
 		}
 	});
 
@@ -99,7 +100,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			vm.posts = data;
 			vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 			vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
-			//vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+			vm.weekliesPosts = $filter('filter')(vm.posts, {type: 'weeklies'});
 			checkUrlPath();
 		});
 	}
@@ -301,7 +302,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	function updatePosts() {
 		vm.sandboxPosts = $filter('filter')(vm.posts, {type: 'sandbox'});
 		vm.companyPosts = $filter('filter')(vm.posts, {type: 'company'});
-		vm.weeklyPosts = $filter('filter')(vm.posts, {type: 'weekly'});
+		vm.weekliesPosts = $filter('filter')(vm.posts, {type: 'weeklies'});
 	}
 
 	// Socket logic
@@ -386,7 +387,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			switch(path[1]) {
 				case "company": vm.selectedIndex = 0; break;
 				case "sandbox": vm.selectedIndex = 1; break;
-				case "weekly": vm.selectedIndex = 2; break;
+				case "weeklies": vm.selectedIndex = 2; break;
+				case "administration": vm.selectedIndex = 3; break;
 			}
 			if(post[0]) showModalPost(post[0]._id, false);
 			else {
@@ -404,7 +406,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		switch(vm.selectedIndex) {
 			case 0: path = "company"; break;
 			case 1: path = "sandbox"; break;
-			case 2: path = "weekly"; break;
+			case 2: path = "weeklies"; break;
+			case 3: path = "administration"; break;
 		}
 
 		if(isSetPath) {
@@ -470,7 +473,8 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 			switch(vm.selectedIndex) {
 				case 0: path = "company"; break;
 				case 1: path = "sandbox"; break;
-				case 2: path = "weekly"; break;
+				case 2: path = "weeklies"; break;
+				case 3: path = "administration"; break;
 			}
 			correctPath();
 			$location.path(path);

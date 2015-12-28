@@ -16,8 +16,8 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					templateUrl: './templates/news/sandbox.html',
 					reloadOnSearch: false
 				})
-				.when('/weekly', {
-					templateUrl: './templates/news/weekly.html',
+				.when('/weeklies', {
+					templateUrl: './templates/news/weeklies.html',
 					reloadOnSearch: false
 				})
 				.when('/company/post/:postId/', {
@@ -28,14 +28,16 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					templateUrl: './templates/news/sandbox.html',
 					reloadOnSearch: false
 				})
-				.when('/weekly/post/:postId/', {
-					templateUrl: './templates/news/weekly.html',
+				.when('/weeklies/post/:postId/', {
+					templateUrl: './templates/news/weeklies.html',
 					reloadOnSearch: false
 				})
-				/*.when('/activity', {
-					templateUrl: './templates/news/activity.html',
+				.when('/administration', {
+					templateUrl: './templates/administration/administration.html',
+					controller: 'AdministrationController',
+					controllerAs:"admCtrl",
 					reloadOnSearch: false
-				})*/
+				})
 				.otherwise({
 					redirectTo: '/company'
 				});
