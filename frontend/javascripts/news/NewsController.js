@@ -389,6 +389,10 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 				case "weekly": vm.selectedIndex = 2; break;
 			}
 			if(post[0]) showModalPost(post[0]._id, false);
+			else {
+				correctPath();
+				$location.path(path[1]);
+			}
 		}
 	}
 

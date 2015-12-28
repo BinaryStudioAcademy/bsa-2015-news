@@ -14,7 +14,8 @@ NewsRepository.prototype.getAllNews = function(user, callback) {
 	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
 		.sort({date:-1})
 		.exec(callback);*/
-	News.find({})
+	var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
+	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
 		.sort({date:-1})
 		.exec(callback);
 };
