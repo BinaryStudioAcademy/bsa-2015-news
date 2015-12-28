@@ -40,8 +40,14 @@ var newsSchema = new Schema({
 	type: String,
 	author: mongoose.Schema.ObjectId,
 	date: Number,
-	comments: [commentSchema],
-	likes: [mongoose.Schema.ObjectId],
+	comments: {
+		type: [commentSchema],
+		default: []
+	},
+	likes: {
+		type: [mongoose.Schema.ObjectId],
+		default: []
+	},
 	access_roles: {
 		type: [mongoose.Schema.ObjectId],
 		default: []

@@ -73,7 +73,7 @@ var app = require('../app.js');
 			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
-			return data.update({ id: newsId }, { body: news }).$promise;
+			return data.update({ id: newsId }, news).$promise;
 		}
 
 		function deleteNews(newsId) {
