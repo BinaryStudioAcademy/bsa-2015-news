@@ -11,8 +11,8 @@
 			.list-item(ng-repeat='role in admCtrl.roles')
 				.global-role {{role.role}}
 				md-input-container.local-role
-					md-select(ng-model="someModel")
-						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoles") {{role}}
+					md-select(ng-model="role.local_role" aria-label='local role' ng-change='admCtrl.updateRole(role)')
+						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoleNames") {{role}}
 	md-card.md-whiteframe-z3
 		md-toolbar.md-primary
 			.md-toolbar-tools
@@ -25,5 +25,6 @@
 			.list-item(ng-repeat='user in admCtrl.users')
 				.global-role {{user.name}} {{user.surname}}
 				md-input-container.local-role
-					md-select(ng-model="someModel")
-						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoles") {{role}}
+					md-select(ng-model="user.local_role" aria-label='local role' ng-change='admCtrl.updateUserRole(user)')
+						md-option(ng-value="'By global role'") By global role
+						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoleNames") {{role}}

@@ -28,12 +28,4 @@ module.exports = function(app) {
 			next();
 		});
 	}, apiResponse);
-
-	app.delete('/api/roles/:id', function(req, res, next){
-		RoleRepository.delete(req.params.id, function(err, data) {
-			res.err = err;
-			res.data = data;
-			next();
-		});
-	}, apiResponse);
 };
