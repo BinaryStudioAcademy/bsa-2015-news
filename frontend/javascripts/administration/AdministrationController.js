@@ -50,7 +50,7 @@ function AdministrationController(NewsService, AdministrationService, $q) {
 	reloadRoles();
 	reloadUsers();
 
-	vm.localRoleNames = ['User', 'Manager', 'Admin'];
+	vm.localRoleNames = ['User', 'Content Manager', 'Admin'];
 
 	vm.updateRole = function(role) {
 		if (role.local_role_id) {

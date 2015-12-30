@@ -11,11 +11,9 @@ NewsRepository.prototype = new Repository();
 
 NewsRepository.prototype.getAllNews = function(user, callback) {
 	/*var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
-	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
-		.sort({date:-1})
-		.exec(callback);*/
-	var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
-	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
+	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })*/
+	var query = user.role === 'ADMIN' ? {} : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } } ] };
+	News.find(query)
 		.sort({date:-1})
 		.exec(callback);
 };
@@ -24,7 +22,8 @@ NewsRepository.prototype.getNews = function(user, newsId, callback) {
 	/*var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
 	News.findOne({ $and: [ {_id: newsId}, roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
 		.exec(callback);*/
-	News.findOne({_id: newsId})
+	var query = user.role === 'ADMIN' ? {_id: newsId} : { $and: [ {_id: newsId}, { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } } ] };
+	News.findOne(query)
 		.exec(callback);
 };
 
@@ -40,6 +39,11 @@ NewsRepository.prototype.likeComment = function(userId, newsId, commentId, callb
 
 NewsRepository.prototype.dislikeComment = function(userId, newsId, commentId, callback) {
 	News.update({_id: newsId,'comments._id': commentId}, {$pull: {'comments.$.likes': userId}})
+		.exec(callback);
+};
+
+NewsRepository.prototype.editComment = function(userId, commentId, body, callback) {
+	News.update({'comments._id': commentId}, {'$set': {'comments.$.body': body}})
 		.exec(callback);
 };
 

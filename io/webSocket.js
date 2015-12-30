@@ -6,6 +6,9 @@ module.exports = function(io) {
         socket.on("edit post", function(newPost) {
             io.emit("change post", newPost);
         });
+        socket.on("edit comment", function(data) {
+            io.emit("change comment", data);
+        });
         socket.on("delete post", function(postId) {
             io.emit("splice post", postId);
         });

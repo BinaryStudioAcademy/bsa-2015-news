@@ -39,18 +39,20 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.put('/api/news/:newsId/comments/:commentId', function(req, res, next) {
-		/*NewsRepository.update(req.params.newsId, req.params.commentId, req.body, function(err, data) {
-			res.err = err;
-			res.data = data;
-			next();
-		});*/
-
-		NewsService.toggleCommentlike(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
-			res.err = err;
-			res.data = data;
-			next();
-		});
-
+		if (req.body.body) {
+			NewsRepository.editComment(req.decoded.id, req.params.commentId, req.body.body, function(err, data) {
+				res.err = err;
+				res.data = data;
+				next();
+			});
+		}
+		else {
+			NewsService.toggleCommentlike(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
+				res.err = err;
+				res.data = data;
+				next();
+			});
+		}
 	}, apiResponse);
 
 	app.put('/api/news/:id', function(req, res, next){

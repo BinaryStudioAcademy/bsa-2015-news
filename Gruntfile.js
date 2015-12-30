@@ -131,7 +131,8 @@ module.exports = function(grunt) {
 					'bower_components/angular-material/angular-material.js',
 					'bower_components/angular-socket-io/socket.js',
 					'bower_components/angular-bootstrap/ui-bootstrap.js',
-					'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+					'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+					'bower_components/angular-cookies/angular-cookies.js'
 				],
 				dest: 'public/javascripts/libs.js',
 			},

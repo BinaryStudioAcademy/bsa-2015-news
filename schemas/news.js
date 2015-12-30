@@ -23,7 +23,7 @@ var newsSchema = new Schema({
 		default: []
 	},
 	access_roles: {
-		type: [mongoose.Schema.ObjectId],
+		type: [String],
 		default: []
 	},
 	restrict_ids:{

@@ -11,6 +11,7 @@ var app = require('../app.js');
 			update_Role_User: update_Role_User,
 			createNews: createNews,
 			editNews: editNews,
+			editComment: editComment,
 			deleteNews: deleteNews,
 			addComment: addComment,
 			deleteComment: deleteComment,
@@ -74,6 +75,13 @@ var app = require('../app.js');
 				update: {method: "PUT"}
 			});
 			return data.update({ id: newsId }, news).$promise;
+		}
+
+		function editComment(newsId, commentId, body) {
+			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({newsId: newsId, commentId: commentId}, {body: body}).$promise;
 		}
 
 		function deleteNews(newsId) {

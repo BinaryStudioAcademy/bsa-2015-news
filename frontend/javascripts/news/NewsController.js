@@ -13,6 +13,8 @@ app.filter('reverse', function() {
 
 NewsController.$inject = [
 	'NewsService',
+	'AdministrationService',
+	'ExpenseService',
 	'$mdDialog',
 	'$location',
 	'$route',
@@ -21,17 +23,79 @@ NewsController.$inject = [
 	'socket'
 ];
 
-function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $filter, socket) {
+function NewsController(NewsService, AdministrationService, ExpenseService, $mdDialog, $location, $route, $rootScope, $filter, socket) {
 	var vm = this;
 	vm.formView = true;
 
 	NewsService.getMe().then(function(data) {
 		vm.WhyCouldntYouMadeThisVariableUser = data;
+
+		ExpenseService.getAccUser().then(function(user) {
+			user.categories.forEach(function(cat) {
+				if (cat.level > 1) {
+					vm.showExpenseWidget = true;
+					return;
+				}
+			});
+			vm.showExpenseWidget = vm.WhyCouldntYouMadeThisVariableUser.role === 'ADMIN' || user.admin || vm.showExpenseWidget;
+		});
+
+		if (vm.WhyCouldntYouMadeThisVariableUser.role == 'ADMIN') {
+			$rootScope.myRole = 'Admin';
+			setTabs();
+		}
+		else {
+			AdministrationService.getLocalRoles().then(function(data) {
+				var local = _.find(data, {global_role: vm.WhyCouldntYouMadeThisVariableUser.role});
+				$rootScope.myRole = local ? local.local_role : 'User';
+				setTabs();
+			}, function() {
+				$rootScope.myRole = 'User';
+				setTabs();
+			});
+		}
+		
 	});
 
+	function setTabs() {
+		if ($rootScope.myRole == 'Admin') {
+			vm.tabs = [{
+				url: "/company",
+				name: "Company news"
+			},{
+				url: "/sandbox",
+				name: "Sandbox"
+			},{
+				url: "/weeklies",
+				name: "Weeklies"
+			},{
+				url: "/administration",
+				name: "Administration"
+			}];
+		}
+		else {
+			vm.tabs = [{
+				url: "/company",
+				name: "Company news"
+			},{
+				url: "/sandbox",
+				name: "Sandbox"
+			},{
+				url: "/weeklies",
+				name: "Weeklies"
+			}];
+		}
+		/*var path = $location.path();
+		switch(path) {
+			case "/company": vm.selectedIndex = 0; break;
+			case "/sandbox": vm.selectedIndex = 1; break;
+			case "/weeklies": vm.selectedIndex = 2; break;
+			case "/administration": vm.selectedIndex = 3; break;
+		}*/
+	}
+
 	vm.checkRights = function(id) {
-		var role = vm.WhyCouldntYouMadeThisVariableUser.role;
-		var res = role === 'ADMIN' || role === 'CEO' || role === 'Tech Lead';
+		var res = $rootScope.myRole === 'Admin' || $rootScope.myRole === 'Manager';
 		if (id) {
 			res = res || vm.WhyCouldntYouMadeThisVariableUser.id === id;
 		}
@@ -54,6 +118,22 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		theme : 'modern'
 	};
 
+	vm.tinymceCommentOptions = {
+		inline: false,
+		plugins: [
+				"advlist autolink lists link image charmap print preview anchor",
+				"searchreplace visualblocks code fullscreen",
+				'print textcolor',
+				"insertdatetime media table contextmenu paste"
+		],
+		height: 100,
+		content_css : ['styles/css/libs.css', 'styles/css/style.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'],
+		body_class: 'body',
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor | backcolor",
+		skin: 'lightgray',
+		theme : 'modern'
+	};
+
 	vm.tinymceOptionsComment = {
 		menubar: false, 
 		statusbar: false
@@ -68,8 +148,11 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		return Object.keys(obj);
 	}
 
-	vm.setEditing = function(data) {
+	vm.setEditing = function(data, id) {
 		vm.editing = JSON.parse(JSON.stringify(data));
+		if (id) {
+			vm.editing.news_id = id;
+		}
 	};
 
 	vm.resetEditing = function() {
@@ -319,6 +402,13 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		updatePosts();
 	});
 
+	socket.on("change comment", function(data) {
+		var postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(data.newsId);
+		var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf(comment._id);
+		vm.posts[postIndex].comments[commentIndex].body = comment.body;
+		updatePosts();
+	});
+
 	socket.on("splice post", function(postId) {
 		var index = vm.posts.map(function(x) {return x._id; }).indexOf(postId);
 		vm.posts.splice(index, 1);
@@ -380,7 +470,6 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		if(path.indexOf("post") > -1) {
 			//path = path.split("/").join("");
 			path = path.split("/");
-			console.log(path);
 			//var postId = path.substring(4, path.length);
 			var postId = path[path.length - 2];
 			var post = $filter('filter')(vm.posts, {_id: postId});
@@ -501,22 +590,33 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.restoreData = function(type) {
+		var postIndex;
 		if (type === 'news') {
-			var postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing._id);
+			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing._id);
 			vm.posts[postIndex] = vm.editing;
 			updatePosts();
 		}
-		// comments editing logic - to complete
-		/*else if (type === 'comment') {
-			var post = _.find(vm.posts, function(news) {
-				return _.find(news.comments, {_id: vm.editing._id});
-			});
-			var postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(newPost._id);
-		}*/
+		else if (type === 'comment') {
+			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing.news_id);
+			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf(vm.editing._id);
+			vm.posts[postIndex].comments[commentIndex].body = vm.editing.body;
+			updatePosts();
+		}
 
 		vm.resetEditing();
 	};
 
+	vm.editComment = function(newsId, comment) {
+		NewsService.editComment(newsId, comment._id, comment.body).then(function(data) {
+			if (!data.nModified) {
+				comment = JSON.parse(JSON.stringify(vm.editing));
+			}
+			else {
+				socket.emit("edit comment", { newsId: newsId, comment: comment });
+			}
+			vm.resetEditing();
+		});
+	};
 
 
 
@@ -535,7 +635,7 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 	};
 
 	vm.transformRoleChip = function(chip) {
-		return chip._id || null;
+		return chip.role || null;
 	};
 
 	/*vm.selectedItem = null;
@@ -569,8 +669,9 @@ function NewsController(NewsService, $mdDialog, $location, $route, $rootScope, $
 		var user = _.find(vm.fullUsers, {serverUserId: id});
 		return user ? user.name + ' ' + user.surname : '';
 	};
-	vm.getRoleName = function(id) {
+
+	/*vm.getRoleName = function(id) {
 		var role = _.find(vm.roles, {_id: id});
 		return role ? role.role : '';
-	};
+	};*/
 }

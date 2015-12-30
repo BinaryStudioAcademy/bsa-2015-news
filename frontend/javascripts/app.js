@@ -1,4 +1,4 @@
-module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io', 'ui.bootstrap'])
+module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','ngMaterial', 'btford.socket-io', 'ui.bootstrap', 'ngCookies'])
 	.config(['$routeProvider', '$resourceProvider', '$httpProvider', '$locationProvider', '$mdThemingProvider',
 		function($routeProvider, $resourceProvider, $httpProvider, $locationProvider, $mdThemingProvider) {
 			$httpProvider.defaults.useXDomain = true;
@@ -65,7 +65,16 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			//	.warnPalette('red')
 			//	.backgroundPalette('grey');
 		}
-	]);
+	])/*.run( function($rootScope, $location, $cookies) {
+			console.log($cookies.get('userRole'));
+			$rootScope.$on( "$routeChangeStart", function(event, next, current) {
+				if ( next.templateUrl == "./templates/administration/administration.html" ) {
+					if ( $rootScope.myRole !== 'ADMIN' ) {
+						$location.path( "/company" );
+					}
+				}
+			});
+	})*/;
 
 var getHeader = function() {
 	var request = new XMLHttpRequest();

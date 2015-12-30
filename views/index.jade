@@ -1,12 +1,12 @@
 extends ./layout.jade
 
 block content
-	#news-viev
+	#news-viev(ng-controller='NewsController as newsCtrl')
 		header#header
 		#all-content
 			aside#left
 				code-review-widget
-				expense-widget
+				expense-widget(ng-if='newsCtrl.showExpenseWidget')
 			ul.mobile-aside
 				li
 					i.icon-widget.fa.fa-sticky-note-o
@@ -24,7 +24,7 @@ block content
 					i.icon-widget.fa.fa-code
 					div
 						code-review-widget
-				li
+				li(ng-if='newsCtrl.showExpenseWidget')
 					i.icon-widget.fa.fa-money
 					div
 						expense-widget
@@ -35,29 +35,23 @@ block content
 				stack-widget
 				#left-block
 					code-review-widget
-					expense-widget
-			#content(ng-controller='NewsController as newsCtrl')
+					expense-widget(ng-if='newsCtrl.showExpenseWidget')
+			#content
 				.tabsdemoDynamicHeight
 					md-content
 						md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
-							md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-								span.tabs-icon
-									i.fa.fa-contao 
-								span.tab-text
-									| Company news
-							md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-								span.tabs-icon
-									i.fa.fa-comments-o 
-								span.tab-text
-									| Sandbox
-							md-tab(ng-click='newsCtrl.switchTab("/weeklies");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
-								span.tabs-icon
-									i.fa.fa-stack-exchange 
-								span.tab-text
-									| Weeklies
-							md-tab(ng-click='newsCtrl.switchTab("/administration")')
-								span.tabs-icon
-									i.fa.fa-pencil-square-o 
-								span.tab-text
-									| Administration
+							md-tab(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";' ng-repeat='tab in newsCtrl.tabs')
+								span.tab-text {{tab.name}}
+							//- md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+							//- 	span.tab-text
+							//- 		| Company news
+							//- md-tab(ng-click='newsCtrl.switchTab("/sandbox");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+							//- 	span.tab-text
+							//- 		| Sandbox
+							//- md-tab(ng-click='newsCtrl.switchTab("/weeklies");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
+							//- 	span.tab-text
+							//- 		| Weeklies
+							//- md-tab(ng-click='newsCtrl.switchTab("/administration")')
+							//- 	span.tab-text
+							//- 		| Administration
 				#main(ng-view)

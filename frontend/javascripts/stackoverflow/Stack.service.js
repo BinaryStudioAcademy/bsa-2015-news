@@ -10,7 +10,6 @@ function stackService(resource) {
 	};
 
 	function getQuestions(type) {
-		console.log('=>', type);
 		var data = resource('http://team.binary-studio.com/asciit/api/v1/widget/questions/:type', {type: type});
 		return data.query().$promise;
 	}
