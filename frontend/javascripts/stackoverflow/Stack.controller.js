@@ -1,11 +1,14 @@
 var app = require('../app.js');
 
-app.controller('StackController', stackController);
+app.controller('StackController', StackController);
 
-stackController.$inject = ['StackService'];
+StackController.$inject = ['StackService'];
 
-function stackController(StackService) {
+function StackController(StackService) {
 	var vm = this;
+
+	vm.collapsed = true;
+	
 	vm.questions = [];
 	vm.type = 'recent';
 	vm.getQuestions = getQuestions;

@@ -1,7 +1,7 @@
-var News = require('../../schemas/news.js');
+var News = require('../../schemas/news').model;
 var apiResponse = require('express-api-response');
 var NewsRepository = require('../../repositories/news');
-var NewsService = require('../../services/news.js');
+var NewsService = require('../../services/news');
 
 
 module.exports = function(app) {

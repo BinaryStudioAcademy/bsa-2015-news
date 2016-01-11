@@ -8,6 +8,8 @@ ExpenseController.$inject = ["ExpenseService", "$filter", "$scope"];
 function ExpenseController(ExpenseService, $filter, $scope) {
 	var vm = this;
 
+	vm.collapsed = true;
+
 	vm.minDate = new Date(0);
 
 	vm.currencies = ['UAH', 'USD'];

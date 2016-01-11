@@ -7,6 +7,8 @@ ReviewController.$inject = ["ReviewService", "$mdDialog"];
 function ReviewController(ReviewService, $mdDialog) {
 	var vm = this;
 
+	vm.collapsed = true;
+
 	vm.periods = [
 	{
 		value: 'today',
@@ -21,7 +23,7 @@ function ReviewController(ReviewService, $mdDialog) {
 		text: 'in a month'
 	}
 	];
-	vm.period = vm.periods[0];
+	vm.period = vm.periods[1];
 
 	ReviewService.getUser().then(function(data) {
 		vm.currentUser = data;

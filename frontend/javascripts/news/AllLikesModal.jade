@@ -1,0 +1,8 @@
+md-dialog.all-likes(aria-label='all-likes')
+	md-dialog-content
+		ul.likes-list
+			li.list-item(ng-repeat='user in users')
+				a(ng-href='/profile/#/userdata/{{globalIdToProfile(user)}}')
+					.avatar(back-img='{{getUser(user).avatar.urlAva}}')
+					.user
+						span {{getUser(user).name + ' ' + getUser(user).surname}}

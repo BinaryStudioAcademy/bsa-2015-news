@@ -19,7 +19,13 @@ var app = require('../app.js');
 			newsLike: newsLike,
 			toggleCommentLike: toggleCommentLike,
 			deleteNewsLike: deleteNewsLike,
-			getMe: getMe
+			getMe: getMe,
+			getServices: getServices,
+			getPacks: getPacks,
+			createPack: createPack,
+			removePack: removePack,
+			pushNewsToPack: pushNewsToPack,
+			removeNewsFromPack: removeNewsFromPack
 		};
 
 		function getMe() {
@@ -117,5 +123,37 @@ var app = require('../app.js');
 			//return data.update({newsId: newsId, commentId: commentId}, {like: true}).$promise;
 			//return data.update({newsId: newsId, commentId: commentId}, {$addToSet:{likes: userId }}).$promise;
 			return data.update({newsId: newsId, commentId: commentId}).$promise;
+		}
+
+		function getServices() {
+			return $resource("http://team.binary-studio.com/app/api/notificationService").query().$promise;
+		}
+
+		function getPacks() {
+			return $resource("api/packs").query().$promise;
+		}
+
+		function createPack(pack) {
+			return $resource("api/packs", {}, {
+						save: { method: 'POST', 
+							headers: {'Content-Type': 'application/json'}
+						}
+					}).save(pack).$promise;
+		}
+
+		function removePack(id) {
+			return $resource("api/packs/:id", {id: "@id"}).remove({id:id}).$promise;
+		}
+
+		function pushNewsToPack(id, newsArray) {
+			return $resource("api/packs/:id/news/", {id: "@id"}, {
+						save: { method: 'POST', 
+							headers: {'Content-Type': 'application/json'}
+						}
+					}).save({ id: id }, {newsArray: newsArray}).$promise;
+		}
+
+		function removeNewsFromPack(packId, newsId) {
+			return $resource("api/packs/:packId/news/:newsId", { packId: "@packId", newsId: "@newsId" }).remove({ packId: packId, newsId: newsId }).$promise;
 		}
 	}

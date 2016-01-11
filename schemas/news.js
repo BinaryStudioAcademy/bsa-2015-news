@@ -33,4 +33,7 @@ var newsSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('News', newsSchema);
+module.exports = {
+	model: mongoose.model('News', newsSchema),
+	schema: newsSchema
+};

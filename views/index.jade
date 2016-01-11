@@ -5,8 +5,11 @@ block content
 		header#header
 		#all-content
 			aside#left
-				code-review-widget
-				expense-widget(ng-if='newsCtrl.showExpenseWidget')
+				ul#nav-list
+					li.nav-item(ng-repeat='service in newsCtrl.services')
+						a(href='{{service.link}}')
+							img(ng-src='{{service.logo}}')
+							span(ng-bind='service.name')
 			ul.mobile-aside
 				li
 					i.icon-widget.fa.fa-sticky-note-o
@@ -24,18 +27,19 @@ block content
 					i.icon-widget.fa.fa-code
 					div
 						code-review-widget
-				li(ng-if='newsCtrl.showExpenseWidget')
-					i.icon-widget.fa.fa-money
-					div
-						expense-widget
+				//- li(ng-if='newsCtrl.showExpenseWidget')
+				//- 	i.icon-widget.fa.fa-money
+				//- 	div
+				//- 		expense-widget
 
 			aside#right
 				poll-widget
 				//- hr-widget
 				stack-widget
+				code-review-widget
 				#left-block
-					code-review-widget
-					expense-widget(ng-if='newsCtrl.showExpenseWidget')
+					//- code-review-widget
+					//- expense-widget(ng-if='newsCtrl.showExpenseWidget')
 			#content
 				.tabsdemoDynamicHeight
 					md-content

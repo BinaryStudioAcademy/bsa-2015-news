@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Repository = require('../units/Repository');
-var News = require('../schemas/news');
+var News = require('../schemas/news').model;
 
 var NewsRepository = function(){
 	Repository.prototype.constructor.call(this);

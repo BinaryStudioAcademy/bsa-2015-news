@@ -6,7 +6,7 @@ function StackDirective() {
 		restrict: "E",
 		templateUrl: "./templates/stackoverflow/stack.html",
 		replace: true,
-		controllerAs: 'stackCtrl',
-		controller: 'StackController'
+		controller: 'StackController',
+		controllerAs: 'stackCtrl'
 	};
 }
