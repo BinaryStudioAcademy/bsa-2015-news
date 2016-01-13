@@ -9,7 +9,8 @@ md-content#weekly
 			md-card
 				md-toolbar.md-primary.hidden-pack(ng-click='pack.collapsed=!pack.collapsed' ng-class='{"collapsed-head": pack.collapsed}')
 					.md-toolbar-tools
-						h2.md-flex {{pack.title}} (hidden pack)
+						h2.md-flex(ng-bind-html='pack.title | unsafe')
+						span &nbsp;(hidden pack)
 				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
 					.section.center
 						span this pack is not published
@@ -78,7 +79,7 @@ md-content#weekly
 			md-card
 				md-toolbar.md-primary(ng-click='')
 					.md-toolbar-tools
-						h2.md-flex {{pack.title}}
+						h2.md-flex(ng-bind-html='pack.title | unsafe')
 				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
 					.section.center
 						span
