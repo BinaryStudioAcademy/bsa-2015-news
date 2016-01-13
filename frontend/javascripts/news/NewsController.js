@@ -402,20 +402,19 @@ function NewsController(NewsService, AdministrationService, $mdDialog, $location
 	};
 
 	vm.restoreData = function(type) {
-		var postIndex;
+		console.log('if u c this then something is wrong');
+		/*var postIndex;
 		if (type === 'news') {
 			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing._id);
 			vm.posts[postIndex] = vm.editing;
-			
 		}
 		else if (type === 'comment') {
 			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing.news_id);
 			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf(vm.editing._id);
 			vm.posts[postIndex].comments[commentIndex].body = vm.editing.body;
-			
 		}
 
-		vm.resetEditing();
+		vm.resetEditing();*/
 	};
 
 	vm.editComment = function(newsId, comment) {

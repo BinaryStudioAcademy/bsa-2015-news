@@ -53,7 +53,7 @@ md-content#weekly
 										textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="comment.body" placeholder='Comment' required)
 									.controls
 										md-button(type='submit') Save comment
-										md-button(ng-click='newsCtrl.restoreData("comment")') Cancel
+										md-button(ng-click='weekCtrl.restoreData("comment")') Cancel
 								div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
 									.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
 									.comment-section
@@ -122,7 +122,7 @@ md-content#weekly
 										textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="comment.body" placeholder='Comment' required)
 									.controls
 										md-button(type='submit') Save comment
-										md-button(ng-click='newsCtrl.restoreData("comment")') Cancel
+										md-button(ng-click='weekCtrl.restoreData("comment")') Cancel
 								div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
 									.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
 									.comment-section
@@ -152,7 +152,8 @@ md-content#weekly
 				.list-item.center(ng-if='!weekCtrl.editingPack.fullNews.length')
 					span News pack is empty
 				.list-item(ng-repeat='news in weekCtrl.editingPack.fullNews')
-					span.news-title {{news.title}}
+					span.news-title(ng-if='!(newsCtrl.editing._id === news._id)' ng-click="newsCtrl.showModalPost(news._id, true)") {{news.title}}
+					span.news-title.news-editable-title(ng-if='(newsCtrl.editing._id === news._id)' ui-tinymce='newsCtrl.tinymceInlineOptions' ng-model="news.title")
 					span.news-controls-2.go-right
 						//- i.fa.fa-pencil.edit-2(ng-click='news.edit=true' ng-show='!news.edit')
 						i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(news)' ng-show='!(newsCtrl.editing._id === news._id)')
@@ -164,7 +165,7 @@ md-content#weekly
 						br
 						//- md-button.md-raised.md-primary(ng-click='news.edit=false') Save
 						md-button.md-raised.md-primary(ng-click='newsCtrl.editpost(news)') Save
-						md-button(ng-click='newsCtrl.restoreData("news")') Cancel
+						md-button(ng-click='weekCtrl.restoreData("news")') Cancel
 
 				md-divider
 

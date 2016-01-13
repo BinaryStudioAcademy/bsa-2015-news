@@ -212,6 +212,33 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 	};
 
+	vm.restoreData = function(type) {
+		var postId;
+		if (type === 'news') {
+			postId = $scope.newsCtrl.editing._id;
+		} else if (type === 'comment') {
+			postId = $scope.newsCtrl.editing.news_id;
+		}
+		var pack = _.find(vm.allPacks, function(pack) {
+			var newsId = _.find(pack.news, function(news) {
+				return news === postId;
+			});
+			return !!newsId;
+		});
+		if (pack) {
+			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
+			var newsIndex = vm.allPacks[packIndex].news.indexOf(postId);
+			if (type === 'news') {
+				vm.allPacks[packIndex].fullNews[newsIndex] = $scope.newsCtrl.editing;
+			} else if (type === 'comment') {
+				var commentIndex = vm.allPacks[packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
+				vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].body = $scope.newsCtrl.editing.body;
+			}
+			vm.splitPacks();
+			$scope.newsCtrl.editing = {};
+		}
+	};
+
 	socket.on("push pack", function(pack) {
 		pack.fullNews = [];
 		pack.collapsed = true;

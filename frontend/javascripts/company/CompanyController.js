@@ -30,6 +30,20 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 		vm.whyCouldntYouMadeThisVariableUser = data;
 	});
 
+	vm.restoreData = function(type) {
+		var postIndex;
+		if (type === 'news') {
+			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
+			vm.posts[postIndex] = $scope.newsCtrl.editing;
+		}
+		else if (type === 'comment') {
+			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing.news_id);
+			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
+			vm.posts[postIndex].comments[commentIndex].body = $scope.newsCtrl.editing.body;
+		}
+		$scope.newsCtrl.editing = {};
+	};
+
 
 	// Socket logic
 	socket.on("push post", function(post) {
