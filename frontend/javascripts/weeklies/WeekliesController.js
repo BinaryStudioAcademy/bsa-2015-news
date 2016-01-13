@@ -73,8 +73,6 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 			WeekliesService.createPack(pack).then(function(data) {
 				socket.emit("new pack", data);
-				vm.editingPack = _.find(vm.packs, {_id: data._id});
-				vm.weekliesMode = 'edit';
 			});
 		} else {
 			vm.editingPack = published ? _.find(vm.packs, {_id: packId}) : _.find(vm.hiddenPacks, {_id: packId});
@@ -83,6 +81,11 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	vm.toViewMode = function() {
+		if (!vm.editingPack.news.length) {
+			WeekliesService.removePack(vm.editingPack._id).then(function() {
+				socket.emit("delete pack", vm.editingPack._id);
+			});
+		}
 		vm.weekliesMode = 'view';
 	};
 
@@ -211,8 +214,11 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 	socket.on("push pack", function(pack) {
 		pack.fullNews = [];
+		pack.collapsed = true;
 		vm.allPacks.push(pack);
 		vm.splitPacks();
+		vm.editingPack = _.find(vm.hiddenPacks, {_id: pack._id});
+		vm.weekliesMode = 'edit';
 	});
 
 	socket.on("change pack", function(data) {
