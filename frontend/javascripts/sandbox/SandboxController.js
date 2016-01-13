@@ -22,7 +22,7 @@ function SandboxController(NewsService, CompanyService, $mdDialog, $route, $root
 
 	vm.posts = [];
 	
-	NewsService.getNews('company').then(function(data){
+	NewsService.getNews('sandbox').then(function(data){
 		vm.posts = data;
 	});
 
@@ -44,10 +44,17 @@ function SandboxController(NewsService, CompanyService, $mdDialog, $route, $root
 		$scope.newsCtrl.editing = {};
 	};
 
+	vm.newsSearch = function(item) {
+		if ( (item.body.toLowerCase().indexOf($scope.newsCtrl.newsFilter.toLowerCase()) > -1) ){
+			return true;
+		}
+		return false;
+	};
+
 
 	// Socket logic
 	socket.on("push post", function(post) {
-		if (post.type === "company") {
+		if (post.type === "sandbox") {
 			vm.posts.unshift(post);
 		}
 	});

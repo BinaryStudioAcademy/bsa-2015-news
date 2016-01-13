@@ -44,7 +44,7 @@ md-content#weekly
 								span  {{news.comments.length}} comments
 						.new-comment-2(ng-if='showComments')
 							form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, $index, newCommentForm);commentText=''" novalidate)
-								div(ng-class='{validation: !newsCtrl.commentText}')
+								div(ng-class='{validation: !commentText}')
 									textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
 								md-button(type='submit') Add comment
 						.comments-2(ng-if='showComments')
@@ -113,7 +113,7 @@ md-content#weekly
 								span  {{news.comments.length}} comments
 						.new-comment-2(ng-if='showComments')
 							form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, $index, newCommentForm);commentText=''" novalidate)
-								div(ng-class='{validation: !newsCtrl.commentText}')
+								div(ng-class='{validation: !commentText}')
 									textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
 								md-button(type='submit') Add comment
 						.comments-2(ng-if='showComments')
