@@ -47,7 +47,13 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 	vm.splitPacks = function() {
 		vm.packs = _.filter(vm.allPacks, {published: true});
+		vm.packs.sort(function(a, b) {
+			return a.date - b.date;
+		});
 		vm.hiddenPacks = _.filter(vm.allPacks, {published: false});
+		vm.hiddenPacks.sort(function(a, b) {
+			return a.date - b.date;
+		});
 	};
 
 	vm.toPackEditMode = function(packId, published) {
@@ -172,10 +178,16 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	vm.updatePackVisibility = function(packId, publish) {
-		WeekliesService.updatePack(packId, {published: publish}).then(function(data) {
+		var date = Date.now();
+		WeekliesService.updatePack(packId, {
+				published: publish,
+				author: vm.whyCouldntYouMadeThisVariableUser.id,
+				date: date
+			}).then(function(data) {
 			if (data.nModified) {
 				socket.emit("edit pack", {
 					packId: packId,
+					date: date,
 					published: publish
 				});
 			}
@@ -198,18 +210,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	socket.on("push pack", function(pack) {
-
 		pack.fullNews = [];
-
-		pack.news.forEach(function(newsId) {
-			pack.fullNews.push(getNewsById(newsId));
-		});
-
-		if (pack.published) {
-			vm.packs.push(pack);
-		}else {
-			vm.hiddenPacks.push(pack);
-		}
+		vm.allPacks.push(pack);
+		vm.splitPacks();
 	});
 
 	socket.on("change pack", function(data) {
@@ -229,8 +232,11 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 			pack = _.find(vm.allPacks, {_id: data.packId});
 			if (!data.published) {
 				pack.collapsed = true;
+			} else {
+				pack.collapsed = false;
 			}
 			pack.published = data.published;
+			pack.date = data.date;
 			vm.splitPacks();
 		}
 	});

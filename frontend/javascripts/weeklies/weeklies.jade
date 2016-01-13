@@ -12,9 +12,9 @@ md-content#weekly
 						h2.md-flex {{pack.title}} (hidden pack)
 				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
 					.section.center
-						span
-							b.author-2 {{newsCtrl.getUserName(pack.author)}}
-							span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
+						span this pack is not published
+							//- b.author-2 {{newsCtrl.getUserName(pack.author)}}
+							//- span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
 						span.pack-controls.go-right
 							label(ng-if='pack.news.length') publish: 
 								input(ng-model='pack.published' ng-change='weekCtrl.updatePackVisibility(pack._id, pack.published)' type='checkbox')
