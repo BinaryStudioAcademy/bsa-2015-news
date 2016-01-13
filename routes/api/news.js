@@ -6,8 +6,8 @@ var NewsService = require('../../services/news');
 
 module.exports = function(app) {
 
-	app.get('/api/news', function(req, res, next){
-		NewsRepository.getAllNews(req.decoded, function(err, data){
+	app.get('/api/news', function(req, res, next) {
+		NewsRepository.getAllNews(req.decoded, req.query.type, function(err, data) {
 			res.err = err;
 			res.data = data;
 			next();

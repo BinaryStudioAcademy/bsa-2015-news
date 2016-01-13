@@ -1,0 +1,180 @@
+md-content#weekly
+	.search
+		md-button.md-raised.md-primary(type='button' ng-click='weekCtrl.toPackEditMode()' ng-if='newsCtrl.checkRights() && weekCtrl.weekliesMode === "view"') Create new weeklies
+		md-button(type='button' ng-click='weekCtrl.toViewMode()' ng-if='weekCtrl.weekliesMode === "edit"') Back to view mode
+		i.fa.fa-search.search-icon
+		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter")
+	#view-packs(ng-if='weekCtrl.weekliesMode === "view"')
+		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks | reverse')
+			md-card
+				md-toolbar.md-primary.hidden-pack(ng-click='pack.collapsed=!pack.collapsed' ng-class='{"collapsed-head": pack.collapsed}')
+					.md-toolbar-tools
+						h2.md-flex {{pack.title}} (hidden pack)
+				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
+					.section.center
+						span
+							b.author-2 {{newsCtrl.getUserName(pack.author)}}
+							span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
+						span.pack-controls.go-right
+							label(ng-if='pack.news.length') publish: 
+								input(ng-model='pack.published' ng-change='weekCtrl.updatePackVisibility(pack._id, pack.published)' type='checkbox')
+							i.fa.fa-pencil.edit-2(ng-click='weekCtrl.toPackEditMode(pack._id, pack.published)')
+							i.fa.fa-times.delete-2(ng-click='weekCtrl.deletePack(pack._id)')
+					.news-2(ng-repeat='news in pack.fullNews')
+						.news-title-2
+							span.news-title {{news.title}}
+						.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!news.edit')
+						div(ng-if='news.edit')
+							textarea(ng-model='news.body', ui-tinymce='newsCtrl.tinymceOptions')
+							br
+							md-button.md-raised.md-primary(ng-click='news.edit=false') Save
+						.section
+							span.likes-count-2.go-right
+								span(ng-click='newsCtrl.newsLike(news)')
+									i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(news.likes)')
+									i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(news.likes)')
+									span  {{news.likes.length}}
+								.likes-user-list
+									a(ng-repeat='like in news.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+										.user {{newsCtrl.getUserName(like)}}
+									.user(ng-if='news.likes.length > 3' ng-click='newsCtrl.showAllLikes(news.likes)') and {{news.likes.length - 3}} more...
+							span.comments-count-2.go-right(ng-click='showComments=!showComments')
+								i.fa.fa-commenting-o
+								span  {{news.comments.length}} comments
+						.new-comment-2(ng-if='showComments')
+							form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, $index, newCommentForm);commentText=''" novalidate)
+								div(ng-class='{validation: !newsCtrl.commentText}')
+									textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
+								md-button(type='submit') Add comment
+						.comments-2(ng-if='showComments')
+							.comment-2(ng-repeat='comment in news.comments | reverse')
+								form.comment-form-2(name='commentForm' ng-if='(newsCtrl.editing._id === comment._id)' ng-submit="commentForm.$valid && newsCtrl.editComment(news._id, comment)" novalidate)
+									div(ng-class='{validation: !comment.body}')
+										textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="comment.body" placeholder='Comment' required)
+									.controls
+										md-button(type='submit') Save comment
+										md-button(ng-click='newsCtrl.restoreData("comment")') Cancel
+								div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
+									.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
+									.comment-section
+										b.author-2 {{newsCtrl.getUserName(comment.author)}}: 
+										span.comment-body-2(ng-bind-html='comment.body| unsafe')
+										span.comment-controls-2.go-right
+											i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
+											i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
+										.footer-2
+											span.date-2 {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+											span.likes-count-2.go-right
+												span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
+													i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')
+													i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(comment.likes)')
+													span  {{comment.likes.length}}
+												.likes-user-list
+													a(ng-repeat='like in comment.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+														.user {{newsCtrl.getUserName(like)}}
+													.user(ng-if='comment.likes.length > 3' ng-click='newsCtrl.showAllLikes(comment.likes)') and {{comment.likes.length - 3}} more...
+
+		.pack(ng-repeat='pack in weekCtrl.packs | reverse')
+			md-card
+				md-toolbar.md-primary(ng-click='')
+					.md-toolbar-tools
+						h2.md-flex {{pack.title}}
+				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
+					.section.center
+						span
+							b.author-2 {{newsCtrl.getUserName(pack.author)}}
+							span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
+						span.pack-controls.go-right
+							label publish: 
+								input(ng-model='pack.published' ng-change='weekCtrl.updatePackVisibility(pack._id, pack.published)' type='checkbox')
+							i.fa.fa-pencil.edit-2(ng-click='weekCtrl.toPackEditMode(pack._id, pack.published)')
+							i.fa.fa-times.delete-2(ng-click='weekCtrl.deletePack(pack._id)')
+					.news-2(ng-repeat='news in pack.fullNews')
+						.news-title-2
+							span.news-title {{news.title}}
+						.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!news.edit')
+						div(ng-if='news.edit')
+							textarea(ng-model='news.body', ui-tinymce='newsCtrl.tinymceOptions')
+							br
+							md-button.md-raised.md-primary(ng-click='weekCtrl.seveNews(pack._id, news)') Save
+						.section
+							span.likes-count-2.go-right
+								span(ng-click='newsCtrl.newsLike(news)')
+									i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(news.likes)')
+									i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(news.likes)')
+									span  {{news.likes.length}}
+								.likes-user-list
+									a(ng-repeat='like in news.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+										.user {{newsCtrl.getUserName(like)}}
+									.user(ng-if='news.likes.length > 3' ng-click='newsCtrl.showAllLikes(news.likes)') and {{news.likes.length - 3}} more...
+							span.comments-count-2.go-right(ng-click='showComments=!showComments')
+								i.fa.fa-commenting-o
+								span  {{news.comments.length}} comments
+						.new-comment-2(ng-if='showComments')
+							form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, $index, newCommentForm);commentText=''" novalidate)
+								div(ng-class='{validation: !newsCtrl.commentText}')
+									textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
+								md-button(type='submit') Add comment
+						.comments-2(ng-if='showComments')
+							.comment-2(ng-repeat='comment in news.comments | reverse')
+								form.comment-form-2(name='commentForm' ng-if='(newsCtrl.editing._id === comment._id)' ng-submit="commentForm.$valid && newsCtrl.editComment(news._id, comment)" novalidate)
+									div(ng-class='{validation: !comment.body}')
+										textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="comment.body" placeholder='Comment' required)
+									.controls
+										md-button(type='submit') Save comment
+										md-button(ng-click='newsCtrl.restoreData("comment")') Cancel
+								div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
+									.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
+									.comment-section
+										b.author-2 {{newsCtrl.getUserName(comment.author)}}: 
+										span.comment-body-2(ng-bind-html='comment.body| unsafe')
+										span.comment-controls-2.go-right
+											i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
+											i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
+										.footer-2
+											span.date-2 {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+											span.likes-count-2.go-right
+												span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
+													i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')
+													i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(comment.likes)')
+													span  {{comment.likes.length}}
+												.likes-user-list
+													a(ng-repeat='like in comment.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+														.user {{newsCtrl.getUserName(like)}}
+													.user(ng-if='comment.likes.length > 3' ng-click='newsCtrl.showAllLikes(comment.likes)') and {{comment.likes.length - 3}} more...
+
+	#edit-pack(ng-if='weekCtrl.weekliesMode === "edit"')
+		md-card.md-whiteframe-z3
+			md-toolbar.md-primary
+				.md-toolbar-tools
+					h2.editable-title.md-flex(ui-tinymce='newsCtrl.tinymceInlineOptions' ng-model="weekCtrl.editingPack.title" ng-blur='weekCtrl.updatePackTitle(weekCtrl.editingPack._id, weekCtrl.editingPack.title)')
+			md-content
+				.list-item.center(ng-if='!weekCtrl.editingPack.fullNews.length')
+					span News pack is empty
+				.list-item(ng-repeat='news in weekCtrl.editingPack.fullNews')
+					span.news-title {{news.title}}
+					span.news-controls-2.go-right
+						//- i.fa.fa-pencil.edit-2(ng-click='news.edit=true' ng-show='!news.edit')
+						i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(news)' ng-show='!(newsCtrl.editing._id === news._id)')
+						i.fa.fa-times.delete-2(ng-click='weekCtrl.removeFromPack($index, news)' ng-show='!news.edit')
+					.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!(newsCtrl.editing._id === news._id)')
+					
+					div(ng-if='newsCtrl.editing._id === news._id')
+						textarea(ng-model='news.body', ui-tinymce='newsCtrl.tinymceOptions')
+						br
+						//- md-button.md-raised.md-primary(ng-click='news.edit=false') Save
+						md-button.md-raised.md-primary(ng-click='newsCtrl.editpost(news)') Save
+						md-button(ng-click='newsCtrl.restoreData("news")') Cancel
+
+				md-divider
+
+				#create-news
+					form.news-message(name="newsForm" ng-submit="newsForm.$valid && weekCtrl.insertNewsInPack(newsForm)" novalidate)
+						.form-group
+							input(type="text" name='title' placeholder='News title' ng-model="weekCtrl.currPackNewsEdit.title" required)
+							div(ng-class='{validation: !weekCtrl.currPackNewsEdit.body}')
+								textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="weekCtrl.currPackNewsEdit.body" required)
+						md-button.md-raised.md-primary(type='submit') Add news
+						md-button(type='button' ng-click='weekCtrl.clearCurrPackNewsEdit()') Clear form
+						.go-right
+							md-button(type='button' ng-click='weekCtrl.showNewsSelector()') Load from Company news

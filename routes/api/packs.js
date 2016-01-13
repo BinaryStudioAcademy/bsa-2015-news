@@ -1,11 +1,12 @@
 var apiResponse = require('express-api-response');
 var PackRepository = require('../../repositories/pack');
+var PacksService = require('../../services/packs');
 
 
 module.exports = function(app) {
 
 	app.get('/api/packs', function(req, res, next){
-		PackRepository.getAll(function(err, data){
+		PacksService.getPacks(req.decoded, function(err, data) {
 			res.err = err;
 			res.data = data;
 			next();

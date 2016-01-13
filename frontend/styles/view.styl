@@ -474,7 +474,7 @@ ul#nav-list
 
 
 .all-likes
-	width 600px
+	width 900px
 	background #777
 	min-width 300px
 	.likes-list
@@ -502,6 +502,34 @@ ul#nav-list
 			.user
 				margin-left 60px
 				text-align center
+			&:after
+				content ''
+				clear both
+				display block
+		&:after
+			content ''
+			clear both
+			display block
+
+.select-news
+	width 900px
+	background #777
+	min-width 300px
+	.news-list
+		list-style none
+		margin 0
+		padding 0
+		.news-item
+			float left
+			padding 5px
+			margin 0
+			width 300px
+			background #777
+			color white
+			line-height 60px
+			text-align center
+			&:hover
+				background rgb(33,150,243)
 			&:after
 				content ''
 				clear both
@@ -723,6 +751,7 @@ ul#nav-list
 			top 50px
 			right 15px
 			.edit-2
+				margin-left 15px
 				color #777
 				outline none
 				font-size 16px
@@ -767,9 +796,26 @@ ul#nav-list
 		md-dialog-content
 			overflow hidden
 	.collapsed-head
-		background-color #EAEDF2 !important
-		&:hover
-			background-color #2196f3 !important
+		background-color #EFF8FF !important
+		transition background-color 0.2s ease-out
+		.md-toolbar-tools
+			color #2196f3
+			transition color 0.2s ease-out
+			&:hover
+				color #fff
+				background-color #2196f3 !important
+				
+	.hidden-pack
+		background-color #B3B3B3 !important
+		
+	.collapsed-head.hidden-pack
+		background-color #EFEFEF !important
+		.md-toolbar-tools
+			color #B3B3B3
+			&:hover
+				color #fff
+				background-color #B3B3B3 !important
+
 	#new-pack, #edit-pack
 		h2.editable-title
 			border-bottom 1px dashed #fff
@@ -781,15 +827,6 @@ ul#nav-list
 
 .empty-status
 	color rgb(225, 225, 225)
-
-.collapsed-head
-	background-color #fdfdfd !important
-	transition background-color 0.2s ease-out
-	.md-toolbar-tools
-		color #2196f3
-		//- font-size 20px
-		transition color 0.2s ease-out
-		transition font-size 0.2s ease-out
 
 md-toolbar
 	outline none

@@ -59,7 +59,7 @@ md-content#sandbox
 					//- 		span(md-highlight-text='newsCtrl.searchText') {{user.name}} 
 					//- 	md-chip-template
 					//- 		span
-					//- 			strong {{newsCtrl.userIdConvert($chip)}}
+					//- 			strong {{newsCtrl.getUserName($chip)}}
 					br
 					md-button.md-raised.md-primary(ng-click='newsCtrl.editpost(news._id, newsCtrl.newpost, news.restrict_ids, news.access_roles);newsCtrl.submitBtn($index)') Save
 					md-button(ng-click='newsCtrl.submitBtn($index)') Cancel
@@ -68,7 +68,7 @@ md-content#sandbox
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-hide='newsCtrl.toggleText[$index]') more
 					//- 	a.load-more(href='' ng-click='newsCtrl.loadMore($index)' ng-show='newsCtrl.toggleText[$index]') less
 			.footer
-				span.author {{newsCtrl.userIdConvert(news.author)}}
+				span.author {{newsCtrl.getUserName(news.author)}}
 				span.hide-mobile on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 				span.comments-count
 					md-button.md-icon-button.fa.fa-commenting-o(aria-label='Coment' ng-click='newsCtrl.toggleCommentForm($index)')  {{news.comments.length}}
@@ -86,7 +86,7 @@ md-content#sandbox
 				.comment(ng-repeat='comment in news.comments | reverse')
 					i.fa.fa-times.delete-post(ng-click='newsCtrl.deleteComment(news._id, comment._id)' ng-if='newsCtrl.checkRights(comment.author)') 
 					.body(ng-bind-html='comment.body| unsafe')
-					span.author {{newsCtrl.userIdConvert(comment.author)}}
+					span.author {{newsCtrl.getUserName(comment.author)}}
 					span.hide-mobile on {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.right-thumb
 						md-button.md-icon-button.fa.fa-thumbs-o-up(ng-click='newsCtrl.commentLike(news._id, comment._id)' ng-if='!newsCtrl.findLike(comment.likes)')  {{comment.likes.length}}

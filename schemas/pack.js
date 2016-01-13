@@ -5,9 +5,9 @@ var packSchema = new Schema({
 	title: String,
 	author: mongoose.Schema.ObjectId,
 	date: Number,
-	hidden: {
+	published: {
 		type: Boolean,
-		default: true
+		default: false
 	},
 	news: {
 		type: [mongoose.Schema.ObjectId],
