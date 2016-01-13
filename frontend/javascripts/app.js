@@ -15,9 +15,9 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					reloadOnSearch: false
 				})
 				.when('/sandbox', {
-					templateUrl: './templates/news/sandbox.html',
-					/*controller: 'SandboxController',
-					controllerAs:"sboxCtrl",*/
+					templateUrl: './templates/sandbox/sandbox.html',
+					controller: 'SandboxController',
+					controllerAs:"sboxCtrl",
 					reloadOnSearch: false
 				})
 				.when('/weeklies', {
@@ -27,15 +27,15 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					reloadOnSearch: false
 				})
 				.when('/company/post/:postId/', {
-					templateUrl: './templates/news/company.html',
-					/*controller: 'CompanyController',
-					controllerAs:"compCtrl",*/
+					templateUrl: './templates/company/company.html',
+					controller: 'CompanyController',
+					controllerAs:"compCtrl",
 					reloadOnSearch: false
 				})
 				.when('/sandbox/post/:postId/', {
-					templateUrl: './templates/news/sandbox.html',
-					/*controller: 'SandboxController',
-					controllerAs:"sboxCtrl",*/
+					templateUrl: './templates/sandbox/sandbox.html',
+					controller: 'SandboxController',
+					controllerAs:"sboxCtrl",
 					reloadOnSearch: false
 				})
 				.when('/weeklies/post/:postId/', {

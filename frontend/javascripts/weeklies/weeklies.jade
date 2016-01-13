@@ -2,8 +2,8 @@ md-content#weekly
 	.search
 		md-button.md-raised.md-primary(type='button' ng-click='weekCtrl.toPackEditMode()' ng-if='newsCtrl.checkRights() && weekCtrl.weekliesMode === "view"') Create new weeklies
 		md-button(type='button' ng-click='weekCtrl.toViewMode()' ng-if='weekCtrl.weekliesMode === "edit"') Back to view mode
-		i.fa.fa-search.search-icon
-		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter")
+		i.fa.fa-search.search-icon(ng-if='false')
+		input(ng-if='false' type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.packsFilter")
 	#view-packs(ng-if='weekCtrl.weekliesMode === "view"')
 		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks | reverse')
 			md-card

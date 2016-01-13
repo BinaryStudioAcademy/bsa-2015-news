@@ -147,14 +147,18 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	vm.showNewsSelector = function() {
-		$mdDialog.show({
-			controller: NewsSelectorController,
-			templateUrl: './templates/news/SelectNewsModal.html',
-			parent: angular.element(document.body),
-			clickOutsideToClose: true
+		NewsService.getNews('company').then(function(data){
+			vm.recentCompanyNews = data;
+			$mdDialog.show({
+				controller: NewsSelectorController,
+				templateUrl: './templates/news/SelectNewsModal.html',
+				parent: angular.element(document.body),
+				clickOutsideToClose: true
+			});
 		});
+
 		function NewsSelectorController($scope, $mdDialog) {
-			$scope.avNews = vm.companyPosts;
+			$scope.avNews = vm.recentCompanyNews;
 			$scope.loadNewsPack = vm.loadNewsPack;
 			$scope.closeDialog = function() {
 				$mdDialog.hide();
@@ -237,6 +241,13 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 			vm.splitPacks();
 			$scope.newsCtrl.editing = {};
 		}
+	};
+
+	vm.packsSearch = function(pack) {
+		if ( (pack.title.toLowerCase().indexOf(vm.packsFilter.toLowerCase()) > -1) ){
+			return true;
+		}
+		return false;
 	};
 
 	socket.on("push pack", function(pack) {
