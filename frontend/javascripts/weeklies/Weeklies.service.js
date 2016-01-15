@@ -5,6 +5,7 @@ var app = require('../app.js');
 
 	function WeekliesService($resource) {
 		return {
+			getPack: getPack,
 			getPacks: getPacks,
 			createPack: createPack,
 			removePack: removePack,
@@ -12,6 +13,10 @@ var app = require('../app.js');
 			pushNewsToPack: pushNewsToPack,
 			removeNewsFromPack: removeNewsFromPack
 		};
+
+		function getPack(id) {
+			return $resource("api/packs/:id", {id: '@id'}).get({id: id}).$promise;
+		}
 
 		function getPacks() {
 			return $resource("api/packs").query().$promise;

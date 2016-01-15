@@ -13,14 +13,42 @@ form[name=newsForm]
 .news-editable-title.mce-edit-focus
 	border-bottom none
 
+.news-wrapper
+	cursor default !important
+.modal-post
+	display flex
+	background rgba(0, 0, 0, 0.7) !important
+	position fixed !important
+	top 60px
+	bottom 0px
+	left 0px
+	right 0px
+	z-index 999
+	margin 0 !important
+	padding 10px 0 !important
+	overflow auto
+	.news-wrapper
+		background #fff
+		margin auto
+		width 85%
+		.title-ne
+			cursor default !important
+		md-card
+			margin 0 !important
+		.pack-controls
+			display none !important
+#view-packs
+	.uncollapsed
+		max-height initial
 
-#company
+
+.company
 	.md-primary
 		background #2196f3
-#sandbox
+.sandbox
 	.md-primary
 		background #009688
-/*#weekly
+/*.weekly
 	.md-primary
 		background #9E9D24*/
 .comment-wrap
@@ -342,7 +370,7 @@ textarea
 .mce-menubar,.mce-panel 
 	border-color #eceff1 !important
 	
-#sandbox
+.sandbox
 	.news-message
 		.mce-container.mce-toolbar
 			.mce-flow-layout
@@ -377,7 +405,7 @@ md-tooltip
 			img
 				float none
 
-#sandbox
+.sandbox
 	.title
 		background #009688 !important
 		color #e3f2fd  !important
@@ -424,7 +452,7 @@ md-tooltip
 
 
 
-/*#company
+/*.company
 	.news-2
 		border 1px solid lightgrey
 		margin 0 10px 30px
@@ -559,7 +587,7 @@ ul#nav-list
 			clear both
 			display block
 
-#company, #weekly, #sandbox
+.company, .weekly, .sandbox
 	.comment-form-2
 		position relative
 		.controls
@@ -757,7 +785,7 @@ ul#nav-list
 	.new-comment-btn
 		margin 0 20px 20px
 
-#sandbox
+.sandbox
 	.news-message
 		position relative
 		button[type='submit']
@@ -775,7 +803,7 @@ ul#nav-list
 			bottom 5px
 			left 3px
 
-#weekly
+.weekly
 	.pack
 		position relative
 		&:hover

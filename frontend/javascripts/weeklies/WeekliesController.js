@@ -22,8 +22,14 @@ WeekliesController.$inject = [
 function WeekliesController(NewsService, WeekliesService, AdministrationService, ExpenseService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
 	var vm = this;
 
+
+	$scope.newsCtrl.selectedIndex = 2;
+
 	NewsService.getMe().then(function(data) {
 		vm.whyCouldntYouMadeThisVariableUser = data;
+		if ($scope.newsCtrl.showModalPost.type === 'weeklies') {
+			console.log('show weeklies');
+		}
 	});
 
 
@@ -44,6 +50,72 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 			pack.collapsed = true;
 		});
 	});
+
+	function checkModal() {
+		var params = $location.search();
+		if (params.pack) {
+			var id = params.pack;
+			var modalPost = _.find(vm.packs, {_id: id});
+			if (modalPost) {
+				vm.showModal(id);
+			} else {
+				WeekliesService.getPack(id).then(function(pack) {
+					vm.packs.unshift(pack);
+					vm.oddPack = id;
+					vm.showModal(id);
+				}, function() {
+					vm.hideModal();
+				});
+			}
+		}
+	}
+
+	$scope.$on('$routeUpdate', function() {
+		checkModal();
+	});
+
+	WeekliesService.getPacks().then(function(data) {
+		vm.allPacks = data;
+		vm.splitPacks();
+		vm.hiddenPacks.forEach(function(pack) {
+			pack.collapsed = true;
+		});
+		checkModal();
+	});
+
+	vm.showModal = function(id, event) {
+		packIndex = vm.packs.map(function(x) {return x._id; }).indexOf(id);
+		vm.packs[packIndex].showInModal = true;
+		if (event) {
+			$location.search('pack', id );
+			event.stopPropagation();
+		}
+	};
+
+	vm.hideModal = function(id) {
+		if (!id) {
+			vm.packs.forEach(function(pack) {
+				pack.showInModal = false;
+				vm.restoreData("news");
+				vm.restoreData("comment");
+				$location.search('pack', null );
+			});
+		} else {
+			packIndex = vm.packs.map(function(x) {return x._id; }).indexOf(id);
+			if (vm.packs[packIndex].showInModal === true) {
+				vm.packs[packIndex].showInModal = false;
+				vm.restoreData("news");
+				vm.restoreData("comment");
+				if (vm.oddPack) {
+					var index = vm.packs.map(function(x) {return x._id; }).indexOf(vm.oddPack);
+					if (index !== -1) {
+						vm.packs.splice(index, 1);
+					}
+				}
+				$location.search('pack', null );
+			}
+		}
+	};
 
 	vm.splitPacks = function() {
 		vm.packs = _.filter(vm.allPacks, {published: true});

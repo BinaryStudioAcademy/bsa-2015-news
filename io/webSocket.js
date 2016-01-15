@@ -18,8 +18,8 @@ module.exports = function(io) {
 		socket.on("like post", function(newPost) {
 			io.emit("change like post", newPost);
 		});
-		socket.on("new comment", function(commnet) {
-			io.emit("push comment", commnet);
+		socket.on("new comment", function(comment) {
+			io.emit("push comment", comment);
 		});
 		socket.on("delete comment", function(commentDetails) {
 			io.emit("splice comment", commentDetails);

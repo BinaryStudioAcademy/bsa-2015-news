@@ -10,6 +10,27 @@ PacksService.prototype.generateNotification = function() {
 
 };
 
+PacksService.prototype.getPack = function(id, user, callback) {
+	PackRepository.getById(id, function(err, pack) {
+		if (err) {
+			return callback(err, null);
+		}
+
+		NewsRepository.getAllNews(user, 'weeklies', function(err, news) {
+			if (err) {
+				return callback(err, null);
+			}
+			
+			pack.fullNews = [];
+			pack.news.forEach(function(newsId) {
+				pack.fullNews.push(_.find(news, {_id: newsId}));
+			});
+
+			callback(err, pack);
+		});
+	});
+};
+
 PacksService.prototype.getPacks = function(user, callback) {
 	PackRepository.getAll(function(err, packs) {
 		if (err) {

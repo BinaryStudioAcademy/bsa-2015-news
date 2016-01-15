@@ -6,11 +6,14 @@ app.controller('AdministrationController', AdministrationController);
 AdministrationController.$inject = [
 	'NewsService',
 	'AdministrationService',
-	'$q'
+	'$q',
+	'$scope'
 ];
 
-function AdministrationController(NewsService, AdministrationService, $q) {
+function AdministrationController(NewsService, AdministrationService, $q, $scope) {
 	var vm = this;
+
+	$scope.newsCtrl.selectedIndex = 3;
 
 	function reloadRoles() {
 		NewsService.getRoles().then(function(data) {

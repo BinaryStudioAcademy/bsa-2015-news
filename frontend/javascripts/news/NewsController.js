@@ -24,6 +24,7 @@ app.directive('backImg', function(){
 NewsController.$inject = [
 	'NewsService',
 	'AdministrationService',
+	'WeekliesService',
 	'$mdDialog',
 	'$location',
 	'$route',
@@ -31,10 +32,11 @@ NewsController.$inject = [
 	'$filter',
 	'socket',
 	'$q',
-	'$timeout'
+	'$timeout',
+	'$scope'
 ];
 
-function NewsController(NewsService, AdministrationService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout) {
+function NewsController(NewsService, AdministrationService, WeekliesService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
 	var vm = this;
 
 	vm.formView = true;
@@ -273,118 +275,77 @@ function NewsController(NewsService, AdministrationService, $mdDialog, $location
 		});
 	};
 
-	
+	vm.prevLocation = '';
+	vm.showModalPost = {};
 
-	// Modal post
-	vm.showModalPost = showModalPost;
-	var currentPostId = "";
-
-	checkUrlPath();
-	function checkUrlPath() {
-		var path = $location.path();
-
-		if(path.indexOf("post") > -1) {
-			//path = path.split("/").join("");
-			path = path.split("/");
-			//var postId = path.substring(4, path.length);
-			var postId = path[path.length - 2];
-			var post = $filter('filter')(vm.posts, {_id: postId});
-			switch(path[1]) {
-				case "company": vm.selectedIndex = 0; break;
-				case "sandbox": vm.selectedIndex = 1; break;
-				case "weeklies": vm.selectedIndex = 2; break;
-				case "administration": vm.selectedIndex = 3; break;
+/*	$scope.$on("$locationChangeSuccess", function(e, currentLocation, previousLocation) {
+		var locs = ['company', 'sandbox', 'weeklies'];
+		for (var i in locs) {
+			var prev = previousLocation.indexOf(locs[i]);
+			var curr = currentLocation.indexOf(locs[i]);
+			if ((curr !== -1) && (prev !== -1)) {
+				vm.reloadData = false;
+				break;
 			}
-			if(post[0]) showModalPost(post[0]._id, false);
 			else {
-				correctPath();
-				$location.path(path[1]);
+				vm.reloadData = true;
 			}
 		}
-	}
+	});*/
 
-	function showModalPost(postId, isSetPath) {
-		currentPostId = postId;
+	/*$rootScope.$on('$locationChangeSuccess', function(event) {
+		var location = $location.url();
+		if (vm.prevLocation === location) {
+			event.preventDefault();
+		} else {
+			vm.prevLocation = location;
+			var params = $location.url().split("/");
+			if (params.length == 5) {
+				var type = params[1];
+				var id = params[3];
+				vm.showModalPost(type, id);
+				vm.showModalPost = {
+					type: type,
+					id: id
+				};
 
-		var path;
-
-		switch(vm.selectedIndex) {
-			case 0: path = "company"; break;
-			case 1: path = "sandbox"; break;
-			case 2: path = "weeklies"; break;
-			case 3: path = "administration"; break;
+			}
 		}
+	});*/
 
-		if(isSetPath) {
-			// Set url path in browser
-			correctPath();
-			//$location.path("/post/" + postId);
-			$location.path(path + "/post/" + postId);
+	/*vm.goToPost = function(type, id) {
+		if (type === 'weeklies') {
+			$location.url(type + '/pack/' + id);
+		} else {
+			$location.url(type + '/post/' + id);
 		}
+	};
 
-		$mdDialog.show({
-			controller: DialogController,
-			templateUrl: './templates/news/ModalPost.html',
-			parent: angular.element(document.body),
-			clickOutsideToClose: true
-		}).then(function(answer) {
-			vm.status = 'You said the information was "' + answer + '".';
-		}, function() {
-			// Reset path in browser
-			correctPath();
-			$location.path(path);
-			//$location.path("/");
-		});
-	}
+	vm.showModalPost = function(type, id) {
 
-	function correctPath() {
-		var original = $location.path;
-		$location.path = function(path) {
-			var lastRoute = $route.current;
-			var un = $rootScope.$on('$locationChangeSuccess', function () {
-				$route.current = lastRoute;
-				//un();
+
+
+		if (type === 'weeklies') {
+			WeekliesService.getPack(id).then(function(pack) {
+				show(pack);
+			}, function() {
+				$location.url(type);
 			});
-			un();
-			return original.apply($location, [path]);
-		};
-	}
+		} else {
+			NewsService.getPost(id).then(function(post) {
+					show(post);
+			}, function() {
+				$location.url(type);
+			});
+		}
 
-	function DialogController($scope, $mdDialog) {
-		var post = $filter('filter')(vm.posts, {_id: currentPostId});
-		if(post[0]) $scope.post = post[0];
-		$scope.newComment = vm.newComment;
-		$scope.editpost = vm.editpost;
-		$scope.deleteNews = function(newsId) {
-			vm.deleteNews(newsId);
-			correctPath();
-			$location.path("/");
-		};
-		$scope.deleteComment = vm.deleteComment;
-		$scope.getUserName = vm.getUserName;
-		$scope.newsLike = vm.newsLike;
-		$scope.commentLike = vm.commentLike;
-		$scope.findLike = vm.findLike;
-		$scope.commentLike = vm.commentLike;
-		$scope.hide = function() {
-			$mdDialog.hide();
-		};
-		$scope.answer = function(answer) {
-			$mdDialog.hide(answer);
-		};
-		$scope.close = function() {
-			$mdDialog.hide();
-			var path;
-			switch(vm.selectedIndex) {
-				case 0: path = "company"; break;
-				case 1: path = "sandbox"; break;
-				case 2: path = "weeklies"; break;
-				case 3: path = "administration"; break;
-			}
-			correctPath();
-			$location.path(path);
-		};
-	}
+		function show(data) {
+		}
+	};*/
+
+	vm.switchTab = function(url) {
+		$location.url(url);
+	};
 
 	vm.newsFilter = '';
 
@@ -399,22 +360,6 @@ function NewsController(NewsService, AdministrationService, $mdDialog, $location
 		return _.find(likes, function(like) {
 			return like == vm.whyCouldntYouMadeThisVariableUser.id;
 		});
-	};
-
-	vm.restoreData = function(type) {
-		console.log('if u c this then something is wrong');
-		/*var postIndex;
-		if (type === 'news') {
-			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing._id);
-			vm.posts[postIndex] = vm.editing;
-		}
-		else if (type === 'comment') {
-			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(vm.editing.news_id);
-			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf(vm.editing._id);
-			vm.posts[postIndex].comments[commentIndex].body = vm.editing.body;
-		}
-
-		vm.resetEditing();*/
 	};
 
 	vm.editComment = function(newsId, comment) {
@@ -525,19 +470,7 @@ function NewsController(NewsService, AdministrationService, $mdDialog, $location
 		}
 	}
 
-	vm.switchTab = function(url) {
-		$location.url(url);
-	};
-
-	$rootScope.$watch('$location.url()', function(current, old) {
-
-		switch($location.url(current)) {
-			case "/company": vm.selectedIndex = 0; break;
-			case "/sandbox": vm.selectedIndex = 1; break;
-			case "/weeklies": vm.selectedIndex = 2; break;
-			case "/administration": vm.selectedIndex = 3; break;
-		}
-	});
+	
 
 
 

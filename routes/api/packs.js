@@ -14,7 +14,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.get('/api/packs/:id', function(req, res, next){
-		PackRepository.getById(req.params.id, function(err, data){
+		PacksService.getPack(req.params.id, req.decoded, function(err, data){
 			res.err = err;
 			res.data = data;
 			next();

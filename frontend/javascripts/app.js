@@ -26,7 +26,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controllerAs:"weekCtrl",
 					reloadOnSearch: false
 				})
-				.when('/company/post/:postId/', {
+				/*.when('/company/post/:postId/', {
 					templateUrl: './templates/company/company.html',
 					controller: 'CompanyController',
 					controllerAs:"compCtrl",
@@ -38,7 +38,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controllerAs:"sboxCtrl",
 					reloadOnSearch: false
 				})
-				.when('/weeklies/post/:postId/', {
+				.when('/weeklies/pack/:packId/', {
 					templateUrl: './templates/weeklies/weeklies.html',
 					controller: 'WeekliesController',
 					controllerAs:"weekCtrl",
@@ -49,7 +49,7 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controller: 'AdministrationController',
 					controllerAs:"admCtrl",
 					reloadOnSearch: false
-				})
+				})*/
 				.otherwise({
 					redirectTo: '/company'
 				});
@@ -77,16 +77,19 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 			//	.warnPalette('red')
 			//	.backgroundPalette('grey');
 		}
-	])/*.run( function($rootScope, $location, $cookies) {
-			console.log($cookies.get('userRole'));
-			$rootScope.$on( "$routeChangeStart", function(event, next, current) {
-				if ( next.templateUrl == "./templates/administration/administration.html" ) {
-					if ( $rootScope.myRole !== 'ADMIN' ) {
-						$location.path( "/company" );
+	])/*.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+			var original = $location.path;
+			$location.path = function (path, reload) {
+					if (reload === false) {
+							var lastRoute = $route.current;
+							var un = $rootScope.$on('$locationChangeSuccess', function () {
+									$route.current = lastRoute;
+									un();
+							});
 					}
-				}
-			});
-	})*/;
+					return original.apply($location, [path]);
+			};
+	}])*/;
 
 /*var getHeader = function() {
 	var request = new XMLHttpRequest();

@@ -14,6 +14,11 @@ PackRepository.prototype.getAll = function(callback) {
 		.exec(callback);
 };
 
+PackRepository.prototype.getById = function(id, callback) {
+	Pack.findOne({_id: id}).lean()
+		.exec(callback);
+};
+
 PackRepository.prototype.pushNews = function(packId, body, callback) {
 	Pack.update({_id: packId}, {$pushAll: {news: body.newsArray}})
 		.exec(callback);

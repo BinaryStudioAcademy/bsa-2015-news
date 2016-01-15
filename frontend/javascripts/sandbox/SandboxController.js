@@ -14,17 +14,82 @@ SandboxController.$inject = [
 	'socket',
 	'$q',
 	'$timeout',
-	'$scope'
+	'$scope',
+	'$location'
 ];
 
-function SandboxController(NewsService, CompanyService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
+function SandboxController(NewsService, CompanyService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
 	var vm = this;
 
+
+	$scope.newsCtrl.selectedIndex = 1;
+
 	vm.posts = [];
-	
-	NewsService.getNews('sandbox').then(function(data){
-		vm.posts = data;
+
+	function checkModal() {
+		var params = $location.search();
+		if (params.post) {
+			var id = params.post;
+			var modalPost = _.find(vm.posts, {_id: id});
+			if (modalPost) {
+				vm.showModal(id);
+			} else {
+				NewsService.getPost(id).then(function(post) {
+					vm.posts.unshift(post);
+					vm.oddPost = id;
+					vm.showModal(id);
+				}, function() {
+					vm.hideModal();
+				});
+			}
+		}
+	}
+
+	$scope.$on('$routeUpdate', function() {
+		checkModal();
 	});
+
+	NewsService.getNews('sandbox').then(function(data) {
+		vm.posts = data;
+		checkModal();
+	});
+
+	vm.showModal = function(id, event) {
+		postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(id);
+		vm.posts[postIndex].showInModal = true;
+		if (event) {
+			$location.search('post', id );
+			event.stopPropagation();
+		}
+	};
+
+	vm.hideModal = function(id) {
+		if (!id) {
+			vm.posts.forEach(function(post) {
+				post.showInModal = false;
+				vm.restoreData("news");
+				vm.restoreData("comment");
+				$location.search('post', null );
+			});
+		} else {
+			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(id);
+			if (vm.posts[postIndex].showInModal === true) {
+				vm.posts[postIndex].showInModal = false;
+				vm.restoreData("news");
+				vm.restoreData("comment");
+				if (vm.oddPost) {
+					var index = vm.posts.map(function(x) {return x._id; }).indexOf(vm.oddPost);
+					if (index !== -1) {
+						vm.posts.splice(index, 1);
+					}
+				}
+				$location.search('post', null );
+			}
+		}
+	};
+
+
+
 
 	NewsService.getMe().then(function(data) {
 		vm.whyCouldntYouMadeThisVariableUser = data;
@@ -34,12 +99,16 @@ function SandboxController(NewsService, CompanyService, $mdDialog, $route, $root
 		var postIndex;
 		if (type === 'news') {
 			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
-			vm.posts[postIndex] = $scope.newsCtrl.editing;
+			if (postIndex !== -1) {
+				vm.posts[postIndex] = $scope.newsCtrl.editing;
+			}
 		}
 		else if (type === 'comment') {
 			postIndex = vm.posts.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing.news_id);
-			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
-			vm.posts[postIndex].comments[commentIndex].body = $scope.newsCtrl.editing.body;
+			if (postIndex !== -1) {
+				var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
+				vm.posts[postIndex].comments[commentIndex].body = $scope.newsCtrl.editing.body;
+			}
 		}
 		$scope.newsCtrl.editing = {};
 	};

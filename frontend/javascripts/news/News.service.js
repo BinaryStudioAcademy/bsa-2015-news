@@ -6,6 +6,7 @@ var app = require('../app.js');
 	function NewsService($resource) {
 		return {
 			getMe: getMe,
+			getPost: getPost,
 			getNews: getNews,
 			getFullUsers: getFullUsers,
 			getRoles: getRoles,
@@ -30,6 +31,10 @@ var app = require('../app.js');
 			return $resource("api/news/:id", { id: "@id"});
 		}
 
+		function getPost(id) {
+			return $resource("api/news/:id", { id: "@id"}).get({id: id}).$promise;
+		}
+
 		function getNews(type) {
 			return $resource("api/news?type=" + type).query().$promise;
 		}
@@ -43,7 +48,7 @@ var app = require('../app.js');
 		}
 
 		function getComments(newsId) {
-			return $resource("/api/news/:id/comments", { id: "@id"}).get({id: newsId}).$promise;
+			return $resource("api/news/:id/comments", { id: "@id"}).get({id: newsId}).$promise;
 		}
 
 		function createNews(news) {
