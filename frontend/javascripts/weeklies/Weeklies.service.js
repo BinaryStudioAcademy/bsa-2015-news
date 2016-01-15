@@ -18,8 +18,8 @@ var app = require('../app.js');
 			return $resource("api/packs/:id", {id: '@id'}).get({id: id}).$promise;
 		}
 
-		function getPacks() {
-			return $resource("api/packs").query().$promise;
+		function getPacks(skip, limit, published) {
+			return $resource('api/packs?skip=' + skip + '&limit=' + limit + '&published=' + published).query().$promise;
 		}
 
 		function createPack(pack) {

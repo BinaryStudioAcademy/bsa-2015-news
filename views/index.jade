@@ -58,4 +58,4 @@ block content
 							//- md-tab(ng-click='newsCtrl.switchTab("/administration")')
 							//- 	span.tab-text
 							//- 		| Administration
-				#main(ng-view)
+				#main(ng-view when-scrolled="newsCtrl.loadMore()")

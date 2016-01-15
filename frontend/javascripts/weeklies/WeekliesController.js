@@ -22,6 +22,12 @@ WeekliesController.$inject = [
 function WeekliesController(NewsService, WeekliesService, AdministrationService, ExpenseService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
 	var vm = this;
 
+	$scope.newsCtrl.loadMore = function() {
+		WeekliesService.getPacks(vm.posts.length, 3).then(function(data) {
+			Array.prototype.push.apply(vm.posts, data);
+		});
+	};
+
 
 	$scope.newsCtrl.selectedIndex = 2;
 
@@ -43,9 +49,13 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	vm.packs = [];
 	vm.hiddenPacks = [];
 
+	WeekliesService.getPacks(0, 3, 'yes').then(function(data) {
+		vm.packs = data;
+		checkModal();
+	});
+
 	WeekliesService.getPacks().then(function(data) {
-		vm.allPacks = data;
-		vm.splitPacks();
+		vm.hiddenPacks = data;
 		vm.hiddenPacks.forEach(function(pack) {
 			pack.collapsed = true;
 		});
@@ -71,15 +81,6 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	}
 
 	$scope.$on('$routeUpdate', function() {
-		checkModal();
-	});
-
-	WeekliesService.getPacks().then(function(data) {
-		vm.allPacks = data;
-		vm.splitPacks();
-		vm.hiddenPacks.forEach(function(pack) {
-			pack.collapsed = true;
-		});
 		checkModal();
 	});
 
@@ -117,7 +118,7 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		}
 	};
 
-	vm.splitPacks = function() {
+/*	vm.splitPacks = function() {
 		vm.packs = _.filter(vm.allPacks, {published: true});
 		vm.packs.sort(function(a, b) {
 			return a.date - b.date;
@@ -126,7 +127,7 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		vm.hiddenPacks.sort(function(a, b) {
 			return a.date - b.date;
 		});
-	};
+	};*/
 
 	vm.toPackEditMode = function(packId, published) {
 		vm.clearCurrPackNewsEdit();
@@ -288,31 +289,84 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 	};
 
-	vm.restoreData = function(type) {
-		var postId;
-		if (type === 'news') {
-			postId = $scope.newsCtrl.editing._id;
-		} else if (type === 'comment') {
-			postId = $scope.newsCtrl.editing.news_id;
-		}
-		var pack = _.find(vm.allPacks, function(pack) {
+	function findPackByNews(postId) {
+		var pack;
+		pack = _.find(vm.packs, function(pack) {
 			var newsId = _.find(pack.news, function(news) {
 				return news === postId;
 			});
 			return !!newsId;
 		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(postId);
-			if (type === 'news') {
-				vm.allPacks[packIndex].fullNews[newsIndex] = $scope.newsCtrl.editing;
-			} else if (type === 'comment') {
-				var commentIndex = vm.allPacks[packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf($scope.newsCtrl.editing._id);
-				vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].body = $scope.newsCtrl.editing.body;
+		if (!pack) {
+			pack = _.find(vm.hiddenPacks, function(pack) {
+				var newsId = _.find(pack.news, function(news) {
+					return news === postId;
+				});
+				return !!newsId;
+			});
+			if (!pack) {
+				return false;
+			} else {
+				return {id: pack._id, type: 'hiddenPacks'};
 			}
-			vm.splitPacks();
-			$scope.newsCtrl.editing = {};
+		} else {
+			return {id: pack._id, type: 'packs'};
 		}
+	}
+
+	function findPackType(packId) {
+		var pack;
+		var packIndex;
+		pack = _.find(vm.packs, {_id: packId});
+		if (!pack) {
+			pack = _.find(vm.hiddenPacks, {_id: packId});
+			if (!pack) {
+				return false;
+			} else {
+				packIndex = vm.hiddenPacks.map(function(x) {return x._id; }).indexOf(packId);
+				return {packIndex: packIndex, type: 'hiddenPacks'};
+			}
+		} else {
+			packIndex = vm.packs.map(function(x) {return x._id; }).indexOf(packId);
+			return {packIndex: packIndex, type: 'packs'};
+		}
+	}
+
+	function findIndexes(newsId, commentId) {
+		var packData = findPackByNews(newsId);
+		var packIndex;
+		var newsIndex;
+		var commentIndex;
+		if (packData) {
+			packIndex = vm[packData.type].map(function(x) {return x._id; }).indexOf(packData.id);
+			newsIndex = vm[packData.type][packIndex].news.indexOf(newsId);
+			if (commentId) {
+				commentIndex = vm[packData.type][packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf(commentId);
+			}
+			return {
+				packIndex: packIndex,
+				type: packData.type,
+				newsIndex: newsIndex,
+				commentIndex: commentIndex
+			};
+		} else {
+			return false;
+		}
+	}
+
+	vm.restoreData = function(type) {
+		var postId;
+		var indexes;
+		if (type === 'news') {
+			postId = $scope.newsCtrl.editing._id;
+			indexes = findIndexes(postId);
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex] = $scope.newsCtrl.editing;
+		} else if (type === 'comment') {
+			postId = $scope.newsCtrl.editing.news_id;
+			indexes = findIndexes(postId, $scope.newsCtrl.editing._id);
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].body = $scope.newsCtrl.editing.body;
+		}
+		$scope.newsCtrl.editing = {};
 	};
 
 	vm.packsSearch = function(pack) {
@@ -325,43 +379,57 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	socket.on("push pack", function(pack) {
 		pack.fullNews = [];
 		pack.collapsed = true;
-		vm.allPacks.push(pack);
-		vm.splitPacks();
+		vm.hiddenPacks.push(pack);
 		vm.editingPack = _.find(vm.hiddenPacks, {_id: pack._id});
 		vm.weekliesMode = 'edit';
 	});
 
 	socket.on("change pack", function(data) {
-		var pack;
+		var packData;
 		if (data.pushNews) {
-			pack = _.find(vm.allPacks, {_id: data.packId});
-			pack.news.push(data.pushNews._id);
-			pack.fullNews.push(data.pushNews);
-			vm.splitPacks();
+			packData = findPackType(data.packId);
+			if (packData) {
+				vm[packData.type][packData.packIndex].news.push(data.pushNews._id);
+				vm[packData.type][packData.packIndex].fullNews.push(data.pushNews);
+			}
 		}
 		if (data.title) {
-			pack = _.find(vm.allPacks, {_id: data.packId});
-			pack.title = data.title;
-			vm.splitPacks();
+			packData = findPackType(data.packId);
+			if (packData) {
+				vm[packData.type][packData.packIndex].title = data.title;
+			}
 		}
 		if (data.hasOwnProperty('published')) {
-			pack = _.find(vm.allPacks, {_id: data.packId});
-			if (!data.published) {
-				pack.collapsed = true;
-			} else {
-				pack.collapsed = false;
+			packData = findPackType(data.packId);
+			if (packData) {
+				if (!data.published) {
+					vm[packData.type][packData.packIndex].collapsed = true;
+				} else {
+					vm[packData.type][packData.packIndex].collapsed = false;
+				}
+				vm[packData.type][packData.packIndex].published = data.published;
+				vm[packData.type][packData.packIndex].date = data.date;
+
+				var pack = vm[packData.type].splice(packData.packIndex, 1)[0];
+				if (packData.type === 'packs') {
+					vm.hiddenPacks.push(pack);
+					vm.hiddenPacks.sort(function(a, b) {
+					return a.date - b.date;
+				});
+				} else {
+					vm.packs.push(pack);
+					vm.packs.sort(function(a, b) {
+					return a.date - b.date;
+				});
+				}
 			}
-			pack.published = data.published;
-			pack.date = data.date;
-			vm.splitPacks();
 		}
 	});
 
 	socket.on("splice pack", function(packId) {
-		var index = vm.allPacks.map(function(x) {return x._id;}).indexOf(packId);
-		if (index !== -1) {
-			vm.allPacks.splice(index, 1);
-			vm.splitPacks();
+		var packData = findPackType(packId);
+		if (packData) {
+			vm[packData.type].splice(packData.packIndex, 1);
 		}
 	});
 
@@ -373,129 +441,71 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	// Socket logic
 
 	socket.on("change post", function(newPost) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === newPost._id;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			if (packIndex !== -1) {
-				var newsIndex = vm.allPacks[packIndex].news.indexOf(newPost._id);
-				vm.allPacks[packIndex].fullNews[newsIndex] = newPost;
-			}
-			vm.splitPacks();
+		var indexes = findIndexes(newPost._id);
+		if (indexes) {
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex] = newPost;
 		}
 	});
 
 	socket.on("change comment", function(data) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === data.newsId;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			if (packIndex !== -1) {
-				var newsIndex = vm.allPacks[packIndex].news.indexOf(data.newsId);
-				var commentIndex = vm.allPacks[packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf(data.comment._id);
-				vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].body = data.comment.body;
-			}
-			vm.splitPacks();
+		var indexes = findIndexes(data.newsId, data.comment._id);
+		if (indexes) {
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].body = data.comment.body;
 		}
 	});
 
 	socket.on("splice post", function(postId, type) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === postId;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(postId);
-			vm.allPacks[packIndex].news.splice(newsIndex, 1);
-			vm.allPacks[packIndex].fullNews.splice(newsIndex, 1);
-			vm.splitPacks();
+		var indexes = findIndexes(postId);
+		if (indexes) {
+			vm[indexes.type][indexes.packIndex].news.splice(indexes.newsIndex, 1);
+			vm[indexes.type][indexes.packIndex].fullNews.splice(indexes.newsIndex, 1);
 		}
 	});
 
 	socket.on("change like post", function(newPost) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === newPost.post;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(newPost.post);
+		var indexes = findIndexes(newPost.post);
+		if (indexes) {
+			var index = vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].likes.indexOf(newPost.user);
 			if (newPost.isLike) {
-				vm.allPacks[packIndex].fullNews[newsIndex].likes.push(newPost.user);
+				if(index === -1) {
+					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].likes.push(newPost.user);
+				}
 			} else {
-				var index = vm.allPacks[packIndex].fullNews[newsIndex].likes.indexOf(newPost.user);
 				if(index !== -1) {
-					vm.allPacks[packIndex].fullNews[newsIndex].likes.splice(index, 1);
+					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].likes.splice(index, 1);
 				}
 			}
-			vm.splitPacks();
 		}
 	});
 
 	socket.on("change like comment", function(data) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === data.newsId;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(data.newsId);
-			var commentIndex = vm.allPacks[packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf(data.commentId);
+		var indexes = findIndexes(data.newsId, data.commentId);
+		if (indexes) {
+			var index = vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].likes.indexOf(vm.whyCouldntYouMadeThisVariableUser.id);
+
 			if (data.like === "added") {
-				vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
+				if (index === -1) {
+					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
+				}
 			} else if (data.like === "removed") {
-				var index = vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].likes.indexOf(vm.whyCouldntYouMadeThisVariableUser.id);
 				if(index !== -1) {
-					vm.allPacks[packIndex].fullNews[newsIndex].comments[commentIndex].likes.splice(index, 1);
+					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].likes.splice(index, 1);
 				}
 			}
-			vm.splitPacks();
 		}
 	});
 	
 	socket.on("push comment", function(data) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === data.postId;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(data.postId);
-			vm.allPacks[packIndex].fullNews[newsIndex].comments.push(data.comment);
-			vm.splitPacks();
+		var indexes = findIndexes(data.postId);
+		if (indexes) {
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments.push(data.comment);
 		}
 	});
 
 	socket.on("splice comment", function(commentDetails) {
-		var pack = _.find(vm.allPacks, function(pack) {
-			var newsId = _.find(pack.news, function(news) {
-				return news === commentDetails.post;
-			});
-			return !!newsId;
-		});
-		if (pack) {
-			var packIndex = vm.allPacks.map(function(x) {return x._id; }).indexOf(pack._id);
-			var newsIndex = vm.allPacks[packIndex].news.indexOf(commentDetails.post);
-			var index = vm.allPacks[packIndex].fullNews[newsIndex].comments.map(function(x) {return x._id; }).indexOf(commentDetails.comment);
-			vm.allPacks[packIndex].fullNews[newsIndex].comments.splice(index, 1);
-			vm.splitPacks();
+		var indexes = findIndexes(commentDetails.post, commentDetails.comment);
+		if (indexes) {
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments.splice(indexes.commentIndex, 1);
 		}
 	});
 

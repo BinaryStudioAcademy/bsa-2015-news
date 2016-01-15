@@ -21,6 +21,12 @@ CompanyController.$inject = [
 function CompanyController(NewsService, CompanyService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
 	var vm = this;
 
+	$scope.newsCtrl.loadMore = function() {
+		NewsService.getNews('company', vm.posts.length, 3).then(function(data) {
+			Array.prototype.push.apply(vm.posts, data);
+		});
+	};
+
 	$scope.newsCtrl.selectedIndex = 0;
 
 	vm.posts = [];
@@ -48,7 +54,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 		checkModal();
 	});
 
-	NewsService.getNews('company').then(function(data) {
+	NewsService.getNews('company', 0, 5).then(function(data) {
 		vm.posts = data;
 		checkModal();
 	});

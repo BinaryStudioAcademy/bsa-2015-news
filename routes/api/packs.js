@@ -6,7 +6,7 @@ var PacksService = require('../../services/packs');
 module.exports = function(app) {
 
 	app.get('/api/packs', function(req, res, next){
-		PacksService.getPacks(req.decoded, function(err, data) {
+		PacksService.getPacks(req.decoded, req.query, function(err, data) {
 			res.err = err;
 			res.data = data;
 			next();

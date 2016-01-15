@@ -31,15 +31,15 @@ PacksService.prototype.getPack = function(id, user, callback) {
 	});
 };
 
-PacksService.prototype.getPacks = function(user, callback) {
-	PackRepository.getAll(function(err, packs) {
+PacksService.prototype.getPacks = function(user, queryString, callback) {
+	PackRepository.getAll(queryString, function(err, packs) {
 		if (err) {
-			callback(err, null);
+			return callback(err, null);
 		}
 
 		NewsRepository.getAllNews(user, 'weeklies', function(err, news) {
 			if (err) {
-				callback(err, null);
+				return callback(err, null);
 			}
 
 			packs.forEach(function(pack) {

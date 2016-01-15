@@ -21,6 +21,18 @@ app.directive('backImg', function(){
 	};
 });
 
+app.directive('whenScrolled', function() {
+	return function(scope, elm, attr) {
+		var raw = elm[0];
+		elm.bind('scroll', function() {
+			if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+				scope.$apply(attr.whenScrolled);
+			}
+		});
+	};
+});
+
+
 NewsController.$inject = [
 	'NewsService',
 	'AdministrationService',
@@ -38,6 +50,10 @@ NewsController.$inject = [
 
 function NewsController(NewsService, AdministrationService, WeekliesService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
 	var vm = this;
+
+	vm.loadMore = function() {
+		console.log('dfgdfg');
+	};
 
 	vm.formView = true;
 

@@ -9,13 +9,15 @@ var NewsRepository = function(){
 
 NewsRepository.prototype = new Repository();
 
-NewsRepository.prototype.getAllNews = function(user, type, callback) {
+NewsRepository.prototype.getAllNews = function(user, queryString, callback) {
 	/*var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
 	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })*/
-	var typeFilter = type ? {type: type} : {};
+	var typeFilter = queryString.type ? {type: queryString.type} : {};
 	var query = user.role === 'ADMIN' ? typeFilter : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } }, typeFilter] };
 	News.find(query)
 		.sort({date:-1})
+		.skip(queryString.skip)
+		.limit(queryString.limit)
 		.exec(callback);
 };
 

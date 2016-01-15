@@ -9,8 +9,17 @@ var PackRepository = function(){
 
 PackRepository.prototype = new Repository();
 
-PackRepository.prototype.getAll = function(callback) {
-	Pack.find({}).lean()
+PackRepository.prototype.getAll = function(queryString, callback) {
+	var query;
+	if (queryString.published === 'yes') {
+		query = {published: true};
+	} else {
+		query = {published: false};
+	}
+	Pack.find(query).lean()
+		.sort({date:-1})
+		.skip(queryString.skip)
+		.limit(queryString.limit)
 		.exec(callback);
 };
 

@@ -43,13 +43,13 @@ module.exports = angular.module('news', ['ngRoute', 'ngResource', 'ui.tinymce','
 					controller: 'WeekliesController',
 					controllerAs:"weekCtrl",
 					reloadOnSearch: false
-				})
+				})*/
 				.when('/administration', {
 					templateUrl: './templates/administration/administration.html',
 					controller: 'AdministrationController',
 					controllerAs:"admCtrl",
 					reloadOnSearch: false
-				})*/
+				})
 				.otherwise({
 					redirectTo: '/company'
 				});
