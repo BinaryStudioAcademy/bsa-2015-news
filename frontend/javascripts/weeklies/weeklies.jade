@@ -58,7 +58,8 @@ md-content#weekly
 								div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
 									.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
 									.comment-section
-										b.author-2 {{newsCtrl.getUserName(comment.author)}}: 
+										.author-2
+											a(ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(comment.author)}}') {{newsCtrl.getUserName(comment.author)}}
 										span.comment-body-2(ng-bind-html='comment.body| unsafe')
 										span.comment-controls-2.go-right
 											i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
@@ -129,7 +130,8 @@ md-content#weekly
 									div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
 										.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
 										.comment-section
-											b.author-2 {{newsCtrl.getUserName(comment.author)}}: 
+											.author-2
+												a(ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(comment.author)}}') {{newsCtrl.getUserName(comment.author)}}
 											span.comment-body-2(ng-bind-html='comment.body| unsafe')
 											span.comment-controls-2.go-right
 												i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')

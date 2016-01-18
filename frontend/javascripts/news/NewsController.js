@@ -100,7 +100,8 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor | backcolor",
 		skin: 'lightgray',
 		menu: {},
-		theme : 'modern'
+		theme : 'modern',
+		browser_spellcheck: true
 	};
 
 	vm.tinymceCommentOptions = {
@@ -113,14 +114,16 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 		height: 100,
 		content_css : ['styles/css/libs.css', 'styles/css/style.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'],
 		body_class: 'body',
-		elementpath: false
+		elementpath: false,
+		browser_spellcheck: true
 	};
 
 	vm.tinymceInlineOptions = {
 		//selector: 'h2.editable',
 		inline: true,
 		toolbar: 'undo redo',
-		menubar: false
+		menubar: false,
+		browser_spellcheck: true
 	};
 
 	vm.setEditing = function(data, id) {
