@@ -27,6 +27,7 @@ form[name=newsForm]
 	margin 0 !important
 	padding 10px 0 !important
 	overflow auto
+	border none !important
 	.news-wrapper
 		padding 10px
 		border-radius 10px
@@ -63,11 +64,19 @@ form[name=newsForm]
 	z-index 200
 
 #all-content
+	max-width 1280px
 	position fixed
+	width 700px
+	height 100%
 	top 60px
-	bottom 0
+	align-self center
 	left 0
-	right 0
+	right 220px
+	margin-left auto
+	margin-right auto
+	padding-bottom 60px
+	bottom 70px
+	background #fff
 /*#right
 	position absolute
 	top 0
@@ -76,23 +85,13 @@ form[name=newsForm]
 	overflow auto
 	margin 0*/
 #content
-	position absolute
-	top 0
-	right 404px
-	bottom 0
-	/*overflow auto*/
 	margin 0
-	left 180px
-	/*max-width 600px
-	margin auto*/
-	/*.news*/
 #main
+	overflow auto
 	position absolute
 	top 60px
-	bottom 0
-	left 0
-	right 0
-	overflow auto
+	bottom 60px
+	width 100%
 	/*max-width 1000px
 	margin auto*/
 
@@ -121,15 +120,16 @@ form[name=newsForm]
 
 
 #news-viev
+	background #eaedf2
 	width 100%
 	margin 0 auto
+	height 100%
 *
 	padding 0
 	margin 0
 
 body
 	font 0.8em Arial, Helvetica, sans-serif
-	background #D7E1F2
 	color #313131
 
 a
@@ -142,13 +142,8 @@ i
 	cursor pointer
 aside
 	width 404px
-	margin 1%
 
 #content
-	/*margin 0 400px*/
-	padding 10px
-	height 100%
-	background #fff
 	& > .news-massage
 		&:first-child
 			margin-top 10px
@@ -277,26 +272,20 @@ md-dialog
 
 aside#right
 	float right
-	color #000
+	position absolute
+	right -400px
 	overflow auto
-	position fixed
-	top 60px
-	right 0
-	bottom 0
-	margin 0
-	background #eaedf2
+	top 0
+	bottom 60px
+
 	md-card
 		margin 20px
 
 aside#left
 	float left
-	color #000
-	overflow auto
-	position fixed
-	top 60px
-	bottom 0
-	margin 0
-	background #eaedf2
+	width 180px
+	position absolute
+	left -180px
 .news-message
 	/*margin 5px 5px 20px*/
 	/*box-shadow 0px 3px 5px -1px rgba(0, 0, 0, 0.14), 0px 6px 10px 0px rgba(0, 0, 0, 0.098), 0px 1px 18px 0px rgba(0, 0, 0, 0.084)*/
@@ -512,13 +501,15 @@ ul#nav-list
 				transition color 0.2s ease-in
 		a
 			line-height 40px
-			color #2196f3
 			transition color 0.2s ease-out
 			font-size 16px
 			display block
 			margin 0
+			font-weight bold
+			color #777
 			img
-				height 40px
+				height 30px
+				margin-right 10px
 
 
 
