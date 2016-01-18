@@ -1,9 +1,9 @@
 #add-expense-widget
-	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+	md-card
+		md-toolbar.md-primary(ng-click='expCtrl.collapsed=!expCtrl.collapsed')
 			.md-toolbar-tools
 				h2.md-flex Create expense
-		md-content
+		md-content(ng-class='{collapsed: expCtrl.collapsed, uncollapsed: !expCtrl.collapsed}')
 			form.expense-form(name="expenseForm", ng-submit="expenseForm.$valid && expCtrl.createExpense()", novalidate)
 				md-input-container.input-container
 					label Expense name

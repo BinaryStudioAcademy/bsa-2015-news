@@ -5,12 +5,14 @@ var app = require('../app.js');
 
 	function NewsService($resource) {
 		return {
+			getMe: getMe,
+			getPost: getPost,
 			getNews: getNews,
 			getFullUsers: getFullUsers,
 			getRoles: getRoles,
-			update_Role_User: update_Role_User,
 			createNews: createNews,
 			editNews: editNews,
+			editComment: editComment,
 			deleteNews: deleteNews,
 			addComment: addComment,
 			deleteComment: deleteComment,
@@ -18,7 +20,7 @@ var app = require('../app.js');
 			newsLike: newsLike,
 			toggleCommentLike: toggleCommentLike,
 			deleteNewsLike: deleteNewsLike,
-			getMe: getMe
+			getServices: getServices
 		};
 
 		function getMe() {
@@ -29,29 +31,24 @@ var app = require('../app.js');
 			return $resource("api/news/:id", { id: "@id"});
 		}
 
-		function getNews() {
-			return $resource("api/news").query().$promise;
+		function getPost(id) {
+			return $resource("api/news/:id", { id: "@id"}).get({id: id}).$promise;
+		}
+
+		function getNews(type, skip, limit) {
+			return $resource("api/news?type=" + type + '&skip=' + skip + '&limit=' + limit).query().$promise;
 		}
 
 		function getFullUsers() {
 			return $resource("profile/api/users").query().$promise;
-			//return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
 		}
 
 		function getRoles() {
 			return $resource("auth/api/roles").query().$promise;
-			//return $resource("http://team.binary-studio.com/profile/api/users").query().$promise;
 		}
 
 		function getComments(newsId) {
-			return $resource("/api/news/:id/comments", { id: "@id"}).get({id: newsId}).$promise;
-		}
-
-		function update_Role_User(newsId, roleId, userId) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
-			});
-			return data.update({ id: newsId }, { $set:{access_roles: roleId, restrict_ids: userId }}).$promise;
+			return $resource("api/news/:id/comments", { id: "@id"}).get({id: newsId}).$promise;
 		}
 
 		function createNews(news) {
@@ -73,7 +70,14 @@ var app = require('../app.js');
 			var data = $resource("api/news/:id", { id: "@id" }, {
 				update: {method: "PUT"}
 			});
-			return data.update({ id: newsId }, { body: news }).$promise;
+			return data.update({ id: newsId }, news).$promise;
+		}
+
+		function editComment(newsId, commentId, comment) {
+			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
+				update: {method: "PUT"}
+			});
+			return data.update({newsId: newsId, commentId: commentId}, {body: comment.body, edited_at: comment.edited_at}).$promise;
 		}
 
 		function deleteNews(newsId) {
@@ -106,8 +110,10 @@ var app = require('../app.js');
 			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
 				update: {method: "PUT"}
 			});
-			//return data.update({newsId: newsId, commentId: commentId}, {like: true}).$promise;
-			//return data.update({newsId: newsId, commentId: commentId}, {$addToSet:{likes: userId }}).$promise;
 			return data.update({newsId: newsId, commentId: commentId}).$promise;
+		}
+
+		function getServices() {
+			return $resource("app/api/notificationService").query().$promise;
 		}
 	}

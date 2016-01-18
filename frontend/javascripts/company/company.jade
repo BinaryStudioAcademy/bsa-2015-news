@@ -1,0 +1,110 @@
+md-content#company
+	.search
+		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.checkRights()') New post
+		i.fa.fa-search.search-icon
+		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter")
+	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('company')" novalidate)
+		.form-group
+			input(type="text" name='title' placeholder='News title' ng-model="newsCtrl.news.title" required)
+			div(ng-class='{validation: !newsCtrl.news.body}')
+				textarea(ui-tinymce='newsCtrl.tinymceOptions', ng-model="newsCtrl.news.body" required)
+				md-chips(ng-model="newsCtrl.news.restrict_ids" md-require-match="true" md-transform-chip="newsCtrl.transformUserChip($chip)")
+					md-autocomplete(md-search-text="userQuery" md-items="item in newsCtrl.userSearch(userQuery)" placeholder="Hide news from")
+						span(md-highlight-text="userQuery") {{item.name}} {{item.surname}}
+					md-chip-template
+						span
+							{{newsCtrl.getUserName($chip)}}
+				md-chips(ng-model="newsCtrl.news.access_roles" md-require-match="true" md-transform-chip="newsCtrl.transformRoleChip($chip)")
+					md-autocomplete(md-search-text="roleQuery" md-items="item in newsCtrl.roleSearch(roleQuery)" placeholder="Show news only for")
+						span(md-highlight-text="roleQuery") {{item.role}}
+					md-chip-template
+						span
+							{{$chip}}
+		md-button.md-raised.md-primary(type='submit') Create
+		md-button(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
+
+	.news-2(ng-repeat='news in compCtrl.posts | filter: newsCtrl.newsSearch track by $index' ng-class='[{commenting: showComments}, {"modal-post": news.showInModal}]' ng-click='compCtrl.hideModal(news._id)')
+		.news-wrapper(ng-click='$event.stopPropagation()')
+			.news-title-2
+				span.title-ne(ng-if='!(newsCtrl.editing._id === news._id)' ng-click="compCtrl.showModal(news._id, $event)") {{news.title}}
+				span.news-editable-title(ng-if='(newsCtrl.editing._id === news._id)' ui-tinymce='newsCtrl.tinymceInlineOptions' ng-model="news.title")
+				span.news-controls-2.go-right(ng-if='newsCtrl.checkRights(news.author)')
+					i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(news)' ng-show='!(newsCtrl.editing._id === news._id)')
+					i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteNews(news._id)' ng-show='!(newsCtrl.editing._id === news._id)')
+					i.fa.fa-undo.undo-2(ng-click='compCtrl.restoreData("news")' ng-show='(newsCtrl.editing._id === news._id)')
+					i.fa.fa-floppy-o.save-2(ng-click='newsCtrl.editpost(news)' ng-show='(newsCtrl.editing._id === news._id)')
+			.section
+				span
+					b.author-2 {{newsCtrl.getUserName(news.author)}}
+					span.date-2  on {{news.date | date:'dd-MMM-yyyy HH:mm'}}
+					span.date-edited-2(ng-if='news.edited_at')  (edited)
+			.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!(newsCtrl.editing._id === news._id)')
+			div(ng-if='(newsCtrl.editing._id === news._id)')
+				textarea(ng-model='news.body', ui-tinymce='newsCtrl.tinymceOptions')
+				md-chips(ng-model="news.restrict_ids" md-require-match="true" md-transform-chip="newsCtrl.transformUserChip($chip)")
+					md-autocomplete(md-search-text="userQuery" md-items="item in newsCtrl.userSearch(userQuery)" placeholder="Hide news from")
+						span(md-highlight-text="userQuery") {{item.name}} {{item.surname}}
+					md-chip-template
+						span
+							{{newsCtrl.getUserName($chip)}}
+				md-chips(ng-model="news.access_roles" md-require-match="true" md-transform-chip="newsCtrl.transformRoleChip($chip)")
+					md-autocomplete(md-search-text="roleQuery" md-items="item in newsCtrl.roleSearch(roleQuery)" placeholder="Show news only for")
+						span(md-highlight-text="roleQuery") {{item.role}}
+					md-chip-template
+						span
+							{{$chip}}
+				br
+				md-button.md-raised.md-primary(ng-click='newsCtrl.editpost(news)') Save
+				md-button(ng-click='compCtrl.restoreData("news")') Cancel
+			.section
+				span.likes-count-2.go-right
+					span(ng-click='newsCtrl.newsLike(news)')
+						i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(news.likes)')
+						i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(news.likes)')
+						span  {{news.likes.length}}
+					.likes-user-list
+						a(ng-repeat='like in news.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+							.user {{newsCtrl.getUserName(like)}}
+						.user(ng-if='news.likes.length > 3' ng-click='newsCtrl.showAllLikes(news.likes)') and {{news.likes.length - 3}} more...
+				span.comments-count-2.go-right(ng-click='showComments=!showComments')
+					i.fa.fa-commenting-o
+					span  {{news.comments.length}} comments
+
+
+			.new-comment-2(ng-if='showComments')
+				.news-input-wrapper
+					.news-input-cover(contentEditable='true' ng-focus='newsCtrl.expandNewsForm(news._id)' ng-if='!(newsCtrl.expandedForm === news._id)') Write new comment...
+					form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, $index, newCommentForm);commentText=''" ng-show='!newsCtrl.editing._id' ng-if='newsCtrl.expandedForm === news._id' novalidate)
+						div(ng-class='{validation: !commentText}')
+							textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
+						md-button(type='submit') Add comment
+			.comments-2(ng-if='showComments')
+				.comment-2(ng-repeat='comment in news.comments | reverse')
+
+					form.comment-form-2(name='commentForm' ng-if='(newsCtrl.editing._id === comment._id)' ng-submit="commentForm.$valid && newsCtrl.editComment(news._id, comment)" novalidate)
+						div(ng-class='{validation: !comment.body}')
+							textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="comment.body" placeholder='Comment' required)
+						.controls
+							md-button(type='submit') Save comment
+							md-button(ng-click='compCtrl.restoreData("comment")') Cancel
+					div.clear(ng-if='!(newsCtrl.editing._id === comment._id)')
+						.avatar(back-img='{{newsCtrl.getUser(comment.author).avatar.urlAva}}')
+						.comment-section
+							.author-2
+								a(ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(comment.author)}}') {{newsCtrl.getUserName(comment.author)}}
+							span.comment-body-2(ng-bind-html='comment.body| unsafe')
+							span.comment-controls-2.go-right
+								i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
+								i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
+							.footer-2
+								span.date-2 {{comment.date | date:'dd-MMM-yyyy HH:mm'}}
+								span.date-edited-2(ng-if='comment.edited_at')  (edited)
+								span.likes-count-2.go-right
+									span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
+										i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')
+										i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(comment.likes)')
+										span  {{comment.likes.length}}
+									.likes-user-list
+										a(ng-repeat='like in comment.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
+											.user {{newsCtrl.getUserName(like)}}
+										.user(ng-if='comment.likes.length > 3' ng-click='newsCtrl.showAllLikes(comment.likes)') and {{comment.likes.length - 3}} more...

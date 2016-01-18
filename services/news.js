@@ -35,5 +35,4 @@ NewsService.prototype.toggleCommentlike = function(userId, newsId, commentId, ca
 	});
 };
 
-
 module.exports = new NewsService();

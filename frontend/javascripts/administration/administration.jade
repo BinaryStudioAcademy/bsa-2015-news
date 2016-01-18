@@ -1,0 +1,39 @@
+#administration(ng-if='myRole === "Admin"')
+	md-card.md-whiteframe-z3
+		md-toolbar.md-primary
+			.md-toolbar-tools
+				h2.md-flex Roles mapping
+		md-content
+			.list-item
+				.header Global role
+				.header Local role
+			md-divider
+			.list-item(ng-repeat='role in admCtrl.roles')
+				.global-role {{role.role}}
+				md-input-container.local-role(ng-if='role.role === "ADMIN"') Admin
+				md-input-container.local-role(ng-if='role.role !== "ADMIN"')
+					md-select(ng-model="role.local_role" aria-label='local role' ng-change='admCtrl.updateRole(role)')
+						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoleNames") {{role}}
+	md-card.md-whiteframe-z3
+		md-toolbar.md-primary
+			.md-toolbar-tools
+				h2.md-flex Personal role
+		md-content
+			.list-item
+				.header User name
+				.header Local role
+			md-divider
+			.list-item(ng-repeat='user in admCtrl.users')
+				.global-role {{user.name}} {{user.surname}}
+				md-input-container.local-role
+					md-select(ng-model="user.local_role" aria-label='local role' ng-change='admCtrl.updateUserRole(user)')
+						md-option(ng-value="'By global role'") By global role
+						md-option(ng-value="role" ng-repeat="role in admCtrl.localRoleNames") {{role}}
+#administration(ng-if='myRole !== "Admin"')
+	md-card.md-whiteframe-z3
+		md-toolbar.md-primary
+			.md-toolbar-tools
+				h2.md-flex Access denied
+		md-content
+			.list-item
+				h3.denied You are not admin

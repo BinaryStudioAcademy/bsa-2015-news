@@ -1,25 +1,26 @@
 #stack-widget
-	md-card.md-whiteframe-z3
-		md-toolbar.md-primary
+	md-card
+		md-toolbar.md-primary(ng-click='stackCtrl.collapsed=!stackCtrl.collapsed' ng-class='{"collapsed-head": stackCtrl.collapsed}')
 			.md-toolbar-tools
-				h2.md-flex Questions
-		md-select(ng-model='stackCtrl.type', ng-change='stackCtrl.getQuestions(stackCtrl.type)' aria-label='Type')
-			md-option(value='recent') Recent
-			md-option(value='commented') Top commented
-			md-option(value='popular') Popular
-			md-option(value='upvoted') Upvoted
-		md-content
-			.list-item(ng-if='!stackCtrl.questions.length')
-				.item-content
-					.align-center Nothing
-			.list-item(ng-repeat='question in stackCtrl.questions')
-				a(href="{{question.url}}").item-content
-					div.stack-av
-						img(src="{{question.user.avatar}}", class='img-thumbnail')
-					div.stack-body
-						b {{question.title}}
-						div.stack-votes
-							i(class="fa fa-comments-o fa-1")
-							|  {{question.answers_count}}&nbsp;
-							i(class="fa fa-thumbs-up fa-1")
-							|  {{question.vote_value}}
+				h2.md-flex Asciit questions
+		div(ng-class='{collapsed: stackCtrl.collapsed, uncollapsed: !stackCtrl.collapsed}')
+			md-select(ng-model='stackCtrl.type', ng-change='stackCtrl.getQuestions(stackCtrl.type)' aria-label='Type')
+				md-option(value='recent') Recent
+				md-option(value='commented') Top commented
+				md-option(value='popular') Popular
+				md-option(value='upvoted') Upvoted
+			md-content
+				.list-item(ng-if='!stackCtrl.questions.length')
+					.item-content
+						.align-center Looks like there's no questions
+				.list-item(ng-repeat='question in stackCtrl.questions')
+					a(href="{{question.url}}").item-content
+						div.stack-av
+							img(src="{{question.user.avatar}}", class='img-thumbnail')
+						div.stack-body
+							b {{question.title}}
+							div.stack-votes
+								i(class="fa fa-comments-o fa-1")
+								|  {{question.answers_count}}&nbsp;
+								i(class="fa fa-thumbs-up fa-1")
+								|  {{question.vote_value}}

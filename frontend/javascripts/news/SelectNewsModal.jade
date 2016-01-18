@@ -1,0 +1,5 @@
+md-dialog.select-news(aria-label='all-likes')
+	md-dialog-content
+		ul.news-list
+			li.news-item(ng-repeat='news in avNews' ng-click='loadNewsPack(news);closeDialog();')
+				span {{news.title}}

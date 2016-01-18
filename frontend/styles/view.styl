@@ -1,18 +1,59 @@
-.news-message.ng-submitted, #comment-form.ng-submitted
+*
+	outline none
+
+.news-message.ng-submitted, .comment-form.ng-submitted, .comment-form-2.ng-submitted
 	input.ng-invalid, .validation .mce-edit-area.mce-container.mce-panel
 		border 1px solid #FA787E !important
 form[name=newsForm]
 	padding 10px
-	
+
+.news-editable-title
+	border-bottom 2px dashed #1f8de4
+	outline none
+.news-editable-title.mce-edit-focus
+	border-bottom none
+
+.news-wrapper
+	cursor default !important
+.modal-post
+	display flex
+	background rgba(0, 0, 0, 0.7) !important
+	position fixed !important
+	top 60px
+	bottom 0px
+	left 0px
+	right 0px
+	z-index 999
+	margin 0 !important
+	padding 10px 0 !important
+	overflow auto
+	border none !important
+	.news-wrapper
+		padding 10px
+		border-radius 10px
+		background #fff
+		margin auto
+		width 85%
+		.title-ne
+			cursor default !important
+		md-card
+			margin 0 !important
+		.pack-controls
+			display none !important
+#view-packs
+	.uncollapsed
+		max-height initial
+
+
 #company
 	.md-primary
 		background #2196f3
 #sandbox
 	.md-primary
 		background #009688
-#weekly
+/*#weekly
 	.md-primary
-		background #ad1457
+		background #9E9D24*/
 .comment-wrap
 	background ghostwhite
 
@@ -33,11 +74,19 @@ form[name=newsForm]
 	z-index 200
 
 #all-content
+	max-width 1280px
 	position fixed
+	width 700px
+	height 100%
 	top 60px
-	bottom 0
+	align-self center
 	left 0
-	right 0
+	right 220px
+	margin-left auto
+	margin-right auto
+	padding-bottom 60px
+	bottom 70px
+	background #fff
 /*#right
 	position absolute
 	top 0
@@ -46,14 +95,15 @@ form[name=newsForm]
 	overflow auto
 	margin 0*/
 #content
-	position absolute
-	top 0
-	right 400px
-	bottom 0
-	/*overflow auto*/
 	margin 0
-	left 400px
-	/*.news*/
+#main
+	overflow auto
+	position absolute
+	top 60px
+	bottom 60px
+	width 100%
+	/*max-width 1000px
+	margin auto*/
 
 .title
 	.title-text
@@ -80,32 +130,28 @@ form[name=newsForm]
 
 
 #news-viev
+	background #eaedf2
 	width 100%
 	margin 0 auto
+	height 100%
 *
 	padding 0
 	margin 0
 
 body
 	font 0.8em Arial, Helvetica, sans-serif
-	background #D7E1F2
 	color #313131
 
 a
 	color #313131
 	margin-left 10px
 	cursor pointer
-
 i
 	cursor pointer
 aside
-	width 380px
-	margin 1%
+	width 404px
 
 #content
-	/*margin 0 400px*/
-	padding 10px
-	height 100%
 	& > .news-massage
 		&:first-child
 			margin-top 10px
@@ -133,12 +179,12 @@ aside
 	cursor pointer
 	margin-left 10px
 
-.tabsdemoDynamicHeight
+/*.tabsdemoDynamicHeight
 	max-width 1000px
-	margin auto
+	margin auto*/
 
 .news
-	max-width 1000px
+	/*max-width 1000px*/
 	margin auto
 	/*max-height 700px*/
 	/*max-height 800px*/
@@ -157,6 +203,8 @@ aside
 		float right
 		opacity 0.2
 		margin-right 15px
+	.edit-post
+		color black
 	.delete-post
 		&:hover
 			opacity 1
@@ -207,6 +255,8 @@ md-dialog
 			float right
 			margin-top -10px
 			opacity: .2;
+		.edit-post
+			color black
 		.body
 			padding 10px
 			overflow auto
@@ -230,26 +280,23 @@ md-dialog
 
 aside#right
 	float right
-	color #000
+	position absolute
+	right -400px
 	overflow auto
-	position fixed
-	top 60px
-	right 0
-	bottom 0
-	margin 0
+	top 0
+	bottom 60px
+
+	md-card
+		margin 20px
 
 aside#left
 	float left
-	color #000
-	overflow auto
-	position fixed
-	top 60px
-	bottom 0
-	margin 0
-
+	width 180px
+	position absolute
+	left -180px
 .news-message
-	margin 5px 5px 20px
-	box-shadow 0px 3px 5px -1px rgba(0, 0, 0, 0.14), 0px 6px 10px 0px rgba(0, 0, 0, 0.098), 0px 1px 18px 0px rgba(0, 0, 0, 0.084)
+	/*margin 5px 5px 20px*/
+	/*box-shadow 0px 3px 5px -1px rgba(0, 0, 0, 0.14), 0px 6px 10px 0px rgba(0, 0, 0, 0.098), 0px 1px 18px 0px rgba(0, 0, 0, 0.084)*/
 	img.title-img
 		float left
 		margin -4px 10px 0px -5px
@@ -264,12 +311,7 @@ aside#left
 	&.form-control
 		width 200px*/
 
-.search
-	width 90%
-	margin-top 15px
-	button
-		float right
-		margin-top -60px
+
 
 #user-log
 	float right
@@ -326,10 +368,23 @@ textarea
 
 .mce-menubar,.mce-panel 
 	border-color #eceff1 !important
+	
+/*#sandbox
+	.news-message
+		.mce-container.mce-toolbar
+			.mce-flow-layout
+				background rgb(33,150,243) !important
+		.mce-btn
+			button
+				background rgb(33,150,243) !important
+		.mce-menubar, .mce-panel, .mce-stack-layout-item, .mce-widget.mce-btn
+			background rgb(33,150,243) !important*/
 
-md-input-container
+	
+
+/*md-input-container
 	width 200px
-
+*/
 md-icon
 	margin 13px
 
@@ -356,21 +411,14 @@ md-tooltip
 			margin-top -8px
 			.fa
 				color #cfd8dc
-	.avatar
+	/*.avatar
 		height 40px
-		margin -5px 10px 0 -5px
+		margin -5px 10px 0 -5px*/
 	.btn-comment
 		background #d500f9
 		color #fff
 
-#weekly
-	.title
-		background rgb(173,20,87) !important
-		color #ffebee   !important
-		span.comments-count
-			margin-top -8px
-			.fa
-				color #cfd8dc
+
 #left-block
 	display none
 .showMenu
@@ -395,7 +443,527 @@ md-tooltip
 	display none
 
 
-@media screen and (max-width: 1600px)
+
+
+
+
+
+
+
+/*#company
+	.news-2
+		border 1px solid lightgrey
+		margin 0 10px 30px
+		margin-bottom
+		&:hover
+			background lightgrey
+		.news-title-2
+			background lightgrey
+			padding 10px
+			font-weight bold
+			font-size 1.4em
+		.news-body-2
+			padding 10px
+		.news-footer-2
+			padding 10px
+			border-top 1px solid lightgrey
+			.comments-count-2
+				outline none
+				float right
+			.likes-count-2
+				outline none
+				float right
+				margin-right 10px
+		.comments-2
+			background #eceff1
+			padding 5px
+			.md-primary
+				background grey
+			.comment-2
+				background white
+				border 1px solid lightgrey
+				margin-top 10px
+				&:first-child
+					margin-top 0
+				.comment-body-2
+					padding 10px
+				.comment-footer-2
+					padding 10px
+					border-top 1px solid lightgrey
+					.likes-count-2
+						outline none
+						float right*/
+
+ul#nav-list
+	list-style none
+	/*margin-left 200px*/
+	li.nav-item
+		padding-left 10px
+		transition background-color 0.2s ease-out
+		&:hover
+			background-color #2196f3
+			transition background-color 0.2s ease-in
+			a
+				color #fff
+				text-decoration none
+				transition color 0.2s ease-in
+		a
+			line-height 40px
+			transition color 0.2s ease-out
+			font-size 16px
+			display block
+			margin 0
+			font-weight bold
+			color #777
+			img
+				height 30px
+				margin-right 10px
+
+
+
+.all-likes
+	width 920px
+	min-width 320px
+	border-radius 10px
+	padding 10px
+	.likes-list
+		list-style none
+		margin 0
+		padding 0
+		.list-item
+			float left
+			padding 5px
+			margin 0
+			width 300px
+			line-height 60px
+			a 
+				margin 0
+				text-decoration none
+			&:hover
+				background #eaedf2
+			.avatar
+				width 60px
+				height 60px
+				float left
+			.user
+				margin-left 60px
+				text-align center
+			&:after
+				content ''
+				clear both
+				display block
+		&:after
+			content ''
+			clear both
+			display block
+
+.select-news
+	width 920px
+	min-width 320px
+	border-radius 10px
+	padding 10px
+	.news-list
+		list-style none
+		margin 0
+		padding 0
+		.news-item
+			float left
+			padding 5px
+			margin 0
+			width 300px
+			line-height 60px
+			text-align center
+			&:hover
+				background #eaedf2
+			&:after
+				content ''
+				clear both
+				display block
+		&:after
+			content ''
+			clear both
+			display block
+
+.news-input-wrapper
+	form
+		margin 10px
+	.news-input-cover
+		height 30px
+		border 1px solid #aaa
+		margin 10px 50px
+		color #aaa
+		cursor text
+		line-height 28px
+		padding-left 10px
+		background #fff
+
+#company, #weekly, #sandbox
+	.comment-form-2
+		position relative
+		.controls
+			position absolute
+			bottom -5px
+			left -7px
+	.comment-form
+		position relative
+		textarea[name='newComment']
+			margin auto
+			width 80%
+			display block
+			height 50px
+			outline none
+			border 1px solid rgb(224, 224, 224)
+			padding 7px
+		button[type='submit']
+			margin 10px 0px
+			position absolute
+			bottom -9px
+		&:after
+			content ''
+			clear both
+			display block
+	.search
+		margin-top 15px
+		button
+			margin-left 20px
+			margin-top 0
+		input[name='search']
+			outline none
+			border 1px solid rgb(224, 224, 224)
+			border-radius 16px
+			font-size 16px
+			line-height 30px
+			height 30px
+			padding-left 28px
+			float right
+			&:focus
+				border 2px solid #2196f3
+		.search-icon
+			float right
+			position relative
+			top 8px
+			left -218px
+			color #aaa
+		&:after
+			content ''
+			clear both
+			display block
+	.likes-user-list
+		position absolute
+		display none
+		right 0
+		bottom 20px
+		background #777
+		color #fff
+		white-space nowrap
+		text-align center
+		a 
+			color #fff
+			margin 0
+			text-decoration none
+		.user
+			padding 5px
+			&:hover
+				background rgb(33,150,243)
+	.news-message
+		input[name='title']
+			width 100%
+			outline none
+			border none
+			border-bottom 1px solid #e0e0e0
+			padding 0 5px 10px
+			font-size 16px
+			&:focus
+				border-bottom 2px solid #2196f3
+	.commenting
+		background #FBFBFB
+	.news-2
+		/*border-bottom 1px solid lightgrey*/
+		/*margin 0 10px*/
+		padding-top 10px
+		border-bottom 1px solid #CCC
+		/*border-top 15px solid #eaedf2*/
+		border-top 15px solid #eaedf2
+		&:hover
+			background #FBFBFB
+			.news-controls-2
+				display initial
+		&:nth-child(2)
+			border-top none
+		.news-avatar
+			width 60px
+			height 60px
+			float left
+			margin-right 8px
+			border-radius 10px
+			margin-top -10px
+		.news-title-2
+			/*background lightgrey*/
+			padding 10px
+			font-size 35px
+			color rgb(31, 141, 228)
+			span
+				outline none
+		.news-body-2
+			padding 10px
+		.comments-count-2
+			color #1f8de4
+			outline none
+			margin-right 10px
+		.likes-count-2
+			outline none
+			margin-right 10px
+			position relative
+			&:hover > .likes-user-list
+				display block
+		.comments-2
+			max-height 300px
+			overflow auto
+			/*background #FBFBFB*/
+			/*padding 5px*/
+			.comment-2
+				/*position relative*/
+				padding 5px 15px
+				background white
+				/*margin-top 5px*/
+				border-bottom 1px solid lightgrey
+				&:hover
+					/*background #eceff1*/
+					.comment-controls-2
+						display initial
+				/*&:first-child
+					margin-top 0*/
+				/*.comment-body-2
+					padding 10px
+					padding-bottom 0*/
+				.section
+					.likes-count-2
+						span
+							outline none
+				.avatar
+					/*position absolute
+					height 100%*/
+					width 60px
+					height 60px
+					float left
+					margin-top 8px
+					border-radius 50%
+					/*img
+						max-height 60px
+						max-width 60px*/
+				.comment-section
+					padding 0 10px 0
+					margin-left 60px
+					/*.footer-2
+						margin-top 15px
+						margin-bottom 5px*/
+				textarea[name='oldComment']
+					width 100%
+					outline none
+					border 1px solid rgb(224, 224, 224)
+					margin-top 10px
+					padding 7px
+		.author-2
+			margin-bottom 5px
+			a
+				margin 0
+				font-weight bold
+		.date-2
+			font-weight bold
+			color #999
+		.date-edited-2
+			color #999
+	.comment-section, .news-title-2
+		position relative
+	.go-right
+		float right
+	.section, .news-title-2
+		padding 10px
+		&:after
+			content ''
+			clear both
+			display block
+	.clear
+		&:after
+			content ''
+			clear both
+			display block
+	.news-controls-2, .comment-controls-2
+		display none
+		position absolute
+		top 0
+		right 0
+		.edit-2, .undo-2, .save-2
+			color #777
+			outline none
+			font-size 16px
+		.delete-2, .save-2
+			margin-left 15px
+			color rgb(255,158,128)
+			outline none
+			font-size 16px
+		.save-2
+			color #777
+	.news-controls-2
+		padding-right 10px
+	.comment-controls-2
+		padding 5px
+		background white
+	.new-comment-btn
+		margin 0 20px 20px
+
+#sandbox
+	.news-message
+		position relative
+		button[type='submit']
+			margin 10px 0px
+			position absolute
+			bottom 1px
+	.news-2
+		.news-title-2
+			padding 0
+			font-size initial
+	.news-form-2
+		position relative
+		.controls
+			position absolute
+			bottom 5px
+			left 3px
+
+#weekly
+	.pack
+		position relative
+		&:hover
+			.uncollapsed
+				.pack-controls
+					display initial
+		.pack-controls
+			display none
+			position absolute
+			padding-right 10px
+			top 50px
+			right 15px
+			.edit-2
+				margin-left 15px
+				color #777
+				outline none
+				font-size 16px
+			.delete-2
+				margin-left 15px
+				color rgb(255,158,128)
+				outline none
+				font-size 16px
+	.no-padding
+		padding 0px !important
+	.list-item
+		padding 10px
+		position relative
+		span.news-title
+			font-size 35px
+			color rgb(31, 141, 228)
+		button
+			span
+				padding 0
+		.news-controls-2
+			display none
+			position absolute
+			padding-right 10px
+			top 25px
+			right 10px
+			.edit-2
+				color #777
+				outline none
+				font-size 16px
+			.delete-2
+				margin-left 15px
+				color rgb(255,158,128)
+				outline none
+				font-size 16px
+		&:hover
+			background #FBFBFB
+			.news-controls-2
+				display initial
+	.center
+		text-align center
+	#view-packs
+		md-dialog-content
+			overflow hidden
+	.collapsed-head
+		background-color #EFF8FF !important
+		transition background-color 0.2s ease-out
+		.md-toolbar-tools
+			color #2196f3
+			transition color 0.2s ease-out
+			&:hover
+				color #fff
+				background-color #2196f3 !important
+				
+	.hidden-pack
+		background-color #B3B3B3 !important
+		
+	.collapsed-head.hidden-pack
+		background-color #EFEFEF !important
+		.md-toolbar-tools
+			color #B3B3B3
+			&:hover
+				color #fff
+				background-color #B3B3B3 !important
+
+	#new-pack, #edit-pack
+		h2.editable-title
+			border-bottom 1px dashed #fff
+			outline none
+		h2.editable-title.mce-edit-focus
+			border-bottom none
+
+
+
+
+.empty-status
+	color rgb(225, 225, 225)
+
+md-toolbar
+	outline none
+	min-height initial
+	transition background-color 0.2s ease-in
+	&:hover
+		background-color #2196f3 !important
+		transition background-color 0.2s ease-in
+		.md-toolbar-tools
+			color #fff
+			transition color 0.2s ease-in
+	.md-toolbar-tools
+		height 40px
+		font-size 16px
+		transition color 0.2s ease-in
+		transition font-size 0.2s ease-in
+.search-icon
+	position relative
+
+.md-raised.md-primary.md-button, md-card
+	box-shadow none
+
+
+.collapsed
+	max-height 0
+	transition max-height 0.4s ease-out
+	overflow hidden
+
+.uncollapsed
+	max-height 1000px
+	transition max-height 0.4s ease-in
+
+
+
+
+
+
+
+
+
+
+
+/*@media screen and (max-width: 1600px)
 	#right
 		position absolute
 		top 0
@@ -403,18 +971,13 @@ md-tooltip
 		bottom 0
 		overflow auto
 		margin 0
-		padding-bottom 20px
-	#content
-		left 0
-
+		padding-bottom 20px*/
 	/*#content
-		margin 0 390px 0 50px*/
-	aside#left
-		display none
-	#left-block
-		display block
-	md-card
-		margin 20px 10px 0 0
+		left 0*/
+	/*aside#left
+		display none*/
+	/*#left-block
+		display block*/
 
 @media screen and (max-width: 1090px)
 	#content
@@ -456,7 +1019,7 @@ md-tooltip
 				color #FFFFFF
 		li
 			&:hover
-				width 380px
+				width 404px
 				height auto
 				.icon-widget
 					height 64px

@@ -1,9 +1,9 @@
 #poll-widget(ng-controller="PollController as pollCtrl")
-    md-card.md-whiteframe-z3
-        md-toolbar.md-primary
+    md-card
+        md-toolbar.md-primary(ng-click='pollCtrl.collapsed=!pollCtrl.collapsed' ng-class='{"collapsed-head": pollCtrl.collapsed}')
             .md-toolbar-tools
-                h2.md-flex &nbsp;Questionnaire
-        md-content
+                h2.md-flex Questionnaire
+        md-content(ng-class='{collapsed: pollCtrl.collapsed, uncollapsed: !pollCtrl.collapsed}')
             //-.section-container
             //-    i.fa.fa-question-circle
             //-    strong &nbsp;Section:&nbsp;
