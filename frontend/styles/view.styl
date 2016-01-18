@@ -585,6 +585,19 @@ ul#nav-list
 			clear both
 			display block
 
+.news-input-wrapper
+	form
+		margin 10px
+	.news-input-cover
+		height 30px
+		border 1px solid #aaa
+		margin 10px 50px
+		color #aaa
+		cursor text
+		line-height 28px
+		padding-left 10px
+		background #fff
+
 #company, #weekly, #sandbox
 	.comment-form-2
 		position relative
@@ -667,13 +680,17 @@ ul#nav-list
 		background #FBFBFB
 	.news-2
 		/*border-bottom 1px solid lightgrey*/
-		margin 0 10px
+		/*margin 0 10px*/
 		padding-top 10px
-		margin-bottom
+		border-bottom 1px solid #CCC
+		/*border-top 15px solid #eaedf2*/
+		border-top 15px solid #eaedf2
 		&:hover
 			background #FBFBFB
 			.news-controls-2
 				display initial
+		&:nth-child(2)
+			border-top none
 		.news-avatar
 			width 60px
 			height 60px
@@ -707,7 +724,7 @@ ul#nav-list
 			/*padding 5px*/
 			.comment-2
 				/*position relative*/
-				padding 5px 0
+				padding 5px 15px
 				background white
 				/*margin-top 5px*/
 				border-bottom 1px solid lightgrey

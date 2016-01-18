@@ -115,7 +115,12 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 		content_css : ['styles/css/libs.css', 'styles/css/style.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'],
 		body_class: 'body',
 		elementpath: false,
-		browser_spellcheck: true
+		browser_spellcheck: true,
+		setup: function(editor) {
+			$timeout(function() {
+				editor.focus();
+			});
+		}
 	};
 
 	vm.tinymceInlineOptions = {
@@ -161,6 +166,10 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 			vm.roles = data;
 		});
 	}
+
+	vm.expandNewsForm = function(newsId) {
+		vm.expandedForm = newsId;
+	};
 
 
 	//angular chips
