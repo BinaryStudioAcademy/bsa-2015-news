@@ -18,8 +18,10 @@ md-content#sandbox
 					i.fa.fa-undo.undo-2(ng-click='sboxCtrl.restoreData("news")' ng-show='(newsCtrl.editing._id === news._id)')
 					i.fa.fa-floppy-o.save-2(ng-click='newsCtrl.editpost(news)' ng-show='(newsCtrl.editing._id === news._id)')
 			.section
+				.news-avatar(back-img='{{newsCtrl.getUser(news.author).avatar.urlAva}}')
 				span.title-ne(ng-click="sboxCtrl.showModal(news._id, $event)")
 					b.author-2 {{newsCtrl.getUserName(news.author)}}
+					br
 					span.date-2  on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
 					span.date-edited-2(ng-if='news.edited_at')  (edited)
 			.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!(newsCtrl.editing._id === news._id)')
@@ -70,7 +72,6 @@ md-content#sandbox
 							.author-2
 								a(ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(comment.author)}}') {{newsCtrl.getUserName(comment.author)}}
 							span.comment-body-2(ng-bind-html='comment.body| unsafe')
-							//- span.comment-body-2 {{comment.body}}
 							span.comment-controls-2.go-right
 								i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
 								i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')

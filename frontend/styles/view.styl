@@ -28,6 +28,8 @@ form[name=newsForm]
 	padding 10px 0 !important
 	overflow auto
 	.news-wrapper
+		padding 10px
+		border-radius 10px
 		background #fff
 		margin auto
 		width 85%
@@ -521,9 +523,10 @@ ul#nav-list
 
 
 .all-likes
-	width 900px
-	background #777
-	min-width 300px
+	width 920px
+	min-width 320px
+	border-radius 10px
+	padding 10px
 	.likes-list
 		list-style none
 		margin 0
@@ -533,15 +536,12 @@ ul#nav-list
 			padding 5px
 			margin 0
 			width 300px
-			background #777
-			color white
 			line-height 60px
 			a 
-				color #fff
 				margin 0
 				text-decoration none
 			&:hover
-				background rgb(33,150,243)
+				background #eaedf2
 			.avatar
 				width 60px
 				height 60px
@@ -559,9 +559,10 @@ ul#nav-list
 			display block
 
 .select-news
-	width 900px
-	background #777
-	min-width 300px
+	width 920px
+	min-width 320px
+	border-radius 10px
+	padding 10px
 	.news-list
 		list-style none
 		margin 0
@@ -571,12 +572,10 @@ ul#nav-list
 			padding 5px
 			margin 0
 			width 300px
-			background #777
-			color white
 			line-height 60px
 			text-align center
 			&:hover
-				background rgb(33,150,243)
+				background #eaedf2
 			&:after
 				content ''
 				clear both
@@ -675,6 +674,13 @@ ul#nav-list
 			background #FBFBFB
 			.news-controls-2
 				display initial
+		.news-avatar
+			width 60px
+			height 60px
+			float left
+			margin-right 8px
+			border-radius 10px
+			margin-top -10px
 		.news-title-2
 			/*background lightgrey*/
 			padding 10px
@@ -725,6 +731,7 @@ ul#nav-list
 					height 60px
 					float left
 					margin-top 8px
+					border-radius 50%
 					/*img
 						max-height 60px
 						max-width 60px*/
