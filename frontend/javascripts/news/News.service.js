@@ -73,11 +73,11 @@ var app = require('../app.js');
 			return data.update({ id: newsId }, news).$promise;
 		}
 
-		function editComment(newsId, commentId, body) {
+		function editComment(newsId, commentId, comment) {
 			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
 				update: {method: "PUT"}
 			});
-			return data.update({newsId: newsId, commentId: commentId}, {body: body}).$promise;
+			return data.update({newsId: newsId, commentId: commentId}, {body: comment.body, edited_at: comment.edited_at}).$promise;
 		}
 
 		function deleteNews(newsId) {

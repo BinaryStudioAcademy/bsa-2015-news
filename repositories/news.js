@@ -46,7 +46,7 @@ NewsRepository.prototype.dislikeComment = function(userId, newsId, commentId, ca
 };
 
 NewsRepository.prototype.editComment = function(userId, commentId, body, callback) {
-	News.update({'comments._id': commentId}, {'$set': {'comments.$.body': body}})
+	News.update({'comments._id': commentId}, {'$set': {'comments.$.body': body, 'comments.$.edited_at': Date.now()}})
 		.exec(callback);
 };
 

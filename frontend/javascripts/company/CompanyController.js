@@ -182,7 +182,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 		var postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(data.newsId);
 		if (postIndex !== -1) {
 			var commentIndex = vm.posts[postIndex].comments.map(function(x) {return x._id; }).indexOf(data.comment._id);
-			vm.posts[postIndex].comments[commentIndex].body = data.comment.body;
+			vm.posts[postIndex].comments[commentIndex] = data.comment;
 		}
 	});
 

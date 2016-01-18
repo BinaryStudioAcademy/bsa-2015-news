@@ -360,11 +360,15 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		if (type === 'news') {
 			postId = $scope.newsCtrl.editing._id;
 			indexes = findIndexes(postId);
-			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex] = $scope.newsCtrl.editing;
+			if (indexes) {
+				vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex] = $scope.newsCtrl.editing;
+			}
 		} else if (type === 'comment') {
 			postId = $scope.newsCtrl.editing.news_id;
 			indexes = findIndexes(postId, $scope.newsCtrl.editing._id);
-			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].body = $scope.newsCtrl.editing.body;
+			if (indexes) {
+				vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].body = $scope.newsCtrl.editing.body;
+			}
 		}
 		$scope.newsCtrl.editing = {};
 	};
@@ -450,7 +454,7 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	socket.on("change comment", function(data) {
 		var indexes = findIndexes(data.newsId, data.comment._id);
 		if (indexes) {
-			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].body = data.comment.body;
+			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex] = data.comment;
 		}
 	});
 

@@ -65,6 +65,7 @@ md-content#weekly
 											i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
 										.footer-2
 											span.date-2 {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+											span.date-edited-2(ng-if='comment.edited_at')  (edited)
 											span.likes-count-2.go-right
 												span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
 													i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')
@@ -135,6 +136,7 @@ md-content#weekly
 												i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
 											.footer-2
 												span.date-2 {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+												span.date-edited-2(ng-if='comment.edited_at')  (edited)
 												span.likes-count-2.go-right
 													span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
 														i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')

@@ -37,6 +37,7 @@ md-content#company
 				span
 					b.author-2 {{newsCtrl.getUserName(news.author)}}
 					span.date-2  on {{news.date | date:'yyyy-MMM-dd HH:mm'}}
+					span.date-edited-2(ng-if='news.edited_at')  (edited)
 			.news-body-2(ng-bind-html='news.body | unsafe' ng-if='!(newsCtrl.editing._id === news._id)')
 			div(ng-if='(newsCtrl.editing._id === news._id)')
 				textarea(ng-model='news.body', ui-tinymce='newsCtrl.tinymceOptions')
@@ -95,6 +96,7 @@ md-content#company
 								i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
 							.footer-2
 								span.date-2 {{comment.date | date:'yyyy-MMM-dd HH:mm'}}
+								span.date-edited-2(ng-if='comment.edited_at')  (edited)
 								span.likes-count-2.go-right
 									span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
 										i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')

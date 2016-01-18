@@ -55,7 +55,7 @@ module.exports = function(app) {
 		}
 	}, apiResponse);
 
-	app.put('/api/news/:id', function(req, res, next){
+	app.put('/api/news/:id', function(req, res, next) {
 		NewsRepository.update(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -63,7 +63,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.delete('/api/news/:id', function(req, res, next){
+	app.delete('/api/news/:id', function(req, res, next) {
 		NewsRepository.delete(req.params.id, function(err, data) {
 			res.err = err;
 			res.data = data;

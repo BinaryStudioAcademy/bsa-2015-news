@@ -5,6 +5,7 @@ var commentSchema = new Schema({
 	author: {type: mongoose.Schema.ObjectId, ref: 'User'},
 	body: String,
 	date: Number,
+	edited_at: Number,
 	likes: [mongoose.Schema.ObjectId]
 });
 
@@ -14,6 +15,7 @@ var newsSchema = new Schema({
 	type: String,
 	author: mongoose.Schema.ObjectId,
 	date: Number,
+	edited_at: Number,
 	comments: {
 		type: [commentSchema],
 		default: []
@@ -30,7 +32,6 @@ var newsSchema = new Schema({
 		type: [mongoose.Schema.ObjectId],
 		default: []
 	}
-
 });
 
 module.exports = {

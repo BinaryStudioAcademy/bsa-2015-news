@@ -175,15 +175,13 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 
 
 	vm.editpost = function(news) {
-		NewsService.editNews(news._id, news).then(function(data) {
-			if (!data.nModified) {
-				news = JSON.parse(JSON.stringify(vm.editing));
-			}
-			else {
+		if (JSON.stringify(vm.editing) !== JSON.stringify(news)) {
+			news.edited_at = Date.now();
+			NewsService.editNews(news._id, news).then(function(data) {
 				socket.emit("edit post", news);
-			}
-			vm.resetEditing();
-		});
+			});
+		}
+		vm.resetEditing();
 	};
 
 	vm.user = [];
@@ -234,7 +232,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 		var comment = {
 			author: vm.whyCouldntYouMadeThisVariableUser.id,
 			body: commentText,
-			date: Date.parse(new Date()),
+			date: Date.now(),
 			likes: []
 			};
 		NewsService.addComment(newsId, comment).then(function(){
@@ -379,15 +377,13 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 	};
 
 	vm.editComment = function(newsId, comment) {
-		NewsService.editComment(newsId, comment._id, comment.body).then(function(data) {
-			if (!data.nModified) {
-				comment = JSON.parse(JSON.stringify(vm.editing));
-			}
-			else {
+		if (JSON.stringify(vm.editing.body) !== JSON.stringify(comment.body)) {
+			comment.edited_at = Date.now();
+			NewsService.editComment(newsId, comment._id, comment).then(function(data) {
 				socket.emit("edit comment", { newsId: newsId, comment: comment });
-			}
-			vm.resetEditing();
-		});
+			});
+		}
+		vm.resetEditing();
 	};
 
 	vm.showAllLikes = function(users) {
