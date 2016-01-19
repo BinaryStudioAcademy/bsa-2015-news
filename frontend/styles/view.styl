@@ -1,6 +1,15 @@
 *
 	outline none
 
+::-webkit-scrollbar
+	width 8px
+
+::-webkit-scrollbar-track
+	background #eaedf2
+
+::-webkit-scrollbar-thumb
+	background #bbb
+
 .news-message.ng-submitted, .comment-form.ng-submitted, .comment-form-2.ng-submitted
 	input.ng-invalid, .validation .mce-edit-area.mce-container.mce-panel
 		border 1px solid #FA787E !important
@@ -33,7 +42,7 @@ form[name=newsForm]
 		border-radius 10px
 		background #fff
 		margin auto
-		width 85%
+		width 720px
 		.title-ne
 			cursor default !important
 		md-card
@@ -522,7 +531,7 @@ ul#nav-list
 
 
 .all-likes
-	width 320px
+	width 920px
 	border-radius 10px
 	padding 10px
 	.likes-list
@@ -556,8 +565,7 @@ ul#nav-list
 			display block
 
 .select-news
-	width 920px
-	min-width 320px
+	width 320px
 	border-radius 10px
 	padding 10px
 	.news-list
@@ -569,7 +577,7 @@ ul#nav-list
 			padding 5px
 			margin 0
 			width 300px
-			line-height 60px
+			/*line-height 60px*/
 			text-align center
 			&:hover
 				background #eaedf2
