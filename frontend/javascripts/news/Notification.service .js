@@ -59,7 +59,7 @@ function NotificationService($resource) {
 			text: user.name + ' ' + user.surname + ' commented your post',
 			serviceType: 'News',
 			url: 'http://team.binary-studio.com/#/sandbox?post=' + post._id,
-			users: [user._id],
+			users: [post.author],
 			sound: true
 		};
 		return $resource("app/api/notification", {}, {
@@ -75,7 +75,7 @@ function NotificationService($resource) {
 			text: user.name + ' ' + user.surname + ' likes your post',
 			serviceType: 'News',
 			url: 'http://team.binary-studio.com/#/sandbox?post=' + post._id,
-			users: [user._id],
+			users: [post.author],
 			sound: true
 		};
 		return $resource("app/api/notification", {}, {
@@ -91,7 +91,7 @@ function NotificationService($resource) {
 			text: user.name + ' ' + user.surname + ' likes your comment',
 			serviceType: 'News',
 			url: 'http://team.binary-studio.com/#/' + post.type + '?post=' + post._id,
-			users: [user._id],
+			users: [post.author],
 			sound: true
 		};
 		return $resource("app/api/notification", {}, {
