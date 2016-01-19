@@ -13,9 +13,13 @@ PackRepository.prototype.getAll = function(queryString, callback) {
 	var query;
 	if (queryString.published === 'yes') {
 		query = {published: true};
+		if (queryString.filter) {
+			query.$or = [{news: { $in : queryString.ids }}, {title: { $regex: queryString.filter, $options: 'i' }}]
+		}
 	} else {
 		query = {published: false};
 	}
+	console.log(query);
 	Pack.find(query).lean()
 		.sort({date:-1})
 		.skip(queryString.skip)

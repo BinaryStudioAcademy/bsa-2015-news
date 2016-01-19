@@ -32,25 +32,37 @@ PacksService.prototype.getPack = function(id, user, callback) {
 };
 
 PacksService.prototype.getPacks = function(user, queryString, callback) {
-	PackRepository.getAll(queryString, function(err, packs) {
-		if (err) {
-			return callback(err, null);
-		}
 
-		NewsRepository.getAllNews(user, 'weeklies', function(err, news) {
+		var newsString = {type: 'weeklies'};
+		NewsRepository.getAllNews(user, newsString, function(err, news) {
 			if (err) {
 				return callback(err, null);
 			}
 
-			packs.forEach(function(pack) {
-				pack.fullNews = [];
-				pack.news.forEach(function(newsId) {
-					pack.fullNews.push(_.find(news, {_id: newsId}));
+			if (queryString.filter) {
+				var filteredNews = _.filter(news, function(item) {
+					return ((item.title.toLowerCase().indexOf(queryString.filter.toLowerCase()) > -1) || (item.body.toLowerCase().indexOf(queryString.filter.toLowerCase()) > -1));
 				});
+				var ids = filteredNews.map(function(x) {return x._id; });
+
+				queryString.ids = ids;
+			}
+
+			PackRepository.getAll(queryString, function(err, packs) {
+				if (err) {
+					return callback(err, null);
+				}
+
+				packs.forEach(function(pack) {
+					pack.fullNews = [];
+					pack.news.forEach(function(newsId) {
+						pack.fullNews.push(_.find(news, {_id: newsId}));
+					});
+				});
+				callback(err, packs);
 			});
-			callback(err, packs);
 		});
-	});
+
 };
 
 module.exports = new PacksService();

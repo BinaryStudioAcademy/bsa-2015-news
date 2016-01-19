@@ -10,10 +10,15 @@ var NewsRepository = function(){
 NewsRepository.prototype = new Repository();
 
 NewsRepository.prototype.getAllNews = function(user, queryString, callback) {
-	/*var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
-	News.find({ $and: [ roleQuery, { restrict_ids: { $nin: [user.id] } } ] })*/
 	var typeFilter = queryString.type ? {type: queryString.type} : {};
-	var query = user.role === 'ADMIN' ? typeFilter : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } }, typeFilter] };
+	var filter = {};
+	if (queryString.filter) {
+		filter = {body: { $regex: queryString.filter, $options: 'i' }};
+		if (typeFilter !== 'sandbox') {
+			filter = {$or :[filter, {title: { $regex: queryString.filter, $options: 'i' }}]};
+		}
+	}
+	var query = user.role === 'ADMIN' ? { $and: [typeFilter, filter] } : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } }, typeFilter, filter] };
 	News.find(query)
 		.sort({date:-1})
 		.skip(queryString.skip)

@@ -23,9 +23,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
-		WeekliesService.getPacks(vm.posts.length, 3).then(function(data) {
-			Array.prototype.push.apply(vm.posts, data);
-		});
+		WeekliesService.getPacks(vm.packs.length, 3, 'yes').then(function(data) {
+			Array.prototype.push.apply(vm.packs, data);
+		}, function() {});
 	};
 
 
@@ -38,6 +38,14 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		}
 	});
 
+
+	vm.filterPacks = function(filter) {
+		WeekliesService.getPacks(0, 3, 'yes', filter).then(function(data) {
+			vm.packs = data;
+		}, function() {
+			vm.packs = [];
+		});
+	};
 
 
 
@@ -52,6 +60,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	WeekliesService.getPacks(0, 3, 'yes').then(function(data) {
 		vm.packs = data;
 		checkModal();
+	}, function() {
+		vm.packs = [];
+		checkModal();
 	});
 
 	WeekliesService.getPacks().then(function(data) {
@@ -59,6 +70,8 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		vm.hiddenPacks.forEach(function(pack) {
 			pack.collapsed = true;
 		});
+	}, function() {
+		vm.hiddenPacks = [];
 	});
 
 	function checkModal() {

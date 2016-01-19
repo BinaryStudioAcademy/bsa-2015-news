@@ -24,7 +24,7 @@ function SandboxController(NewsService, CompanyService, $mdDialog, $route, $root
 	$scope.newsCtrl.loadMore = function() {
 		NewsService.getNews('sandbox', vm.posts.length, 3).then(function(data) {
 			Array.prototype.push.apply(vm.posts, data);
-		});
+		}, function() {});
 	};
 
 
@@ -58,7 +58,18 @@ function SandboxController(NewsService, CompanyService, $mdDialog, $route, $root
 	NewsService.getNews('sandbox', 0, 10).then(function(data) {
 		vm.posts = data;
 		checkModal();
+	}, function() {
+		vm.posts = [];
+		checkModal();
 	});
+
+	vm.filterNews = function(filter) {
+		NewsService.getNews('sandbox', 0, 10, filter).then(function(data) {
+			vm.posts = data;
+		}, function() {
+			vm.posts = [];
+		});
+	};
 
 	vm.showModal = function(id, event) {
 		postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(id);

@@ -522,8 +522,7 @@ ul#nav-list
 
 
 .all-likes
-	width 920px
-	min-width 320px
+	width 320px
 	border-radius 10px
 	padding 10px
 	.likes-list
@@ -535,18 +534,17 @@ ul#nav-list
 			padding 5px
 			margin 0
 			width 300px
-			line-height 60px
+			line-height 45px
 			a 
 				margin 0
 				text-decoration none
 			&:hover
 				background #eaedf2
 			.avatar
-				width 60px
-				height 60px
+				width 45px
+				height 45px
 				float left
 			.user
-				margin-left 60px
 				text-align center
 			&:after
 				content ''
@@ -680,7 +678,7 @@ ul#nav-list
 	.news-2
 		/*border-bottom 1px solid lightgrey*/
 		/*margin 0 10px*/
-		padding-top 10px
+		padding 10px
 		border-bottom 1px solid #CCC
 		/*border-top 15px solid #eaedf2*/
 		border-top 15px solid #eaedf2
@@ -691,21 +689,19 @@ ul#nav-list
 		&:nth-child(2)
 			border-top none
 		.news-avatar
-			width 60px
-			height 60px
+			width 45px
+			height 45px
 			float left
 			margin-right 8px
-			border-radius 10px
-			margin-top -10px
 		.news-title-2
 			/*background lightgrey*/
-			padding 10px
+			margin-bottom 10px
 			font-size 35px
 			color rgb(31, 141, 228)
 			span
 				outline none
 		.news-body-2
-			padding 10px
+			margin-top 5px
 		.comments-count-2
 			color #1f8de4
 			outline none
@@ -743,17 +739,16 @@ ul#nav-list
 				.avatar
 					/*position absolute
 					height 100%*/
-					width 60px
-					height 60px
+					width 45px
+					height 45px
 					float left
-					margin-top 8px
+					margin 3px 10px 0 0
 					border-radius 50%
 					/*img
 						max-height 60px
 						max-width 60px*/
 				.comment-section
-					padding 0 10px 0
-					margin-left 60px
+					margin-left 55px
 					/*.footer-2
 						margin-top 15px
 						margin-bottom 5px*/
@@ -763,22 +758,25 @@ ul#nav-list
 					border 1px solid rgb(224, 224, 224)
 					margin-top 10px
 					padding 7px
-		.author-2
-			margin-bottom 5px
+		.author-2, .footer-2
+			/*margin-bottom 5px*/
 			a
 				margin 0
 				font-weight bold
+				font-size smaller
 		.date-2
 			font-weight bold
 			color #999
+			font-size smaller
 		.date-edited-2
 			color #999
+			font-size smaller
 	.comment-section, .news-title-2
 		position relative
 	.go-right
 		float right
 	.section, .news-title-2
-		padding 10px
+		/*padding 10px*/
 		&:after
 			content ''
 			clear both
@@ -822,6 +820,7 @@ ul#nav-list
 	.news-2
 		.news-title-2
 			padding 0
+			margin 0
 			font-size initial
 	.news-form-2
 		position relative

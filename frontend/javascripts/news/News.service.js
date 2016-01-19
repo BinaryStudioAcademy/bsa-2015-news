@@ -35,8 +35,12 @@ var app = require('../app.js');
 			return $resource("api/news/:id", { id: "@id"}).get({id: id}).$promise;
 		}
 
-		function getNews(type, skip, limit) {
-			return $resource("api/news?type=" + type + '&skip=' + skip + '&limit=' + limit).query().$promise;
+		function getNews(type, skip, limit, filter) {
+			var query = '';
+			query = skip ? (query + '&skip=' + skip) : query;
+			query = limit ? (query + '&limit=' + limit) : query;
+			query = filter ? (query + '&filter=' + filter) : query;
+			return $resource("api/news?type=" + type + query).query().$promise;
 		}
 
 		function getFullUsers() {

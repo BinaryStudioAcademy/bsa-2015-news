@@ -24,7 +24,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 	$scope.newsCtrl.loadMore = function() {
 		NewsService.getNews('company', vm.posts.length, 3).then(function(data) {
 			Array.prototype.push.apply(vm.posts, data);
-		});
+		}, function() {});
 	};
 
 	$scope.newsCtrl.selectedIndex = 0;
@@ -56,6 +56,9 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 
 	NewsService.getNews('company', 0, 5).then(function(data) {
 		vm.posts = data;
+		checkModal();
+	}, function() {
+		vm.posts = [];
 		checkModal();
 	});
 
@@ -94,50 +97,13 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 	};
 
 	
-	/*NewsService.getNews('company').then(function(data) {
-		vm.posts = data;
-		var params = $location.url().split("/");
-		if (params.length == 5) {
-			var id = params[3];
-			var modalPost = _.find(vm.posts, {_id: id});
-			if (modalPost) {
-				vm.showModal(id);
-			} else {
-				NewsService.getPost(id).then(function(post) {
-					vm.posts.unshift(post);
-					vm.oddPost = id;
-					vm.showModal(id);
-				}, function() {
-					$location.url('company');
-				});
-			}
-		}
-	});
-
-	vm.showModal = function(id, event) {
-		postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(id);
-		vm.posts[postIndex].showInModal = true;
-		if (event) {
-			$location.url('company/post/' + id + '/');
-			event.stopPropagation();
-		}
+	vm.filterNews = function(filter) {
+		NewsService.getNews('company', 0, 5, filter).then(function(data) {
+			vm.posts = data;
+		}, function() {
+			vm.posts = [];
+		});
 	};
-
-	vm.hideModal = function(id) {
-		postIndex = vm.posts.map(function(x) {return x._id; }).indexOf(id);
-		if (vm.posts[postIndex].showInModal === true) {
-			vm.posts[postIndex].showInModal = false;
-			vm.restoreData("news");
-			vm.restoreData("comment");
-			if (vm.oddPost) {
-				var index = vm.posts.map(function(x) {return x._id; }).indexOf(vm.oddPost);
-				if (index !== -1) {
-					vm.posts.splice(index, 1);
-				}
-			}
-			$location.url('company');
-		}
-	};*/
 
 	NewsService.getMe().then(function(data) {
 		vm.whyCouldntYouMadeThisVariableUser = data;
