@@ -278,6 +278,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 				date: date
 			}).then(function(data) {
 			if (data.nModified) {
+				if (publish) {
+					NotificationService.packPublished(_.find(vm.hiddenPacks, {_id: packId}), $scope.newsCtrl.fullUsers);
+				}
 				socket.emit("edit pack", {
 					packId: packId,
 					date: date,

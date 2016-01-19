@@ -176,6 +176,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 			var comment = _.find(news.comments, {_id: data.commentId});
 			if (data.like === "added") {
 				comment.likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
+				NotificationService.newCommentLike(news, _.find($scope.newsCtrl.fullUsers, {serverUserId: vm.whyCouldntYouMadeThisVariableUser.id}));
 			}
 			else if (data.like === "removed") {
 				_.remove(comment.likes, function(from) {

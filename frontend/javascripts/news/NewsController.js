@@ -37,6 +37,7 @@ NewsController.$inject = [
 	'NewsService',
 	'AdministrationService',
 	'WeekliesService',
+	'NotificationService',
 	'$mdDialog',
 	'$location',
 	'$route',
@@ -48,7 +49,7 @@ NewsController.$inject = [
 	'$scope'
 ];
 
-function NewsController(NewsService, AdministrationService, WeekliesService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
+function NewsController(NewsService, AdministrationService, WeekliesService, NotificationService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
 	var vm = this;
 
 	vm.loadMore = function() {
@@ -212,6 +213,11 @@ function NewsController(NewsService, AdministrationService, WeekliesService, $md
 			resetNews();
 			vm.formView = true;
 			socket.emit("new post", post);
+			console.log(post);
+			console.log(vm.fullUsers);
+			if (post.type === 'company') {
+				NotificationService.newsCreated(post, vm.fullUsers);
+			}
 		});
 	};
 
