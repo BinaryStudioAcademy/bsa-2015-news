@@ -126,7 +126,7 @@ function NotificationService($resource) {
 				text: user.name + ' ' + user.surname + ' likes your comment',
 				serviceType: 'News',
 				url: 'http://team.binary-studio.com/#/' + post.type + '?post=' + post._id,
-				users: [commen.author],
+				users: [comment.author],
 				sound: true
 			};
 		}

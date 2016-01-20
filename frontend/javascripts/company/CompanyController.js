@@ -23,7 +23,7 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
-		NewsService.getNews('company', vm.posts.length, 3).then(function(data) {
+		NewsService.getNews('company', vm.posts.length, 3, $scope.newsCtrl.newsFilter).then(function(data) {
 			Array.prototype.push.apply(vm.posts, data);
 		}, function() {});
 	};
@@ -55,7 +55,7 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 		checkModal();
 	});
 
-	NewsService.getNews('company', 0, 5).then(function(data) {
+	NewsService.getNews('company', 0, 5, $scope.newsCtrl.newsFilter).then(function(data) {
 		vm.posts = data;
 		checkModal();
 	}, function() {
@@ -98,8 +98,8 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 	};
 
 	
-	vm.filterNews = function(filter) {
-		NewsService.getNews('company', 0, 5, filter).then(function(data) {
+	vm.filterNews = function() {
+		NewsService.getNews('company', 0, 5, $scope.newsCtrl.newsFilter).then(function(data) {
 			vm.posts = data;
 		}, function() {
 			vm.posts = [];
