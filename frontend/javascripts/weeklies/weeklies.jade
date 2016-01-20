@@ -16,7 +16,7 @@ md-content#weekly
 						span this pack is not published
 							//- b.author-2 {{newsCtrl.getUserName(pack.author)}}
 							//- span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
-						span.pack-controls.go-right
+						span.pack-controls.go-right(ng-if='newsCtrl.checkRights()')
 							label(ng-if='pack.news.length') publish: 
 								input(ng-model='pack.published' ng-change='weekCtrl.updatePackVisibility(pack._id, pack.published)' type='checkbox')
 							i.fa.fa-pencil.edit-2(ng-click='weekCtrl.toPackEditMode(pack._id, pack.published)')
