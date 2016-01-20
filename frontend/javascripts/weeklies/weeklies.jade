@@ -12,7 +12,7 @@ md-content#weekly
 						h2.md-flex(ng-bind-html='pack.title | unsafe')
 						span &nbsp;(hidden pack)
 				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
-					.section.center
+					.section.center.add-padding
 						span this pack is not published
 							//- b.author-2 {{newsCtrl.getUserName(pack.author)}}
 							//- span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
@@ -87,10 +87,11 @@ md-content#weekly
 						.md-toolbar-tools
 							h2.md-flex(ng-bind-html='pack.title | unsafe')
 					div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
-						.section.center
+						.section.center.add-padding
 							span
+								span.date-2 Published by 
 								b.author-2 {{newsCtrl.getUserName(pack.author)}}
-								span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}
+								span.date-2  on {{pack.date | date:'dd-MMM-yyyy HH:mm'}}
 							span.pack-controls.go-right
 								label publish: 
 									input(ng-model='pack.published' ng-change='weekCtrl.updatePackVisibility(pack._id, pack.published)' type='checkbox')

@@ -38,17 +38,34 @@ form[name=newsForm]
 	overflow auto
 	border none !important
 	.news-wrapper
-		padding 10px
-		border-radius 10px
+		padding 30px
 		background #fff
 		margin auto
-		width 720px
+		width 760px
+		position relative
+		/*border 1px solid #ccc*/
+		border-radius 10px
+		/*&:after
+			content ''
+			position absolute
+			top -11px
+			left -11px
+			right -11px
+			bottom -11px
+			background #eaedf2
+			z-index -1
+			border-radius 10px*/
 		.title-ne
 			cursor default !important
 		md-card
 			margin 0 !important
 		.pack-controls
 			display none !important
+#weekly
+	.news-wrapper
+		padding 0
+
+
 #view-packs
 	.uncollapsed
 		max-height initial
@@ -68,13 +85,14 @@ form[name=newsForm]
 
 #main
 	position absolute
-	top 60px
-	bottom 0
+	top 49px
 	left 0
 	right 0
 	overflow auto
 	max-width 1000px
 	margin auto
+	bottom 60px
+	width 100%
 
 
 #header
@@ -105,14 +123,7 @@ form[name=newsForm]
 	margin 0*/
 #content
 	margin 0
-#main
-	overflow auto
-	position absolute
-	top 60px
-	bottom 60px
-	width 100%
-	/*max-width 1000px
-	margin auto*/
+
 
 .title
 	.title-text
@@ -509,10 +520,11 @@ ul#nav-list
 	li.nav-item
 		padding-left 10px
 		transition background-color 0.2s ease-out
-		border-bottom 1px solid #fff
+		border-bottom 1px solid #C3BFBF
 		&:hover
 			background-color #fff
 			transition background-color 0.2s ease-in
+			border-bottom 1px solid #2196f3
 			a
 				color #2196f3
 				text-decoration none
@@ -686,10 +698,9 @@ ul#nav-list
 	.news-2
 		/*border-bottom 1px solid lightgrey*/
 		/*margin 0 10px*/
-		padding 10px
+		padding 20px
 		border-bottom 1px solid #CCC
 		/*border-top 15px solid #eaedf2*/
-		border-top 15px solid #eaedf2
 		&:hover
 			background #FBFBFB
 			.news-controls-2
@@ -890,6 +901,8 @@ ul#nav-list
 			background #FBFBFB
 			.news-controls-2
 				display initial
+	.add-padding
+		padding 12px
 	.center
 		text-align center
 	#view-packs

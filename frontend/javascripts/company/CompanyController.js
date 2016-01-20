@@ -7,6 +7,7 @@ app.controller('CompanyController', CompanyController);
 CompanyController.$inject = [
 	'NewsService',
 	'CompanyService',
+	'NotificationService',
 	'$mdDialog',
 	'$route',
 	'$rootScope',
@@ -18,7 +19,7 @@ CompanyController.$inject = [
 	'$location'
 ];
 
-function CompanyController(NewsService, CompanyService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
+function CompanyController(NewsService, CompanyService, NotificationService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
@@ -162,7 +163,10 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 	socket.on("change like post", function(newPost) {
 		var post = _.find(vm.posts, {_id: newPost.post});
 		if(post) {
-			if(newPost.isLike) post.likes.push(newPost.user);
+			if(newPost.isLike) {
+				post.likes.push(newPost.user);
+				NotificationService.newPostLike(post, _.find($scope.newsCtrl.fullUsers, {serverUserId: newPost.user}));
+			}
 			else {
 				var index = post.likes.indexOf(newPost.user);
 				if(index !== -1) post.likes.splice(index, 1);
@@ -176,7 +180,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 			var comment = _.find(news.comments, {_id: data.commentId});
 			if (data.like === "added") {
 				comment.likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
-				NotificationService.newCommentLike(news, _.find($scope.newsCtrl.fullUsers, {serverUserId: vm.whyCouldntYouMadeThisVariableUser.id}));
+				NotificationService.newCommentLike(news, _.find($scope.newsCtrl.fullUsers, {serverUserId: data.userId}), comment);
 			}
 			else if (data.like === "removed") {
 				_.remove(comment.likes, function(from) {
@@ -190,6 +194,7 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 		var post = _.find(vm.posts, {_id: data.postId});
 		if (post) {
 			post.comments.push(data.comment);
+			NotificationService.newComment(post, _.find($scope.newsCtrl.fullUsers, {serverUserId: data.comment.author}));
 		}
 	});
 

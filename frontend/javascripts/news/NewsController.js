@@ -120,7 +120,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		setup: function(editor) {
 			$timeout(function() {
 				editor.focus();
-			});
+			}, 300);
 		}
 	};
 
@@ -303,7 +303,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 
 	vm.commentLike = function(newsId, commentId) {
 		NewsService.toggleCommentLike(newsId, commentId).then(function(data) {
-			socket.emit("like comment", {newsId: newsId, commentId: commentId, like: data.like});
+			socket.emit("like comment", {newsId: newsId, commentId: commentId, like: data.like, userId: vm.whyCouldntYouMadeThisVariableUser.id});
 		});
 	};
 
