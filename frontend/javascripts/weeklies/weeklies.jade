@@ -12,7 +12,7 @@ md-content#weekly
 						h2.md-flex(ng-bind-html='pack.title | unsafe')
 						span &nbsp;(hidden pack)
 				div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
-					.section.center.add-padding
+					.section.center.pack-author
 						span this pack is not published
 							//- b.author-2 {{newsCtrl.getUserName(pack.author)}}
 							//- span.date-2  on {{pack.date | date:'yyyy-MMM-dd HH:mm'}}

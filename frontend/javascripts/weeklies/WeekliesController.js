@@ -233,7 +233,7 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	vm.showNewsSelector = function() {
-		NewsService.getNews('company').then(function(data){
+		NewsService.getNews('company', 0, 50).then(function(data){
 			vm.recentCompanyNews = data;
 			$mdDialog.show({
 				controller: NewsSelectorController,
