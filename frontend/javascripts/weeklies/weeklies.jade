@@ -87,7 +87,7 @@ md-content#weekly
 						.md-toolbar-tools
 							h2.md-flex(ng-bind-html='pack.title | unsafe')
 					div(ng-class='{collapsed: pack.collapsed, uncollapsed: !pack.collapsed}')
-						.section.center.add-padding
+						.section.center.pack-author
 							span
 								span.date-2 Published by 
 								b.author-2 {{newsCtrl.getUserName(pack.author)}}
