@@ -4,8 +4,8 @@ block content
 	#news-viev(ng-controller='NewsController as newsCtrl')
 		header#header
 		#all-content
-			aside#left(ng-class='{"show-gen-menu": newsCtrl.showIntranet}')
-				#intranet-container
+			aside#left(ng-class='{"show-gen-menu": newsCtrl.showIntranet}' ng-click='newsCtrl.toggleGenMenu()')
+				#intranet-container(ng-click='$event.stopPropagation()')
 					ul#nav-list
 						li.nav-item(ng-repeat='service in newsCtrl.services')
 							a(href='{{service.link}}')
@@ -33,20 +33,20 @@ block content
 				//- 	div
 				//- 		expense-widget
 
-			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}')
-				#widget-container
+			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}' ng-click='newsCtrl.toggleGenMenu()')
+				#widget-container(ng-click='$event.stopPropagation()')
 					poll-widget
 					//- hr-widget
 					stack-widget
 					code-review-widget
-			#modal-menus(ng-class='{"show-gen-menu": newsCtrl.genMenu}')
-				#menus-wrapper
+			#modal-menus(ng-class='{"show-gen-menu": newsCtrl.genMenu}' ng-click='newsCtrl.toggleGenMenu()')
+				#menus-wrapper(ng-click='$event.stopPropagation()')
 					.gen-menu-item.show-549(ng-click='newsCtrl.showMenu("news")') News navigation
 					.gen-menu-item.show-1119(ng-click='newsCtrl.showMenu("widgets")') Widgets
 					.gen-menu-item.show-1279(ng-click='newsCtrl.showMenu("intranet")') Intranet navigation
-			#fake-nav(ng-class='{"show-gen-menu": newsCtrl.showNews}')
-				ul
-					li(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";' ng-repeat='tab in newsCtrl.tabs')
+			#fake-nav(ng-class='{"show-gen-menu": newsCtrl.showNews}' ng-click='newsCtrl.toggleGenMenu()')
+				ul(ng-click='$event.stopPropagation()')
+					li(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";newsCtrl.toggleGenMenu()' ng-repeat='tab in newsCtrl.tabs')
 						span.tab-text {{tab.name}}
 			#content
 				.tabsdemoDynamicHeight

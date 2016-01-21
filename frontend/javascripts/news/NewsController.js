@@ -46,10 +46,11 @@ NewsController.$inject = [
 	'socket',
 	'$q',
 	'$timeout',
-	'$scope'
+	'$scope',
+	'$window'
 ];
 
-function NewsController(NewsService, AdministrationService, WeekliesService, NotificationService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope) {
+function NewsController(NewsService, AdministrationService, WeekliesService, NotificationService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $window) {
 	var vm = this;
 
 	vm.loadMore = function() {
@@ -499,9 +500,9 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			}];
 		}
 	}
-	
-	$timeout(function() {
-		vm.toggleGenMenu = function() {
+
+	vm.toggleGenMenu = function() {
+		if ($window.innerWidth < 1280) {
 			if (vm.showNews || vm.showWidgets || vm.showIntranet) {
 				vm.genMenu = false;
 				vm.showNews = false;
@@ -510,8 +511,9 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			} else {
 				vm.genMenu=!vm.genMenu;
 			}
-		};
-	});
+		}
+	};
+
 
 	
 
