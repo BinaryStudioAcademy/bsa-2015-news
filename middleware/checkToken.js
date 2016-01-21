@@ -1,5 +1,7 @@
 var jsonwebtoken = require('jsonwebtoken');
 var Cookies = require('cookies');
+var RoleRepository = require('../repositories/role');
+var UserRepository = require('../repositories/user');
 
 module.exports = function(req, res, next){
 	var cookies = new Cookies(req, res);
@@ -11,7 +13,30 @@ module.exports = function(req, res, next){
 				res.status(403).send({ success: false, message: "Failed to authenticate user"});
 			} else {
 				req.decoded = decoded;
-				next();
+				if (req.decoded.role === 'ADMIN') {
+					req.decoded.localRole = 'Admin';
+					next();
+				}
+				else {
+					UserRepository.findGlobal(req.decoded, function(err, data) {
+						if (data) {
+							req.decoded.localRole = data.local_role;
+							next();
+						}
+						else {
+							RoleRepository.findGlobal(req.decoded.role, function(err, data) {
+								if (data) {
+									req.decoded.localRole = data.local_role;
+									next();
+								}
+								else {
+									req.decoded.localRole = 'User';
+									next();
+								}
+							});
+						}
+					});
+				}
 			}
 		});
 	} else {

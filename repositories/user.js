@@ -8,4 +8,9 @@ var UserRepository = function(){
 
 UserRepository.prototype = new Repository();
 
+UserRepository.prototype.findGlobal = function(userGlobalId, callback) {
+	User.findOne({global_id: userGlobalId})
+		.exec(callback);
+};
+
 module.exports = new UserRepository();

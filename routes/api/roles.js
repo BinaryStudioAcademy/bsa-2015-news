@@ -1,6 +1,6 @@
 var apiResponse = require('express-api-response');
 var RoleRepository = require('../../repositories/role');
-//var NewsService = require('../../services/news.js');
+var rightsChecker = require('../../middleware/rightsChecker');
 
 
 module.exports = function(app) {
@@ -13,7 +13,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.post('/api/roles', function(req, res, next){
+	app.post('/api/roles', rightsChecker.isAdmin, function(req, res, next){
 		RoleRepository.add(req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -21,7 +21,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.put('/api/roles/:id', function(req, res, next){
+	app.put('/api/roles/:id', rightsChecker.isAdmin, function(req, res, next){
 		RoleRepository.update(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;

@@ -3,7 +3,7 @@ md-content#weekly
 		md-button.md-raised.md-primary(type='button' ng-click='weekCtrl.toPackEditMode()' ng-if='newsCtrl.checkRights() && weekCtrl.weekliesMode === "view"') Create new weeklies
 		md-button(type='button' ng-click='weekCtrl.toViewMode()' ng-if='weekCtrl.weekliesMode === "edit"') Back to view mode
 		i.fa.fa-search.search-icon
-		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='weekCtrl.filterPacks(newsCtrl.newsFilter)')
+		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='weekCtrl.filterPacks()')
 	#view-packs(ng-if='weekCtrl.weekliesMode === "view"')
 		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks | reverse')
 			md-card
@@ -79,7 +79,8 @@ md-content#weekly
 													a(ng-repeat='like in comment.likes | limitTo:3' ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(like)}}')
 														.user {{newsCtrl.getUserName(like)}}
 													.user(ng-if='comment.likes.length > 3' ng-click='newsCtrl.showAllLikes(comment.likes)') and {{comment.likes.length - 3}} more...
-
+		.no-news-found(ng-if='weekCtrl.noData')
+			.line Looks like there's no weeklies packs :(
 		.pack(ng-repeat='pack in weekCtrl.packs | reverse' ng-click='weekCtrl.hideModal(pack._id)' ng-class='{"modal-post": pack.showInModal}')
 			.news-wrapper(ng-click='$event.stopPropagation()')
 				md-card
@@ -183,6 +184,8 @@ md-content#weekly
 				md-divider
 
 				#create-news(ng-if='!newsCtrl.editing._id')
+					.add-news-helper
+						span Feel free to add news to this pack:
 					form.news-message(name="newsForm" ng-submit="newsForm.$valid && weekCtrl.insertNewsInPack(newsForm)" novalidate)
 						.form-group
 							input(type="text" name='title' placeholder='News title' ng-model="weekCtrl.currPackNewsEdit.title" required)

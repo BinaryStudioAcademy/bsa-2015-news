@@ -57,9 +57,11 @@ form[name=newsForm]
 			border-radius 10px*/
 		.title-ne
 			cursor default !important
+		.news-2
+			padding 20px 30px !important
 		md-card
 			margin 0 !important
-		.pack-controls
+		.pack-controls, .news-controls-2
 			display none !important
 #weekly
 	.news-wrapper
@@ -725,6 +727,9 @@ ul#nav-list
 				outline none
 		.news-body-2
 			margin 15px 0
+			img
+				max-width 100%
+				height auto
 		.comments-count-2
 			color #1f8de4
 			outline none
@@ -736,7 +741,7 @@ ul#nav-list
 			&:hover > .likes-user-list
 				display block
 		.comments-2
-			max-height 300px
+			max-height 400px
 			overflow auto
 			/*background #FBFBFB*/
 			/*padding 5px*/
@@ -980,9 +985,23 @@ md-toolbar
 
 
 
+#create-news
+	.add-news-helper
+		text-align center
+		padding 10px
+		background #EAEDF2
+		border-bottom 1px solid #E1E1E1
 
-
-
+.no-news-found
+	text-align center
+	padding 20px
+	border-bottom 1px solid #eaedf2
+	&:hover
+		background #fbfbfb
+	.line
+		margin-bottom 10px
+		font-size 35px
+		color #1f8de4
 
 
 

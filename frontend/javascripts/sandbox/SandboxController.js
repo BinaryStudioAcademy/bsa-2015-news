@@ -23,8 +23,9 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
-		NewsService.getNews('sandbox', vm.posts.length, 3).then(function(data) {
+		NewsService.getNews('sandbox', vm.posts.length, 5, $scope.newsCtrl.newsFilter).then(function(data) {
 			Array.prototype.push.apply(vm.posts, data);
+			vm.noData = (vm.posts.length === 0);
 		}, function() {});
 	};
 
@@ -47,6 +48,7 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 					vm.showModal(id);
 				}, function() {
 					vm.hideModal();
+					vm.noData = true;
 				});
 			}
 		}
@@ -56,19 +58,22 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 		checkModal();
 	});
 
-	NewsService.getNews('sandbox', 0, 10).then(function(data) {
+	NewsService.getNews('sandbox', 0, 10, $scope.newsCtrl.newsFilter).then(function(data) {
 		vm.posts = data;
 		checkModal();
+		vm.noData = (vm.posts.length === 0);
 	}, function() {
 		vm.posts = [];
 		checkModal();
 	});
 
-	vm.filterNews = function(filter) {
-		NewsService.getNews('sandbox', 0, 10, filter).then(function(data) {
+	vm.filterNews = function() {
+		NewsService.getNews('sandbox', 0, 10, $scope.newsCtrl.newsFilter).then(function(data) {
 			vm.posts = data;
+			vm.noData = (vm.posts.length === 0);
 		}, function() {
 			vm.posts = [];
+			vm.noData = true;
 		});
 	};
 

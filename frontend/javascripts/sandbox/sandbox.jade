@@ -1,14 +1,16 @@
 md-content#sandbox
 	.search
 		i.fa.fa-search.search-icon
-		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='sboxCtrl.filterNews(newsCtrl.newsFilter)')
+		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='sboxCtrl.filterNews()')
 
 	
 	form.news-message(name='newsForm' ng-submit="newsForm.$valid && newsCtrl.createNews('sandbox');newsForm.$setPristine();" novalidate)
 		div
 			textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="newsCtrl.news.body" required)
 		md-button(type='submit') Create post
-
+	.no-news-found(ng-if='sboxCtrl.noData')
+		.line Looks like there's no news :(
+		.line Would be nice if you created some :)
 	.news-2(ng-repeat='news in sboxCtrl.posts' ng-class='[{commenting: showComments}, {"modal-post": news.showInModal}]' ng-click='sboxCtrl.hideModal(news._id)')
 		.news-wrapper(ng-click='$event.stopPropagation()')
 			.news-title-2

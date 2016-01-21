@@ -22,7 +22,9 @@ md-content#company
 							{{$chip}}
 		md-button.md-raised.md-primary(type='submit') Create
 		md-button(type='reset' ng-click='newsCtrl.toggleForm()') Cancel
-
+	.no-news-found(ng-if='compCtrl.noData')
+		.line Looks like there's no news :(
+		.line Would be nice if you created some :)
 	.news-2(ng-repeat='news in compCtrl.posts' ng-class='[{commenting: showComments}, {"modal-post": news.showInModal}]' ng-click='compCtrl.hideModal(news._id)')
 		.news-wrapper(ng-click='$event.stopPropagation()')
 			.news-title-2

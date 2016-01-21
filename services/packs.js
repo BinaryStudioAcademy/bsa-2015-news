@@ -16,6 +16,10 @@ PacksService.prototype.getPack = function(id, user, callback) {
 			return callback(err, null);
 		}
 
+		if (!pack.published && (user.localRole === 'User')) {
+			return callback(err, {});
+		}
+
 		NewsRepository.getAllNews(user, 'weeklies', function(err, news) {
 			if (err) {
 				return callback(err, null);
@@ -51,6 +55,10 @@ PacksService.prototype.getPacks = function(user, queryString, callback) {
 			PackRepository.getAll(queryString, function(err, packs) {
 				if (err) {
 					return callback(err, null);
+				}
+
+				if (user.localRole === 'User') {
+					packs = _.filter(packs, {published: true});
 				}
 
 				packs.forEach(function(pack) {

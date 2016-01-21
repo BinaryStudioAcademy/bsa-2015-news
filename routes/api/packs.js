@@ -1,6 +1,7 @@
 var apiResponse = require('express-api-response');
 var PackRepository = require('../../repositories/pack');
 var PacksService = require('../../services/packs');
+var rightsChecker = require('../../middleware/rightsChecker');
 
 
 module.exports = function(app) {
@@ -21,7 +22,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.post('/api/packs', function(req, res, next){
+	app.post('/api/packs', rightsChecker.isContentManager, function(req, res, next){
 		PackRepository.add(req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -29,7 +30,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.put('/api/packs/:id', function(req, res, next){
+	app.put('/api/packs/:id', rightsChecker.isContentManager, function(req, res, next){
 		PackRepository.update(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -37,7 +38,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.delete('/api/packs/:id', function(req, res, next){
+	app.delete('/api/packs/:id', rightsChecker.isContentManager, function(req, res, next){
 		PackRepository.delete(req.params.id, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -45,7 +46,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.post('/api/packs/:id/news', function(req, res, next){
+	app.post('/api/packs/:id/news', rightsChecker.isContentManager, function(req, res, next){
 		PackRepository.pushNews(req.params.id, req.body, function(err, data) {
 			res.err = err;
 			res.data = data;
@@ -53,7 +54,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.delete('/api/packs/:packId/news/:newsId', function(req, res, next){
+	app.delete('/api/packs/:packId/news/:newsId', rightsChecker.isContentManager, function(req, res, next){
 		PackRepository.removeNews(req.params.packId, req.params.newsId, function(err, data) {
 			res.err = err;
 			res.data = data;

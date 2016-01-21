@@ -8,4 +8,9 @@ var RoleRepository = function(){
 
 RoleRepository.prototype = new Repository();
 
+RoleRepository.prototype.findGlobal = function(globalRole, callback) {
+	Role.findOne({global_role: globalRole})
+		.exec(callback);
+};
+
 module.exports = new RoleRepository();

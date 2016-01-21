@@ -23,8 +23,9 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
-		NewsService.getNews('company', vm.posts.length, 3, $scope.newsCtrl.newsFilter).then(function(data) {
+		NewsService.getNews('company', vm.posts.length, 5, $scope.newsCtrl.newsFilter).then(function(data) {
 			Array.prototype.push.apply(vm.posts, data);
+			vm.noData = (vm.posts.length === 0);
 		}, function() {});
 	};
 
@@ -55,12 +56,14 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 		checkModal();
 	});
 
-	NewsService.getNews('company', 0, 5, $scope.newsCtrl.newsFilter).then(function(data) {
+	NewsService.getNews('company', 0, 10, $scope.newsCtrl.newsFilter).then(function(data) {
 		vm.posts = data;
 		checkModal();
+		vm.noData = (vm.posts.length === 0);
 	}, function() {
 		vm.posts = [];
 		checkModal();
+		vm.noData = true;
 	});
 
 	vm.showModal = function(id, event) {
@@ -99,10 +102,12 @@ function CompanyController(NewsService, CompanyService, NotificationService, $md
 
 	
 	vm.filterNews = function() {
-		NewsService.getNews('company', 0, 5, $scope.newsCtrl.newsFilter).then(function(data) {
+		NewsService.getNews('company', 0, 10, $scope.newsCtrl.newsFilter).then(function(data) {
 			vm.posts = data;
+			vm.noData = (vm.posts.length === 0);
 		}, function() {
 			vm.posts = [];
+			vm.noData = true;
 		});
 	};
 

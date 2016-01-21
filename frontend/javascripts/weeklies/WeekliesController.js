@@ -23,8 +23,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
-		WeekliesService.getPacks(vm.packs.length, 3, 'yes').then(function(data) {
+		WeekliesService.getPacks(vm.packs.length, 3, 'yes', $scope.newsCtrl.newsFilter).then(function(data) {
 			Array.prototype.push.apply(vm.packs, data);
+			vm.noData = (vm.packs.length === 0);
 		}, function() {});
 	};
 
@@ -39,11 +40,13 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	});
 
 
-	vm.filterPacks = function(filter) {
-		WeekliesService.getPacks(0, 3, 'yes', filter).then(function(data) {
+	vm.filterPacks = function() {
+		WeekliesService.getPacks(0, 3, 'yes', $scope.newsCtrl.newsFilter).then(function(data) {
 			vm.packs = data;
+			vm.noData = (vm.packs.length === 0);
 		}, function() {
 			vm.packs = [];
+			vm.noData = true;
 		});
 	};
 
@@ -57,12 +60,14 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	vm.packs = [];
 	vm.hiddenPacks = [];
 
-	WeekliesService.getPacks(0, 3, 'yes').then(function(data) {
+	WeekliesService.getPacks(0, 3, 'yes', $scope.newsCtrl.newsFilter).then(function(data) {
 		vm.packs = data;
 		checkModal();
+		vm.noData = (vm.packs.length === 0);
 	}, function() {
 		vm.packs = [];
 		checkModal();
+		vm.noData = true;
 	});
 
 	WeekliesService.getPacks().then(function(data) {
@@ -233,7 +238,7 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 	};
 
 	vm.showNewsSelector = function() {
-		NewsService.getNews('company', 0, 50).then(function(data){
+		NewsService.getNews('company', 0, 50).then(function(data) {
 			vm.recentCompanyNews = data;
 			$mdDialog.show({
 				controller: NewsSelectorController,
