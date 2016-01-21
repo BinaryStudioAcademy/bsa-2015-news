@@ -500,6 +500,28 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		}
 	}
 
+	vm.toggleGenMenu = function() {
+		if (vm.showNews || vm.showWidgets || vm.showIntranet) {
+			vm.genMenu = false;
+			vm.showNews = false;
+			vm.showWidgets = false;
+			vm.showIntranet = false;
+		} else {
+			vm.genMenu=!vm.genMenu;
+		}
+	};
+
+	vm.showMenu = function(menu) {
+		vm.genMenu = false;
+		if (menu === 'news') {
+			vm.showNews = true;
+		} else if (menu === 'widgets') {
+			vm.showWidgets = true;
+		} else if (menu === 'intranet') {
+			vm.showIntranet = true;
+		}
+	};
+
 	
 
 

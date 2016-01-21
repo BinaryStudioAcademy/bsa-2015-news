@@ -1003,99 +1003,153 @@ md-toolbar
 		font-size 35px
 		color #1f8de4
 
+#menu-gen
+	display none
+	padding-right 15px
+	i
+		color #fff
+		font-size 24px
+
+.show-gen-menu
+	display flex !important
+
+#modal-menus
+	display none
+	top 0
+	bottom 0
+	left 0
+	right 0
+	background rgba(0,0,0,.7)
+	z-index 999
+	position fixed
+	#menus-wrapper
+		background #fff
+		padding 10px
+		border-radius 10px
+		margin auto
+		.gen-menu-item
+			padding 10px
+			text-align center
+			font-size 25px
+			min-width 250px
+			&:hover
+				background #eaedf2
+
+.gen-menu-item, #fake-nav
+	display none
+
+.search-group
+	float right
+
+
+@media screen and (max-width: 1279px)
+	#left
+		display none
+		left 0 !important
+		right 0 !important
+		background rgba(0,0,0,.7)
+		z-index 1000
+		margin auto
+		width 100% !important
+		position fixed !important
+		top 60px !important
+		bottom 0 !important
+		#intranet-container
+			background #EAEDF2
+			padding 10px
+			width 424px
+			margin auto
+			border-radius 10px
+			ul
+				text-align center
+				li
+					padding 0
+				img
+					display none
+	#all-content
+		left -180px
+	.show-1279
+		display block
+	#menu-gen
+		display block
 
 
 
-
-/*@media screen and (max-width: 1600px)
+@media screen and (max-width: 1119px)
 	#right
-		position absolute
-		top 0
+		display none
+		left 0 !important
+		right 0 !important
+		background rgba(0,0,0,.7)
+		z-index 1000
+		margin auto
+		width 100%
+		position fixed !important
+		top 60px !important
+		bottom 0 !important
+		#widget-container
+			background #EAEDF2
+			padding 10px
+			width 424px
+			margin auto
+			border-radius 10px
+	#all-content
+		right -180px
+	.show-1119
+		display block
+
+@media screen and (max-width: 844px)
+	.modal-post
+		.news-wrapper
+			width 90%
+
+@media screen and (max-width: 700px)
+	#all-content
+		width 100%
+
+@media screen and (max-width: 549px)
+	.tabsdemoDynamicHeight
+		display none
+	#fake-nav
+		position fixed
+		z-index 1000
+		background rgba(0,0,0,.7)
+		left 0
 		right 0
 		bottom 0
-		overflow auto
-		margin 0
-		padding-bottom 20px*/
-	/*#content
-		left 0*/
-	/*aside#left
-		display none*/
-	/*#left-block
-		display block*/
-
-@media screen and (max-width: 1090px)
-	#content
-		/*margin 60px 10px 10px*/
-		right 45px
-	.news
-		margin-right 0
-	header
-		position fixed
-		width 100%
-		z-index 3
-		top 0
-	aside#right
-		float none
-		width 100%
-		margin-top 54px
-		display none
-	.mobile-aside
-		display block
-		right 1px
-		top 90px
-		position fixed
-		z-index 4
-		li
-			width 25px
-			height 25px
-			margin 20px 0
-			overflow hidden
-			.icon-widget
-				position fixed
-				right 5px
-				display block
-				width 40px
-				height 5em
-				line-height 5em
-				background #E65100
+		top 60px
+		ul
+			margin auto
+			width 424px
+			background #EAEDF2
+			list-style none
+			padding 20px
+			border-radius 10px
+			li
+				transition background-color .2s ease-out
+				border-bottom 1px solid #c3bfbf
+				line-height 40px
 				text-align center
-				z-index 5
-				color #FFFFFF
-		li
-			&:hover
-				width 404px
-				height auto
-				.icon-widget
-					height 64px
-				.icon-widget
-					& + div
-						margin-top -20px
-						margin-right -5px
-	@media screen and (max-height: 740px)
-		.mobile-aside
-			display none
-		#content
-			right 0
-
-/*@media screen and (max-width: 750px)
-	.tabs-icon
-		display inline
-	.tab-text
-		display none*/
-
-@media screen and (max-width: 500px)
-	.hide-mobile
-		display none
-	/*#content
-		margin 60px 0 0*/
+				&:hover
+					background-color #fff
+					transition: background-color .2s ease-in
+					border-bottom 1px solid #2196f3
+	#main
+		top 0
+	.show-549
+		display block
 		
-	/*.news
-		margin 0 45px 0 0
-	.news-message 
-		margin 0*/
-
-@media screen and (max-width: 385px)
-	.mobile-aside
-			display none
-	#content
-		right 0
+@media screen and (max-width: 480px)
+	.search
+		text-align center
+		button
+			width 90%
+		.search-group
+			width 100%
+			.search-icon
+				float none !important
+				top -1px !important
+				left 23px !important
+			input[name='search']
+				width 90%
+				float none !important

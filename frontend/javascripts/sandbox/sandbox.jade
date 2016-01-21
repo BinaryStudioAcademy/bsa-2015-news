@@ -1,7 +1,8 @@
 md-content#sandbox
 	.search
-		i.fa.fa-search.search-icon
-		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='sboxCtrl.filterNews()')
+		.search-group
+			i.fa.fa-search.search-icon
+			input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='sboxCtrl.filterNews()')
 
 	
 	form.news-message(name='newsForm' ng-submit="newsForm.$valid && newsCtrl.createNews('sandbox');newsForm.$setPristine();" novalidate)

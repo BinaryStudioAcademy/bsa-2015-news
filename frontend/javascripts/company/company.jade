@@ -1,8 +1,9 @@
 md-content#company
 	.search
 		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.checkRights()') New post
-		i.fa.fa-search.search-icon
-		input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='compCtrl.filterNews()')
+		.search-group
+			i.fa.fa-search.search-icon
+			input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='compCtrl.filterNews()')
 	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('company')" novalidate)
 		.form-group
 			input(type="text" name='title' placeholder='News title' ng-model="newsCtrl.news.title" required)
