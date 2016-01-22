@@ -99,11 +99,20 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		height: 300,
 		content_css : ['styles/css/libs.css', 'styles/css/style.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'],
 		body_class: 'body',
-		toolbar: "insertfile undo redo | styleselect | bold italic | bullist numlist outdent indent | link image media | forecolor | backcolor",
+		toolbar: "insertfile undo redo | styleselect | bullist numlist outdent indent | link image media | forecolor | backcolor | mybutton",
 		skin: 'lightgray',
 		menu: {},
 		theme : 'modern',
-		browser_spellcheck: true
+		browser_spellcheck: true,
+		setup: function (editor) {
+			editor.addButton('mybutton', {
+				text: 'Button',
+				icon: false,
+				onclick: function () {
+					editor.insertContent('<a class="custom-button-link" href="http://example.com" data-mce-href="http://example.com">Now setup me!</a>');
+				}
+			});
+		}
 	};
 
 	vm.tinymceCommentOptions = {
