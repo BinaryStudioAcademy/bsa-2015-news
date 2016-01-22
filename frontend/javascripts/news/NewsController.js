@@ -123,7 +123,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 				return {
 					text: option.text,
 					onclick: function() {
-						editor.insertContent('<a style="background:' + option.color + ';" class="custom-button-link" href="http://example.com" data-mce-href="http://example.com" target="_blank">Now setup me!</a>');
+						editor.insertContent('<a style="background:' + option.color + ';" class="custom-button-link" href="http://example.com" data-mce-href="http://example.com" target="_blank">Brand new ' + option.text + ' button. Now set me up!</a>');
 					}
 				};
 			});
