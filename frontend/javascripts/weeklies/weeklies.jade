@@ -6,7 +6,7 @@ md-content#weekly
 			i.fa.fa-search.search-icon
 			input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='weekCtrl.filterPacks()')
 	#view-packs(ng-if='weekCtrl.weekliesMode === "view"')
-		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks | reverse')
+		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks')
 			md-card
 				md-toolbar.md-primary.hidden-pack(ng-click='pack.collapsed=!pack.collapsed' ng-class='{"collapsed-head": pack.collapsed}')
 					.md-toolbar-tools
@@ -82,7 +82,7 @@ md-content#weekly
 													.user(ng-if='comment.likes.length > 3' ng-click='newsCtrl.showAllLikes(comment.likes)') and {{comment.likes.length - 3}} more...
 		.no-news-found(ng-if='weekCtrl.noData')
 			.line Looks like there's no weeklies packs :(
-		.pack(ng-repeat='pack in weekCtrl.packs | reverse' ng-click='weekCtrl.hideModal(pack._id)' ng-class='{"modal-post": pack.showInModal}')
+		.pack(ng-repeat='pack in weekCtrl.packs' ng-click='weekCtrl.hideModal(pack._id)' ng-class='{"modal-post": pack.showInModal}')
 			.news-wrapper(ng-click='$event.stopPropagation()')
 				md-card
 					md-toolbar.md-primary.title-ne(ng-click="weekCtrl.showModal(pack._id, $event)")
