@@ -109,7 +109,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 				text: 'Button',
 				icon: false,
 				onclick: function () {
-					editor.insertContent('<a class="custom-button-link" href="http://example.com" data-mce-href="http://example.com">Now setup me!</a>');
+					editor.insertContent('<a class="custom-button-link" href="http://example.com" data-mce-href="http://example.com" target="_blank">Now setup me!</a>');
 				}
 			});
 		}
