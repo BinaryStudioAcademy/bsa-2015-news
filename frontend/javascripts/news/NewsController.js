@@ -104,13 +104,34 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		menu: {},
 		theme : 'modern',
 		browser_spellcheck: true,
-		setup: function (editor) {
+		setup: function(editor) {
+			var options = [
+			{text: 'Red', color: '#F44336'},
+			{text: 'Pink', color: '#E91E63'},
+			{text: 'Purple', color: '#9C27B0'},
+			{text: 'Deep Purple', color: '#673AB7'},
+			{text: 'Indigo', color: '#3F51B5'},
+			{text: 'Blue', color: '#2196F3'},
+			{text: 'Teal', color: '#009688'},
+			{text: 'Green', color: '#4CAF50'},
+			{text: 'Light Green', color: '#8BC34A'},
+			{text: 'Amber', color: '#FFC107'},
+			{text: 'Brown', color: '#795548'},
+			{text: 'Blue Grey', color: '#607D8B'}
+			];
+			var menu = options.map(function(option) {
+				return {
+					text: option.text,
+					onclick: function() {
+						editor.insertContent('<a style="background:' + option.color + ';" class="custom-button-link" href="http://example.com" data-mce-href="http://example.com" target="_blank">Now setup me!</a>');
+					}
+				};
+			});
 			editor.addButton('mybutton', {
+				type: 'menubutton',
 				text: 'Button',
 				icon: false,
-				onclick: function () {
-					editor.insertContent('<a class="custom-button-link" href="http://example.com" data-mce-href="http://example.com" target="_blank">Now setup me!</a>');
-				}
+				menu: menu
 			});
 		}
 	};
