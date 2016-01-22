@@ -437,12 +437,12 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 
 				var pack = vm[packData.type].splice(packData.packIndex, 1)[0];
 				if (packData.type === 'packs') {
-					vm.hiddenPacks.push(pack);
+					vm.hiddenPacks.unshift(pack);
 					vm.hiddenPacks.sort(function(a, b) {
 					return a.date - b.date;
 				});
 				} else {
-					vm.packs.push(pack);
+					vm.packs.unshift(pack);
 					vm.packs.sort(function(a, b) {
 					return a.date - b.date;
 				});
