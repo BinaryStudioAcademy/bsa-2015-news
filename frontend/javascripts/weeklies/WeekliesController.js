@@ -439,13 +439,13 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 				if (packData.type === 'packs') {
 					vm.hiddenPacks.unshift(pack);
 					vm.hiddenPacks.sort(function(a, b) {
-					return a.date - b.date;
+					return b.date - a.date;
 				});
 				} else {
 					vm.packs.unshift(pack);
 					vm.packs.sort(function(a, b) {
-					return a.date - b.date;
-				});
+						return b.date - a.date;
+					});
 				}
 			}
 		}
