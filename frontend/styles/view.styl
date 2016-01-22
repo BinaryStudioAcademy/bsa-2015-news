@@ -316,6 +316,7 @@ aside#left
 	width 180px
 	position absolute
 	left -180px
+	overflow auto
 .news-message
 	/*margin 5px 5px 20px*/
 	/*box-shadow 0px 3px 5px -1px rgba(0, 0, 0, 0.14), 0px 6px 10px 0px rgba(0, 0, 0, 0.098), 0px 1px 18px 0px rgba(0, 0, 0, 0.084)*/
@@ -1035,11 +1036,18 @@ md-toolbar
 			&:hover
 				background #eaedf2
 
-.gen-menu-item, #fake-nav
+.gen-menu-item
 	display none
+#fake-nav
+	display none
+	overflow auto
 
 .search-group
 	float right
+
+.mce-primary
+	button
+		color initial !important
 
 
 @media screen and (max-width: 1279px)

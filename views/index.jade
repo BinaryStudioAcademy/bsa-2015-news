@@ -4,7 +4,7 @@ block content
 	#news-viev(ng-controller='NewsController as newsCtrl')
 		header#header
 		#all-content
-			aside#left(ng-class='{"show-gen-menu": newsCtrl.showIntranet}' ng-click='newsCtrl.toggleGenMenu()')
+			aside#left(ng-class='{"show-gen-menu": newsCtrl.showIntranet}' ng-click='newsCtrl.showIntranet=false')
 				#intranet-container(ng-click='$event.stopPropagation()')
 					ul#nav-list
 						li.nav-item(ng-repeat='service in newsCtrl.services')
@@ -33,7 +33,7 @@ block content
 				//- 	div
 				//- 		expense-widget
 
-			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}' ng-click='newsCtrl.toggleGenMenu()')
+			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}' ng-click='newsCtrl.showNews=false')
 				#widget-container(ng-click='$event.stopPropagation()')
 					poll-widget
 					//- hr-widget
@@ -44,7 +44,7 @@ block content
 					.gen-menu-item.show-549(ng-click='newsCtrl.showMenu("news")') News navigation
 					.gen-menu-item.show-1119(ng-click='newsCtrl.showMenu("widgets")') Widgets
 					.gen-menu-item.show-1279(ng-click='newsCtrl.showMenu("intranet")') Intranet navigation
-			#fake-nav(ng-class='{"show-gen-menu": newsCtrl.showNews}' ng-click='newsCtrl.toggleGenMenu()')
+			#fake-nav(ng-class='{"show-gen-menu": newsCtrl.showNews}' ng-click='newsCtrl.showNews=false')
 				ul(ng-click='$event.stopPropagation()')
 					li(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";newsCtrl.toggleGenMenu()' ng-repeat='tab in newsCtrl.tabs')
 						span.tab-text {{tab.name}}
