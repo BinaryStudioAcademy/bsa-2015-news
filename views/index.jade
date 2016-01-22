@@ -33,7 +33,7 @@ block content
 				//- 	div
 				//- 		expense-widget
 
-			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}' ng-click='newsCtrl.showNews=false')
+			aside#right(ng-class='{"show-gen-menu": newsCtrl.showWidgets}' ng-click='newsCtrl.showWidgets=false')
 				#widget-container(ng-click='$event.stopPropagation()')
 					poll-widget
 					//- hr-widget
