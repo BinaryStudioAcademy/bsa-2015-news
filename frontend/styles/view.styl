@@ -4,8 +4,8 @@
 ::-webkit-scrollbar
 	width 8px
 
-::-webkit-scrollbar-track
-	background #eaedf2
+/*::-webkit-scrollbar-track
+	background #eaedf2*/
 
 ::-webkit-scrollbar-thumb
 	background #bbb
@@ -1025,17 +1025,22 @@ md-toolbar
 	z-index 999
 	position fixed
 	#menus-wrapper
-		background #fff
-		padding 10px
-		border-radius 10px
 		margin auto
+		width 424px
+		background #EAEDF2
+		list-style none
+		padding 20px
+		border-radius 10px
 		.gen-menu-item
-			padding 10px
+			transition background-color .2s ease-out
+			border-bottom 1px solid #c3bfbf
+			line-height 40px
 			text-align center
-			font-size 25px
-			min-width 250px
 			&:hover
-				background #eaedf2
+				background-color #fff
+				transition: background-color .2s ease-in
+				border-bottom 1px solid #2196f3
+
 
 .gen-menu-item
 	display none
