@@ -40,6 +40,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.post('/api/news/:id/comments', function(req, res, next){
+		NewsRepository.update(req.params.id, req.body, function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
+	}, apiResponse);
+
 	app.put('/api/news/:newsId/comments/:commentId', function(req, res, next) {
 		if (req.body.body) {
 			if (req.decoded.localRole === 'User') {
@@ -69,7 +77,7 @@ module.exports = function(app) {
 		if (req.decoded.localRole === 'User') {
 			NewsRepository.getNews(req.decoded, req.params.id, function(err, data){
 				res.err = err;
-				if (!data || ((data.author !== req.decoded.id) && (!req.body.$addToSet || !req.body.$pull))) {
+				if (!data || (data.author !== req.decoded.id)) {
 					return res.sendStatus(403);
 				}
 			});

@@ -64,8 +64,8 @@ var app = require('../app.js');
 		}
 
 		function addComment(newsId, comment) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
+			var data = $resource("api/news/:id/comments", { id: "@id" }, {
+				update: {method: "POST"}
 			});
 			return data.update({ id: newsId }, {$push:{comments: comment}}).$promise;
 		}
