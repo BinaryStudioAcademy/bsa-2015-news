@@ -68,7 +68,8 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 	});
 
 	vm.filterNews = function() {
-		NewsService.getNews('sandbox', 0, 10, $scope.newsCtrl.newsFilter).then(function(data) {
+		var maxDate = $scope.newsCtrl.getFilterDate();
+		NewsService.getNews('sandbox', 0, 10, $scope.newsCtrl.newsFilter, 0, maxDate).then(function(data) {
 			vm.posts = data;
 			vm.noData = (vm.posts.length === 0);
 		}, function() {

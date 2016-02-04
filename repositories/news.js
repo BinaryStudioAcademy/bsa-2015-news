@@ -18,18 +18,20 @@ NewsRepository.prototype.getAllNews = function(user, queryString, callback) {
 			filter = {$or :[filter, {title: { $regex: queryString.filter, $options: 'i' }}]};
 		}
 	}
-	var query = user.role === 'ADMIN' ? { $and: [typeFilter, filter] } : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } }, typeFilter, filter] };
+	var dateFilter = {};
+	if (queryString.maxDate) {
+		dateFilter = {date: { $lte: queryString.maxDate }};
+	}
+	var query = user.role === 'ADMIN' ? { $and: [typeFilter, filter, dateFilter] } : { $and: [ { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } }, typeFilter, filter, dateFilter] };
+	var sort = queryString.dateSort ? {date: queryString.dateSort} : {date: -1};
 	News.find(query)
-		.sort({date:-1})
+		.sort(sort)
 		.skip(queryString.skip)
 		.limit(queryString.limit)
 		.exec(callback);
 };
 
 NewsRepository.prototype.getNews = function(user, newsId, callback) {
-	/*var roleQuery = user.role === 'ADMIN' ? {} : { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] };
-	News.findOne({ $and: [ {_id: newsId}, roleQuery, { restrict_ids: { $nin: [user.id] } } ] })
-		.exec(callback);*/
 	var query = user.role === 'ADMIN' ? {_id: newsId} : { $and: [ {_id: newsId}, { $or: [ {access_roles: { $size: 0 }}, {access_roles: user.role} ] }, { restrict_ids: { $nin: [user.id] } } ] };
 	News.findOne(query)
 		.exec(callback);

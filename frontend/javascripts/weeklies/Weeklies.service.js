@@ -18,12 +18,13 @@ var app = require('../app.js');
 			return $resource("api/packs/:id", {id: '@id'}).get({id: id}).$promise;
 		}
 
-		function getPacks(skip, limit, published, filter) {
+		function getPacks(skip, limit, published, filter, maxDate) {
 			var query = '';
 			query = skip ? (query + '?skip=' + skip) : (query + '?skip=' + 0);
 			query = limit ? (query + '&limit=' + limit) : query;
 			query = published ? (query + '&published=yes') : query;
 			query = filter ? (query + '&filter=' + filter) : query;
+			query = maxDate ? (query + '&maxDate=' + maxDate) : query;
 			return $resource('api/packs' + query).query().$promise;
 		}
 

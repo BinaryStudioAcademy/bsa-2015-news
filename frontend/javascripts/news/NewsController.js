@@ -341,70 +341,6 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 	vm.prevLocation = '';
 	vm.showModalPost = {};
 
-/*	$scope.$on("$locationChangeSuccess", function(e, currentLocation, previousLocation) {
-		var locs = ['company', 'sandbox', 'weeklies'];
-		for (var i in locs) {
-			var prev = previousLocation.indexOf(locs[i]);
-			var curr = currentLocation.indexOf(locs[i]);
-			if ((curr !== -1) && (prev !== -1)) {
-				vm.reloadData = false;
-				break;
-			}
-			else {
-				vm.reloadData = true;
-			}
-		}
-	});*/
-
-	/*$rootScope.$on('$locationChangeSuccess', function(event) {
-		var location = $location.url();
-		if (vm.prevLocation === location) {
-			event.preventDefault();
-		} else {
-			vm.prevLocation = location;
-			var params = $location.url().split("/");
-			if (params.length == 5) {
-				var type = params[1];
-				var id = params[3];
-				vm.showModalPost(type, id);
-				vm.showModalPost = {
-					type: type,
-					id: id
-				};
-
-			}
-		}
-	});*/
-
-	/*vm.goToPost = function(type, id) {
-		if (type === 'weeklies') {
-			$location.url(type + '/pack/' + id);
-		} else {
-			$location.url(type + '/post/' + id);
-		}
-	};
-
-	vm.showModalPost = function(type, id) {
-
-
-
-		if (type === 'weeklies') {
-			WeekliesService.getPack(id).then(function(pack) {
-				show(pack);
-			}, function() {
-				$location.url(type);
-			});
-		} else {
-			NewsService.getPost(id).then(function(post) {
-					show(post);
-			}, function() {
-				$location.url(type);
-			});
-		}
-
-		function show(data) {
-		}
-	};*/
 
 	vm.switchTab = function(url) {
 		$location.url(url);
@@ -412,12 +348,36 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 
 	vm.newsFilter = '';
 
-	/*vm.newsSearch = function(item) {
-		if ( (item.title.toLowerCase().indexOf(vm.newsFilter.toLowerCase()) > -1) || (item.body.toLowerCase().indexOf(vm.newsFilter.toLowerCase()) > -1) ){
-			return true;
+	vm.filterYears = [new Date().getFullYear()];
+	
+	vm.resetDateFilter = function() {
+		vm.filterYear = vm.filterYears[0];
+		vm.filterMonth = new Date().getMonth();
+		console.log('resettin\'');
+	};
+
+	vm.resetDateFilter();
+
+	NewsService.getNews('', 0, 1, 0, 1).then(function(data) {
+		var startYear = new Date(data[0].date).getFullYear();
+		if (vm.filterYear !== startYear) {
+			for (var i = 0; i < (vm.filterYear - startYear); i++) {
+				vm.filterYears.push(vm.filterYears[i] - 1);
+			}
 		}
-		return false;
-	};*/
+	}, function() {});
+
+	vm.getFilterDate = function() {
+		var m = Number(vm.filterMonth) + 2;
+		var y = vm.filterYear;
+		if (m === 13) {
+			m = 1;
+			y++;
+		}
+		console.log(new Date((new Date(m + '-1-' + y)).getTime() - 1));
+		return (new Date((new Date(m + '-1-' + y)).getTime() - 1)).getTime();
+	};
+
 
 	vm.findLike = function(likes) {
 		return _.find(likes, function(like) {

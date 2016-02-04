@@ -16,7 +16,7 @@
 				.list-item(ng-repeat='question in stackCtrl.questions')
 					a(href="{{question.url}}").item-content
 						div.stack-av
-							img(src="{{question.user.avatar}}", class='img-thumbnail')
+							img(ng-src="{{question.user.avatar}}", class='img-thumbnail')
 						div.stack-body
 							b {{question.title}}
 							div.stack-votes

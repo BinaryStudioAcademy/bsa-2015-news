@@ -16,6 +16,9 @@ PackRepository.prototype.getAll = function(queryString, callback) {
 		if (queryString.filter) {
 			query.$or = [{news: { $in : queryString.ids }}, {title: { $regex: queryString.filter, $options: 'i' }}]
 		}
+		if (queryString.maxDate) {
+			query.date = {$lt: queryString.maxDate}
+		}
 	} else {
 		query = {published: false};
 	}

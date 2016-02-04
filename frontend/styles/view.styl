@@ -464,57 +464,6 @@ md-tooltip
 	display none
 
 
-
-
-
-
-
-
-
-/*#company
-	.news-2
-		border 1px solid lightgrey
-		margin 0 10px 30px
-		margin-bottom
-		&:hover
-			background lightgrey
-		.news-title-2
-			background lightgrey
-			padding 10px
-			font-weight bold
-			font-size 1.4em
-		.news-body-2
-			padding 10px
-		.news-footer-2
-			padding 10px
-			border-top 1px solid lightgrey
-			.comments-count-2
-				outline none
-				float right
-			.likes-count-2
-				outline none
-				float right
-				margin-right 10px
-		.comments-2
-			background #eceff1
-			padding 5px
-			.md-primary
-				background grey
-			.comment-2
-				background white
-				border 1px solid lightgrey
-				margin-top 10px
-				&:first-child
-					margin-top 0
-				.comment-body-2
-					padding 10px
-				.comment-footer-2
-					padding 10px
-					border-top 1px solid lightgrey
-					.likes-count-2
-						outline none
-						float right*/
-
 ul#nav-list
 	list-style none
 	/*margin-left 200px*/
@@ -649,7 +598,7 @@ ul#nav-list
 		margin-top 15px
 		button
 			margin-left 20px
-			margin-top 0
+			margin-top 15px
 		input[name='search']
 			outline none
 			border 1px solid rgb(224, 224, 224)
@@ -1051,6 +1000,12 @@ md-toolbar
 .search-group
 	float right
 
+.filters-group
+	display inline-block
+	md-select
+		margin 0 0 0 20px
+		display inline-block
+
 .mce-primary
 	button
 		color initial !important
@@ -1172,6 +1127,11 @@ md-toolbar
 		display block
 		
 @media screen and (max-width: 480px)
+	.filters-group
+		display block
+		md-select
+			margin 15px 20px
+			display block
 	.search
 		text-align center
 		button

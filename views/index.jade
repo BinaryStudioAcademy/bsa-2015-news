@@ -46,13 +46,13 @@ block content
 					.gen-menu-item.show-1279(ng-click='newsCtrl.showMenu("intranet")') Intranet navigation
 			#fake-nav(ng-class='{"show-gen-menu": newsCtrl.showNews}' ng-click='newsCtrl.showNews=false')
 				ul(ng-click='$event.stopPropagation()')
-					li(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";newsCtrl.toggleGenMenu()' ng-repeat='tab in newsCtrl.tabs')
+					li(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";newsCtrl.resetDateFilter();newsCtrl.toggleGenMenu()' ng-repeat='tab in newsCtrl.tabs')
 						span.tab-text {{tab.name}}
 			#content
 				.tabsdemoDynamicHeight
 					md-content
 						md-tabs(md-dynamic-height='', md-border-bottom='' md-stretch-tabs='' md-selected="newsCtrl.selectedIndex" )
-							md-tab(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";' ng-repeat='tab in newsCtrl.tabs')
+							md-tab(ng-click='newsCtrl.switchTab(tab.url);newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";newsCtrl.resetDateFilter()' ng-repeat='tab in newsCtrl.tabs')
 								span.tab-text {{tab.name}}
 							//- md-tab(ng-click='newsCtrl.switchTab("/company");newsCtrl.resetEditingForms();newsCtrl.newsFilter = "";')
 							//- 	span.tab-text

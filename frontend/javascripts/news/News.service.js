@@ -35,11 +35,13 @@ var app = require('../app.js');
 			return $resource("api/news/:id", { id: "@id"}).get({id: id}).$promise;
 		}
 
-		function getNews(type, skip, limit, filter) {
+		function getNews(type, skip, limit, filter, dateSort, maxDate) {
 			var query = '';
 			query = skip ? (query + '&skip=' + skip) : query;
 			query = limit ? (query + '&limit=' + limit) : query;
 			query = filter ? (query + '&filter=' + filter) : query;
+			query = dateSort ? (query + '&dateSort=' + dateSort) : query;
+			query = maxDate ? (query + '&maxDate=' + maxDate) : query;
 			return $resource("api/news?type=" + type + query).query().$promise;
 		}
 

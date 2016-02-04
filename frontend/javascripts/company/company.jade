@@ -1,9 +1,26 @@
 md-content#company
 	.search
-		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.checkRights()') New post
+		.filters-group
+			md-select(ng-model='newsCtrl.filterYear' ng-change='compCtrl.filterNews()' aria-label='year')
+				md-option(ng-repeat='year in newsCtrl.filterYears' value='{{year}}') {{year}}
+			md-select(ng-model='newsCtrl.filterMonth' ng-change='compCtrl.filterNews()' aria-label='month')
+				md-option(value='0') January
+				md-option(value='1') February
+				md-option(value='2') March
+				md-option(value='3') April
+				md-option(value='4') May
+				md-option(value='5') June
+				md-option(value='6') July
+				md-option(value='7') August
+				md-option(value='8') September
+				md-option(value='9') October
+				md-option(value='10') November
+				md-option(value='11') December
 		.search-group
 			i.fa.fa-search.search-icon
 			input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='compCtrl.filterNews()')
+		br
+		md-button.md-raised.md-primary(type='button' ng-click='newsCtrl.toggleForm()' ng-if='newsCtrl.checkRights()') New post
 	form.news-message(name="newsForm" ng-if='!newsCtrl.formView' ng-submit="newsForm.$valid && newsCtrl.createNews('company')" novalidate)
 		.form-group
 			input(type="text" name='title' placeholder='News title' ng-model="newsCtrl.news.title" required)

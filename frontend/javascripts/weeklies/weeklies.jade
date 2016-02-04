@@ -1,10 +1,27 @@
 md-content#weekly
 	.search
-		md-button.md-raised.md-primary(type='button' ng-click='weekCtrl.toPackEditMode()' ng-if='newsCtrl.checkRights() && weekCtrl.weekliesMode === "view"') Create new weeklies
-		md-button(type='button' ng-click='weekCtrl.toViewMode()' ng-if='weekCtrl.weekliesMode === "edit"') Back to view mode
-		.search-group
+		.filters-group(ng-if='weekCtrl.weekliesMode === "view"')
+			md-select(ng-model='newsCtrl.filterYear' ng-change='weekCtrl.filterPacks()' aria-label='year')
+				md-option(ng-repeat='year in newsCtrl.filterYears' value='{{year}}') {{year}}
+			md-select(ng-model='newsCtrl.filterMonth' ng-change='weekCtrl.filterPacks()' aria-label='month')
+				md-option(value='0') January
+				md-option(value='1') February
+				md-option(value='2') March
+				md-option(value='3') April
+				md-option(value='4') May
+				md-option(value='5') June
+				md-option(value='6') July
+				md-option(value='7') August
+				md-option(value='8') September
+				md-option(value='9') October
+				md-option(value='10') November
+				md-option(value='11') December
+		.search-group(ng-if='weekCtrl.weekliesMode === "view"')
 			i.fa.fa-search.search-icon
 			input(type='text' name='search' placeholder="Type in to search..." ng-model="newsCtrl.newsFilter" ng-change='weekCtrl.filterPacks()')
+		br(ng-if='weekCtrl.weekliesMode === "view"')
+		md-button.md-raised.md-primary(type='button' ng-click='weekCtrl.toPackEditMode()' ng-if='newsCtrl.checkRights() && weekCtrl.weekliesMode === "view"') Create new weeklies
+		md-button(type='button' ng-click='weekCtrl.toViewMode()' ng-if='weekCtrl.weekliesMode === "edit"') Back to view mode
 	#view-packs(ng-if='weekCtrl.weekliesMode === "view"')
 		.pack(ng-if='newsCtrl.checkRights()' ng-repeat='pack in weekCtrl.hiddenPacks')
 			md-card

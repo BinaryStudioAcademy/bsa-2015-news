@@ -39,9 +39,9 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		}
 	});
 
-
 	vm.filterPacks = function() {
-		WeekliesService.getPacks(0, 3, 'yes', $scope.newsCtrl.newsFilter).then(function(data) {
+		var maxDate = $scope.newsCtrl.getFilterDate();
+		WeekliesService.getPacks(0, 3, 'yes', $scope.newsCtrl.newsFilter, maxDate).then(function(data) {
 			vm.packs = data;
 			vm.noData = (vm.packs.length === 0);
 		}, function() {
