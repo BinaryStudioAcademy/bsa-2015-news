@@ -79,14 +79,21 @@ module.exports = function(app) {
 				res.err = err;
 				if (!data || (data.author !== req.decoded.id)) {
 					return res.sendStatus(403);
+				} else {
+					NewsRepository.update(req.params.id, req.body, function(err, data) {
+						res.err = err;
+						res.data = data;
+						next();
+					});
 				}
 			});
+		} else {
+			NewsRepository.update(req.params.id, req.body, function(err, data) {
+				res.err = err;
+				res.data = data;
+				next();
+			});
 		}
-		NewsRepository.update(req.params.id, req.body, function(err, data) {
-			res.err = err;
-			res.data = data;
-			next();
-		});
 	}, apiResponse);
 
 	app.delete('/api/news/:id', function(req, res, next) {
@@ -95,13 +102,20 @@ module.exports = function(app) {
 				res.err = err;
 				if (!data || (data.author !== req.decoded.id)) {
 					return res.sendStatus(403);
+				} else {
+					NewsRepository.delete(req.params.id, function(err, data) {
+						res.err = err;
+						res.data = data;
+						next();
+					});
 				}
 			});
+		} else {
+			NewsRepository.delete(req.params.id, function(err, data) {
+				res.err = err;
+				res.data = data;
+				next();
+			});
 		}
-		NewsRepository.delete(req.params.id, function(err, data) {
-			res.err = err;
-			res.data = data;
-			next();
-		});
 	}, apiResponse);
 };

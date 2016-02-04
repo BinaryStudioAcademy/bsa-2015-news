@@ -77,7 +77,7 @@ md-content#sandbox
 							//- .author-2
 							//- 	a(ng-href='/profile/#/userdata/{{newsCtrl.globalIdToProfile(comment.author)}}') {{newsCtrl.getUserName(comment.author)}}
 							span.comment-body-2(ng-bind-html='comment.body| unsafe')
-							span.comment-controls-2.go-right
+							span.comment-controls-2.go-right(ng-if='newsCtrl.checkRights(comment.author)')
 								i.fa.fa-pencil.edit-2(ng-click='newsCtrl.setEditing(comment, news._id)')
 								i.fa.fa-times.delete-2(ng-click='newsCtrl.deleteComment(news._id, comment._id)')
 							.footer-2
