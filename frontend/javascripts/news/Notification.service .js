@@ -16,7 +16,7 @@ function NotificationService($resource) {
 
 	function newsCreated(post, allUsers) {
 		var users;
-		users = allUsers.map(function(x) {return x._id; });
+		users = allUsers.map(function(x) {return x.serverUserId; });
 		users = _.difference(users, post.restrict_ids);
 		//Should also filter users by access roles
 		var data = {
@@ -36,7 +36,7 @@ function NotificationService($resource) {
 
 	function packPublished(pack, allUsers) {
 		var users;
-		users = allUsers.map(function(x) {return x._id; });
+		users = allUsers.map(function(x) {return x.serverUserId; });
 		var data = {
 			title: 'New Weeklies pack published',
 			text: pack.title,
