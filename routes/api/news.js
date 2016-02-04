@@ -55,16 +55,22 @@ module.exports = function(app) {
 					var comment = _.find(comments, {_id: req.params.commentId});
 					if (!comment || (comment.author !== req.decoded.id)) {
 						return res.sendStatus(403);
+					} else {
+						NewsRepository.editComment(req.decoded.id, req.params.commentId, req.body.body, function(err, data) {
+							res.err = err;
+							res.data = data;
+							next();
+						});
 					}
 				});
+			} else {
+				NewsRepository.editComment(req.decoded.id, req.params.commentId, req.body.body, function(err, data) {
+					res.err = err;
+					res.data = data;
+					next();
+				});
 			}
-			NewsRepository.editComment(req.decoded.id, req.params.commentId, req.body.body, function(err, data) {
-				res.err = err;
-				res.data = data;
-				next();
-			});
-		}
-		else {
+		} else {
 			NewsService.toggleCommentlike(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
 				res.err = err;
 				res.data = data;
