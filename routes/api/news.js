@@ -51,16 +51,8 @@ module.exports = function(app) {
 	app.put('/api/news/:newsId/comments/:commentId', function(req, res, next) {
 		if (req.body.body) {
 			if (req.decoded.localRole === 'User') {
-				console.log('------ local role is user');
-				NewsRepository.getComments(req.params.newsId, function(err, comments) {
-					console.log('------ comments', comments);
-					console.log('------ req.decoded.id', req.decoded.id);
-					console.log('------ req.params.commentId', req.params.commentId);
-					var comment = _.find(comments, function(com) {
-						return com._id == req.params.commentId;
-					});
-					console.log('------ comment', comment);
-					console.log('------ comment.author', comment.author);
+				NewsRepository.getComments(req.params.newsId, function(err, data) {
+					var comment = _.find(data.comments, {_id: req.params.commentId});
 					if (!comment || (comment.author !== req.decoded.id)) {
 						return res.sendStatus(403);
 					} else {
