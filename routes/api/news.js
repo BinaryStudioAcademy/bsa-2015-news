@@ -52,7 +52,19 @@ module.exports = function(app) {
 		if (req.body.body) {
 			if (req.decoded.localRole === 'User') {
 				NewsRepository.getComments(req.params.newsId, function(err, data) {
+					console.log('----- data.comments', data.comments);
 					var comment = _.find(data.comments, {_id: req.params.commentId});
+					console.log('----- comment', comment);
+					if (comment) {
+						console.log('----- comment.author', comment.author);
+					}
+					var comment2 = _.find(data.comments, function(comm) {
+						return comm._id == req.params.commentId;
+					});
+					console.log('----- comment2', comment2);
+					if (comment2) {
+						console.log('----- comment2.author', comment2.author);
+					}
 					if (!comment || (comment.author !== req.decoded.id)) {
 						return res.sendStatus(403);
 					} else {
