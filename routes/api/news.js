@@ -54,10 +54,13 @@ module.exports = function(app) {
 				console.log('------ local role is user');
 				NewsRepository.getComments(req.params.newsId, function(err, comments) {
 					console.log('------ comments', comments);
-					var comment = _.find(comments, {_id: req.params.commentId});
-					console.log('------ comment', comment);
 					console.log('------ comment.author', comment.author);
 					console.log('------ req.decoded.id', req.decoded.id);
+					var comment = _.find(comments, function(com) {
+						return com._id == req.params.commentId;
+					});
+					console.log('------ comment', comment);
+					
 					if (!comment || (comment.author !== req.decoded.id)) {
 						return res.sendStatus(403);
 					} else {
