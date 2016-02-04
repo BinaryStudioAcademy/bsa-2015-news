@@ -54,13 +54,15 @@ module.exports = function(app) {
 				NewsRepository.getComments(req.params.newsId, function(err, data) {
 					console.log('----- data.comments', data.comments);
 					var comment = _.find(data.comments, function(comm) {
-						console.log('***** comm', comm);
 						return comm._id == req.params.commentId;
 					});
 					console.log('----- comment', comment);
 					console.log('----- req.decoded.id', req.decoded.id);
 					console.log('----- comment.author', comment.author);
 					if (!comment || (comment.author !== req.decoded.id)) {
+						console.log('----- FORBIDDEN !!!!!!');
+						console.log('----- !comment', !comment);
+						console.log('----- comment.author !== req.decoded.id', comment.author !== req.decoded.id);
 						return res.sendStatus(403);
 					} else {
 						NewsRepository.editComment(req.decoded.id, req.params.commentId, req.body.body, function(err, data) {
