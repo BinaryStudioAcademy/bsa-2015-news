@@ -53,10 +53,6 @@ NewsController.$inject = [
 function NewsController(NewsService, AdministrationService, WeekliesService, NotificationService, $mdDialog, $location, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $window) {
 	var vm = this;
 
-	vm.loadMore = function() {
-		console.log('dfgdfg');
-	};
-
 	vm.formView = true;
 
 	NewsService.getMe().then(function(data) {
@@ -244,8 +240,6 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			resetNews();
 			vm.formView = true;
 			socket.emit("new post", post);
-			console.log(post);
-			console.log(vm.fullUsers);
 			if (post.type === 'company') {
 				NotificationService.newsCreated(post, vm.fullUsers);
 			}
@@ -353,7 +347,6 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 	vm.resetDateFilter = function() {
 		vm.filterYear = vm.filterYears[0];
 		vm.filterMonth = new Date().getMonth();
-		console.log('resettin\'');
 	};
 
 	vm.resetDateFilter();
@@ -374,7 +367,6 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			m = 1;
 			y++;
 		}
-		console.log(new Date((new Date(m + '-1-' + y)).getTime() - 1));
 		return (new Date((new Date(m + '-1-' + y)).getTime() - 1)).getTime();
 	};
 
