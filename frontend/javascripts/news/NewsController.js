@@ -270,7 +270,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		vm.resetEditing();
 	};
 
-	vm.newComment = function(commentText, newsId, form) {
+	vm.newComment = function(commentText, news, form, pack) {
 
 		var comment = {
 			author: vm.whyCouldntYouMadeThisVariableUser.id,
@@ -278,11 +278,11 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			date: Date.now(),
 			likes: []
 			};
-		NewsService.addComment(newsId, comment).then(function(){
-			NewsService.getComments(newsId).then(function(data) {
-				var i = data.comments.length - 1;
-				socket.emit("new comment", {postId: newsId, comment: data.comments[i]});
-			});
+		NewsService.addComment(news._id, comment).then(function() {
+			if (news.author !== comment.author) {
+				NotificationService.newComment(news, _.find(vm.fullUsers, {serverUserId: comment.author}), pack);
+			}
+			socket.emit("new comment", {postId: news._id, comment: comment});
 		});
 		$timeout(function() {
 			form.$setPristine();
@@ -311,7 +311,7 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 		});
 	};
 
-	vm.newsLike = function(news) {
+	vm.newsLike = function(news, pack) {
 
 		var userId = vm.whyCouldntYouMadeThisVariableUser.id;
 
@@ -321,14 +321,20 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			});
 		} else {
 			NewsService.newsLike(news._id, userId).then(function() {
+				if (news.author !== userId) {
+					NotificationService.newPostLike(news, _.find(vm.fullUsers, {serverUserId: userId}), pack);
+				}
 				socket.emit("like post", {post: news._id, user: userId, isLike: true});
 			});
 		}
 	};
 
-	vm.commentLike = function(newsId, commentId) {
-		NewsService.toggleCommentLike(newsId, commentId).then(function(data) {
-			socket.emit("like comment", {newsId: newsId, commentId: commentId, like: data.like, userId: vm.whyCouldntYouMadeThisVariableUser.id});
+	vm.commentLike = function(news, comment, pack) {
+		NewsService.toggleCommentLike(news._id, comment._id).then(function(data) {
+			if ((data.like === 'added') && (comment.author !== vm.whyCouldntYouMadeThisVariableUser.id)) {
+				NotificationService.newCommentLike(news, _.find(vm.fullUsers, {serverUserId: vm.whyCouldntYouMadeThisVariableUser.id}), comment, pack);
+			}
+			socket.emit("like comment", {newsId: news._id, commentId: comment._id, like: data.like, userId: vm.whyCouldntYouMadeThisVariableUser.id});
 		});
 	};
 

@@ -7,7 +7,6 @@ app.controller('SandboxController', SandboxController);
 SandboxController.$inject = [
 	'NewsService',
 	'CompanyService',
-	'NotificationService',
 	'$mdDialog',
 	'$route',
 	'$rootScope',
@@ -19,7 +18,7 @@ SandboxController.$inject = [
 	'$location'
 ];
 
-function SandboxController(NewsService, CompanyService, NotificationService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
+function SandboxController(NewsService, CompanyService, $mdDialog, $route, $rootScope, $filter, socket, $q, $timeout, $scope, $location) {
 	var vm = this;
 
 	$scope.newsCtrl.loadMore = function() {
@@ -179,7 +178,6 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 		if(post) {
 			if(newPost.isLike) {
 				post.likes.push(newPost.user);
-				NotificationService.newPostLike(post, _.find($scope.newsCtrl.fullUsers, {serverUserId: newPost.user}));
 			}
 			else {
 				var index = post.likes.indexOf(newPost.user);
@@ -194,7 +192,6 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 			var comment = _.find(news.comments, {_id: data.commentId});
 			if (data.like === "added") {
 				comment.likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
-				NotificationService.newCommentLike(news, _.find($scope.newsCtrl.fullUsers, {serverUserId: data.userId}), comment);
 			}
 			else if (data.like === "removed") {
 				_.remove(comment.likes, function(from) {
@@ -208,7 +205,6 @@ function SandboxController(NewsService, CompanyService, NotificationService, $md
 		var post = _.find(vm.posts, {_id: data.postId});
 		if (post) {
 			post.comments.push(data.comment);
-			NotificationService.newComment(post, _.find($scope.newsCtrl.fullUsers, {serverUserId: data.comment.author}));
 		}
 	});
 

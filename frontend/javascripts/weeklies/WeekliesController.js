@@ -494,7 +494,6 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 			if (newPost.isLike) {
 				if(index === -1) {
 					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].likes.push(newPost.user);
-					NotificationService.newPostLike(vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex], _.find($scope.newsCtrl.fullUsers, {serverUserId: newPost.user}), vm[indexes.type][indexes.packIndex]);
 				}
 			} else {
 				if(index !== -1) {
@@ -512,7 +511,6 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 			if (data.like === "added") {
 				if (index === -1) {
 					vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex].likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
-					NotificationService.newCommentLike(vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex], _.find($scope.newsCtrl.fullUsers, {serverUserId: data.userId}), vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments[indexes.commentIndex], vm[indexes.type][indexes.packIndex]);
 				}
 			} else if (data.like === "removed") {
 				if(index !== -1) {
@@ -526,7 +524,6 @@ function WeekliesController(NewsService, WeekliesService, AdministrationService,
 		var indexes = findIndexes(data.postId);
 		if (indexes) {
 			vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex].comments.push(data.comment);
-			NotificationService.newComment(vm[indexes.type][indexes.packIndex].fullNews[indexes.newsIndex], _.find($scope.newsCtrl.fullUsers, {serverUserId: data.comment.author}), vm[indexes.type][indexes.packIndex]);
 		}
 	});
 

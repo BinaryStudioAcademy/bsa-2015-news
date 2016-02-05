@@ -94,7 +94,7 @@ md-content#company
 			.new-comment-2(ng-if='showComments')
 				.news-input-wrapper
 					.news-input-cover(contentEditable='true' ng-focus='newsCtrl.expandNewsForm(news._id)' ng-if='!(newsCtrl.expandedForm === news._id)') Write new comment...
-					form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news._id, newCommentForm);commentText=''" ng-show='!newsCtrl.editing._id' ng-if='newsCtrl.expandedForm === news._id' novalidate)
+					form.comment-form(name='newCommentForm' ng-submit="newCommentForm.$valid && newsCtrl.newComment(commentText, news, newCommentForm);commentText=''" ng-show='!newsCtrl.editing._id' ng-if='newsCtrl.expandedForm === news._id' novalidate)
 						div(ng-class='{validation: !commentText}')
 							textarea.form-control(ui-tinymce='newsCtrl.tinymceCommentOptions' ng-model="commentText" placeholder='Comment' required)
 						md-button(type='submit') Add comment
@@ -119,7 +119,7 @@ md-content#company
 								span.date-2  on {{comment.date | date:'dd-MMM-yyyy HH:mm'}}
 								span.date-edited-2(ng-if='comment.edited_at')  (edited)
 								span.likes-count-2.go-right
-									span(ng-click='newsCtrl.commentLike(news._id, comment._id)')
+									span(ng-click='newsCtrl.commentLike(news, comment)')
 										i.fa.fa-thumbs-o-up(ng-if='!newsCtrl.findLike(comment.likes)')
 										i.fa.fa-thumbs-up(ng-if='newsCtrl.findLike(comment.likes)')
 										span  {{comment.likes.length}}
