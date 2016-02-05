@@ -168,11 +168,13 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 	socket.on("change like post", function(newPost) {
 		var post = _.find(vm.posts, {_id: newPost.post});
 		if(post) {
+			var index;
 			if(newPost.isLike) {
-				post.likes.push(newPost.user);
+				index = post.likes.indexOf(newPost.user);
+				if(index === -1) post.likes.push(newPost.user);
 			}
 			else {
-				var index = post.likes.indexOf(newPost.user);
+				index = post.likes.indexOf(newPost.user);
 				if(index !== -1) post.likes.splice(index, 1);
 			}
 		}
@@ -183,7 +185,8 @@ function CompanyController(NewsService, CompanyService, $mdDialog, $route, $root
 		if (news) {
 			var comment = _.find(news.comments, {_id: data.commentId});
 			if (data.like === "added") {
-				comment.likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
+				var index = comment.likes.indexOf(vm.whyCouldntYouMadeThisVariableUser.id);
+				if(index === -1) comment.likes.push(vm.whyCouldntYouMadeThisVariableUser.id);
 			}
 			else if (data.like === "removed") {
 				_.remove(comment.likes, function(from) {
