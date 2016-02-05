@@ -39,7 +39,7 @@ function NotificationService($resource) {
 	function packPublished(pack, allUsers) {
 		var users;
 		users = allUsers.map(function(x) {return x.serverUserId; });
-		users = _.difference(users, pack.author);
+		users = _.difference(users, [pack.author]);
 		var data = {
 			title: 'New Weeklies pack published',
 			text: pack.title,
