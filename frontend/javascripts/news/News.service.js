@@ -18,8 +18,9 @@ var app = require('../app.js');
 			deleteComment: deleteComment,
 			getComments: getComments,
 			newsLike: newsLike,
-			toggleCommentLike: toggleCommentLike,
 			deleteNewsLike: deleteNewsLike,
+			commentLike: commentLike,
+			deleteCommentLike: deleteCommentLike,
 			getServices: getServices
 		};
 
@@ -98,26 +99,33 @@ var app = require('../app.js');
 		}
 
 		function newsLike(newsId, userId) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
+			var data = $resource("api/news/:id/likes", { id: "@id" }, {
+				update: {method: "POST"}
 			});
-			return data.update({ id: newsId }, { $addToSet:{likes: userId }}).$promise;
+			return data.update({ id: newsId }).$promise;
 		}
 
 		function deleteNewsLike(newsId, userId) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
-			});
-			return data.update({ id: newsId }, { $pull:{likes: userId }}).$promise;
-
+			return $resource("api/news/:id/likes", { id: "@id"}).remove({ id: newsId }).$promise;
 		}
 
-		function toggleCommentLike(newsId, commentId) {
+		function commentLike(newsId, commentId, userId) {
+			var data = $resource("api/news/:newsId/comments/:commentId/likes", { newsId: "@newsId", commentId: "@commentId" }, {
+				update: {method: "POST"}
+			});
+			return data.update({ newsId: newsId, commentId: commentId }).$promise;
+		}
+
+		function deleteCommentLike(newsId, commentId, userId) {
+			return $resource("api/news/:newsId/comments/:commentId/likes", { newsId: "@newsId", commentId: "@commentId"}).remove({ newsId: newsId, commentId: commentId }).$promise;
+		}
+
+		/*function toggleCommentLike(newsId, commentId) {
 			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
 				update: {method: "PUT"}
 			});
 			return data.update({newsId: newsId, commentId: commentId}).$promise;
-		}
+		}*/
 
 		function getServices() {
 			return $resource("app/api/notificationService").query().$promise;

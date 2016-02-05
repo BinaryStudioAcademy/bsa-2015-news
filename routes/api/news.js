@@ -72,13 +72,13 @@ module.exports = function(app) {
 					next();
 				});
 			}
-		} else {
+		}/*else {
 			NewsService.toggleCommentlike(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
 				res.err = err;
 				res.data = data;
 				next();
 			});
-		}
+		}*/
 	}, apiResponse);
 
 	app.put('/api/news/:id', function(req, res, next) {
@@ -125,5 +125,37 @@ module.exports = function(app) {
 				next();
 			});
 		}
+	}, apiResponse);
+
+	app.post('/api/news/:newsId/likes', function(req, res, next) {
+		NewsRepository.likeNews(req.decoded.id, req.params.newsId, function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
+	}, apiResponse);
+
+	app.delete('/api/news/:newsId/likes', function(req, res, next) {
+		NewsRepository.dislikeNews(req.decoded.id, req.params.newsId, function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
+	}, apiResponse);
+
+	app.post('/api/news/:newsId/comments/:commentId/likes', function(req, res, next) {
+		NewsRepository.likeComment(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
+	}, apiResponse);
+
+	app.delete('/api/news/:newsId/comments/:commentId/likes', function(req, res, next) {
+		NewsRepository.dislikeComment(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
 	}, apiResponse);
 };

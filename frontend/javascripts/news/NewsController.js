@@ -333,12 +333,26 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 	};
 
 	vm.commentLike = function(news, comment, pack) {
-		NewsService.toggleCommentLike(news._id, comment._id).then(function(data) {
+		var userId = vm.whyCouldntYouMadeThisVariableUser.id;
+
+		if(_.contains(comment.likes, userId)) {
+			NewsService.deleteCommentLike(news._id, comment._id, userId).then(function() {
+				socket.emit("like comment", {newsId: news._id, commentId: comment._id, like: 'removed', userId: userId});
+			});
+		} else {
+			NewsService.commentLike(news._id, comment._id, userId).then(function() {
+				if (comment.author !== userId) {
+					NotificationService.newCommentLike(news, _.find(vm.fullUsers, {serverUserId: userId}), comment, pack);
+				}
+				socket.emit("like comment", {newsId: news._id, commentId: comment._id, like: 'added', userId: userId});
+			});
+		}
+		/*NewsService.toggleCommentLike(news._id, comment._id).then(function(data) {
 			if ((data.like === 'added') && (comment.author !== vm.whyCouldntYouMadeThisVariableUser.id)) {
 				NotificationService.newCommentLike(news, _.find(vm.fullUsers, {serverUserId: vm.whyCouldntYouMadeThisVariableUser.id}), comment, pack);
 			}
 			socket.emit("like comment", {newsId: news._id, commentId: comment._id, like: data.like, userId: vm.whyCouldntYouMadeThisVariableUser.id});
-		});
+		});*/
 	};
 
 	vm.prevLocation = '';

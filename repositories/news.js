@@ -37,6 +37,16 @@ NewsRepository.prototype.getNews = function(user, newsId, callback) {
 		.exec(callback);
 };
 
+NewsRepository.prototype.likeNews = function(userId, newsId, callback) {
+	News.update({_id: newsId}, {$addToSet: {likes: userId}})
+		.exec(callback);
+};
+
+NewsRepository.prototype.dislikeNews = function(userId, newsId, callback) {
+	News.update({_id: newsId}, {$pull: {likes: userId}})
+		.exec(callback);
+};
+
 NewsRepository.prototype.getComments = function(newsId, callback) {
 	News.findOne({_id: newsId}, {_id: 0, comments: 1})
 		.exec(callback);

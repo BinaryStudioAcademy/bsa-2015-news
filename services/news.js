@@ -9,7 +9,7 @@ NewsService.prototype.generateNotification = function() {
 
 };
 
-NewsService.prototype.toggleCommentlike = function(userId, newsId, commentId, callback) {
+/*NewsService.prototype.toggleCommentlike = function(userId, newsId, commentId, callback) {
 	NewsRepository.getComments(newsId, function(err, data) {
 		if (err) {
 			callback(err, null);
@@ -33,6 +33,6 @@ NewsService.prototype.toggleCommentlike = function(userId, newsId, commentId, ca
 			});
 		}
 	});
-};
+};*/
 
 module.exports = new NewsService();
