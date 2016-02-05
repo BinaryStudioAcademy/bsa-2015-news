@@ -67,7 +67,7 @@ NewsRepository.prototype.editComment = function(userId, commentId, body, callbac
 		.exec(callback);
 };
 
-NewsRepository.prototype.deleteComment = function(commentId, callback) {
+NewsRepository.prototype.deleteComment = function(newsId, commentId, callback) {
 	News.update({_id: newsId}, {$pull: {comments: {_id: commentId}}})
 		.exec(callback);
 };

@@ -92,7 +92,7 @@ module.exports = function(app) {
 				if (!comment || (comment.author != req.decoded.id)) {
 					return res.sendStatus(403);
 				} else {
-					NewsRepository.deleteComment(req.params.commentId, function(err, data) {
+					NewsRepository.deleteComment(req.params.newsId, req.params.commentId, function(err, data) {
 						res.err = err;
 						res.data = data;
 						next();
@@ -100,7 +100,7 @@ module.exports = function(app) {
 				}
 			});
 		} else {
-			NewsRepository.deleteComment(req.params.commentId, function(err, data) {
+			NewsRepository.deleteComment(req.params.newsId, req.params.commentId, function(err, data) {
 				res.err = err;
 				res.data = data;
 				next();
