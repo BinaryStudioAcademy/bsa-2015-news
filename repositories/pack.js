@@ -45,4 +45,8 @@ PackRepository.prototype.removeNews = function(packId, newsId, callback) {
 		.exec(callback);
 };
 
+PackRepository.prototype.drop = function(callback) {
+	Pack.remove({}).exec(callback);
+};
+
 module.exports = new PackRepository();

@@ -1,12 +1,40 @@
 var _ = require('lodash');
 var NewsRepository = require('../repositories/news.js');
 
-var NewsService = function(){
+var PackRepository = require('../repositories/pack.js');
+var RoleRepository = require('../repositories/role.js');
+var UserRepository = require('../repositories/user.js');
 
+var NewsService = function() {
 };
 
-NewsService.prototype.generateNotification = function() {
-
+NewsService.prototype.dropAll = function(callback) {
+	var total = {removed: {}};
+	UserRepository.drop(function(err, data) {
+		if (err) {
+			callback(err, null);
+		}
+		total.removed.userCollection = data.result.n;
+		RoleRepository.drop(function(err, data) {
+			if (err) {
+				callback(err, null);
+			}
+			total.removed.roleCollection = data.result.n;
+			PackRepository.drop(function(err, data) {
+				if (err) {
+					callback(err, null);
+				}
+				total.removed.packCollection = data.result.n;
+				NewsRepository.drop(function(err, data) {
+					if (err) {
+						callback(err, null);
+					}
+					total.removed.newsCollection = data.result.n;
+					callback(err, total);
+				});
+			});
+		});
+	});
 };
 
 /*NewsService.prototype.toggleCommentlike = function(userId, newsId, commentId, callback) {

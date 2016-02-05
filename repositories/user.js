@@ -13,4 +13,8 @@ UserRepository.prototype.findGlobal = function(userGlobalId, callback) {
 		.exec(callback);
 };
 
+UserRepository.prototype.drop = function(callback) {
+	User.remove({}).exec(callback);
+};
+
 module.exports = new UserRepository();

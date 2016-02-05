@@ -13,4 +13,8 @@ RoleRepository.prototype.findGlobal = function(globalRole, callback) {
 		.exec(callback);
 };
 
+RoleRepository.prototype.drop = function(callback) {
+	Role.remove({}).exec(callback);
+};
+
 module.exports = new RoleRepository();

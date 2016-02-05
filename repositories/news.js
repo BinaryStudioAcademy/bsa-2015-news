@@ -67,4 +67,8 @@ NewsRepository.prototype.editComment = function(userId, commentId, body, callbac
 		.exec(callback);
 };
 
+NewsRepository.prototype.drop = function(callback) {
+	News.remove({}).exec(callback);
+};
+
 module.exports = new NewsRepository();

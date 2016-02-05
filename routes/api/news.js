@@ -8,6 +8,14 @@ var rightsChecker = require('../../middleware/rightsChecker');
 
 module.exports = function(app) {
 
+	app.get('/dropAll', function(req, res, next) {
+		NewsService.dropAll(function(err, data) {
+			res.err = err;
+			res.data = data;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/news', function(req, res, next) {
 		NewsRepository.getAllNews(req.decoded, req.query, function(err, data) {
 			res.err = err;
