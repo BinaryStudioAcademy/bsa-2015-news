@@ -279,10 +279,13 @@ function NewsController(NewsService, AdministrationService, WeekliesService, Not
 			likes: []
 			};
 		NewsService.addComment(news._id, comment).then(function() {
-			if (news.author !== comment.author) {
-				NotificationService.newComment(news, _.find(vm.fullUsers, {serverUserId: comment.author}), pack);
-			}
-			socket.emit("new comment", {postId: news._id, comment: comment});
+			NewsService.getComments(news._id).then(function(data) {
+				var i = data.comments.length - 1;
+				if (news.author !== comment.author) {
+					NotificationService.newComment(news, _.find(vm.fullUsers, {serverUserId: comment.author}), pack);
+				}
+				socket.emit("new comment", {postId: news._id, comment: data.comments[i]});
+			});
 		});
 		$timeout(function() {
 			form.$setPristine();
