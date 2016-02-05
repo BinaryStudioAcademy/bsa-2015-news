@@ -80,13 +80,32 @@ module.exports = function(app) {
 					next();
 				});
 			}
-		}/*else {
-			NewsService.toggleCommentlike(req.decoded.id, req.params.newsId, req.params.commentId, function(err, data) {
+		}
+	}, apiResponse);
+
+	app.delete('/api/news/:newsId/comments/:commentId', function(req, res, next) {
+		if (req.decoded.localRole === 'User') {
+			NewsRepository.getComments(req.params.newsId, function(err, data) {
+				var comment = _.find(data.comments, function(comm) {
+					return comm._id == req.params.commentId;
+				});
+				if (!comment || (comment.author != req.decoded.id)) {
+					return res.sendStatus(403);
+				} else {
+					NewsRepository.deleteComment(req.params.commentId, function(err, data) {
+						res.err = err;
+						res.data = data;
+						next();
+					});
+				}
+			});
+		} else {
+			NewsRepository.deleteComment(req.params.commentId, function(err, data) {
 				res.err = err;
 				res.data = data;
 				next();
 			});
-		}*/
+		}
 	}, apiResponse);
 
 	app.put('/api/news/:id', function(req, res, next) {

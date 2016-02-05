@@ -92,10 +92,7 @@ var app = require('../app.js');
 		}
 
 		function deleteComment(newsId, commentId) {
-			var data = $resource("api/news/:id", { id: "@id" }, {
-				update: {method: "PUT"}
-			});
-			return data.update({ id: newsId }, { $pull:{comments: {_id: commentId} }}).$promise;
+			return $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }).remove({ newsId: newsId, commentId: commentId }).$promise;
 		}
 
 		function newsLike(newsId, userId) {
@@ -119,13 +116,6 @@ var app = require('../app.js');
 		function deleteCommentLike(newsId, commentId, userId) {
 			return $resource("api/news/:newsId/comments/:commentId/likes", { newsId: "@newsId", commentId: "@commentId"}).remove({ newsId: newsId, commentId: commentId }).$promise;
 		}
-
-		/*function toggleCommentLike(newsId, commentId) {
-			var data = $resource("api/news/:newsId/comments/:commentId", { newsId: "@newsId", commentId: "@commentId" }, {
-				update: {method: "PUT"}
-			});
-			return data.update({newsId: newsId, commentId: commentId}).$promise;
-		}*/
 
 		function getServices() {
 			return $resource("app/api/notificationService").query().$promise;
