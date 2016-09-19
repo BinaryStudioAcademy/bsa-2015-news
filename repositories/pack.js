@@ -25,8 +25,8 @@ PackRepository.prototype.getAll = function(queryString, callback) {
 	console.log(query);
 	Pack.find(query).lean()
 		.sort({date:-1})
-		.skip(queryString.skip)
-		.limit(queryString.limit)
+		.skip(Number(queryString.skip))
+		.limit(Number(queryString.limit))
 		.exec(callback);
 };
 
