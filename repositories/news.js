@@ -27,7 +27,7 @@ NewsRepository.prototype.getAllNews = function(user, queryString, callback) {
 	News.find(query)
 		.sort(sort)
 		.skip(queryString.skip)
-		.limit(queryString.limit)
+		.limit(Number(queryString.limit))
 		.exec(callback);
 };
 
