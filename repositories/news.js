@@ -26,7 +26,7 @@ NewsRepository.prototype.getAllNews = function(user, queryString, callback) {
 	var sort = queryString.dateSort ? {date: queryString.dateSort} : {date: -1};
 	News.find(query)
 		.sort(sort)
-		.skip(queryString.skip)
+		.skip(Number(queryString.skip))
 		.limit(Number(queryString.limit))
 		.exec(callback);
 };
